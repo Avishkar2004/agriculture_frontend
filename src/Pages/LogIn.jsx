@@ -70,7 +70,7 @@ const LogIn = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-200 to-gray-400 p-4">
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg relative">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Log In</h2>
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Sign In</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700 text-sm font-medium mb-2">

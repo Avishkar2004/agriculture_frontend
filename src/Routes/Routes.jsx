@@ -76,9 +76,9 @@ const AppRoutes = () => {
         <Route path="/BuyNow" component={BuyNow} />
 
         {/* Route for Log In */}
-        <Route path="/Login" component={LogIn} />
+        <Route path="/Signin" component={LogIn} />
         {/* Route for SignUp */}
-        <Route path="/signup" component={CreateAcc} />
+        <Route path="/Signup" component={CreateAcc} />
         <Route path="/categories" component={Categories} />
       </Switch>
 

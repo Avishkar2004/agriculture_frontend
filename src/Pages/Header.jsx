@@ -147,8 +147,8 @@ const Header = () => {
             renderUserDropdown()
           ) : (
             <div className="space-x-4">
-              <Link to="/login" className="text-gray-600 hover:underline">Login</Link>
-              <Link to="/signup" className="text-gray-600 hover:underline">Signup</Link>
+              <Link to="/Signup" className="text-gray-600 hover:underline">Sign up</Link>
+              <Link to="/Signin" className="text-gray-600 hover:underline">Sign in</Link>
             </div>
           )}
           <Link to="/become-a-seller" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">
