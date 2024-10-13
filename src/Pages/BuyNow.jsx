@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
+import OrderConfirm from './OrderConfirm.jssx';
+// Add some more payment options
 const BuyNow = () => {
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState('');
@@ -15,6 +16,14 @@ const BuyNow = () => {
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);
+  const [upiId, setUpiId] = useState("")
+  const [paymentMethod, setPaymentMethod] = useState('creditCard'); // default option is credit card
+  const [bankName, setBankName] = useState()
+
+
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
 
   useEffect(() => {
     setProductData(initialProductData);
@@ -22,21 +31,7 @@ const BuyNow = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log({
-      name,
-      email,
-      phoneNumber,
-      address,
-      city,
-      state,
-      zipCode,
-      country,
-      creditCard,
-      quantity,
-      productName: productData.name,
-      totalPrice: (productData.salePrice * quantity).toFixed(2),
-    });
+
   };
 
   return (
@@ -166,15 +161,63 @@ const BuyNow = () => {
               <h3 className="text-xl font-semibold mt-4 mb-2">Payment Details</h3>
 
               <label className="block mb-2">
-                Credit Card:
-                <input
-                  type="text"
-                  value={creditCard}
-                  onChange={(e) => setCreditCard(e.target.value)}
-                  required
+                Payment Method:
+                <select
+                  value={paymentMethod}
+                  onChange={handlePaymentMethodChange}
                   className="border p-2 w-full rounded"
-                />
+                >
+                  <option value="creditCard">Credit Card</option>
+                  <option value="upi">UPI</option>
+                  <option value="netBanking">Net Banking</option>
+                  <option value="paypal">PayPal</option>
+                </select>
               </label>
+
+              {paymentMethod === 'creditCard' && (
+                <label className="block mb-2">
+                  Credit Card:
+                  <input
+                    type="text"
+                    value={creditCard}
+                    onChange={(e) => setCreditCard(e.target.value)}
+                    required
+                    className="border p-2 w-full rounded"
+                  />
+                </label>
+              )}
+
+              {paymentMethod === 'upi' && (
+                <label className="block mb-2">
+                  UPI ID:
+                  <input
+                    type="text"
+                    value={upiId}
+                    onChange={(e) => setUpiId(e.target.value)} // Add a state for UPI ID
+                    required
+                    className="border p-2 w-full rounded"
+                  />
+                </label>
+              )}
+
+              {paymentMethod === 'netBanking' && (
+                <label className="block mb-2">
+                  Bank Name:
+                  <input
+                    type="text"
+                    value={bankName}
+                    onChange={(e) => setBankName(e.target.value)} // Add a state for Bank Name
+                    required
+                    className="border p-2 w-full rounded"
+                  />
+                </label>
+              )}
+
+              {paymentMethod === 'paypal' && (
+                <div className="block mb-2">
+                  <p>Redirecting to PayPal for secure checkout...</p>
+                </div>
+              )}
 
               {/* Order Summary */}
               <div className="bg-gray-100 p-4 rounded-lg mt-4">
