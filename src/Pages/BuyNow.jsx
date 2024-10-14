@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import OrderConfirm from './OrderConfirm.jssx';
-// Add some more payment options
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import OrderConfirmModal from './OrderConfirmModal';
+// Order confirmation modal component
+
 const BuyNow = () => {
+  const history = useHistory()
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,13 +16,13 @@ const BuyNow = () => {
   const [zipCode, setZipCode] = useState('');
   const [country, setCountry] = useState('');
   const [creditCard, setCreditCard] = useState('');
+  const [upiId, setUpiId] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('creditCard'); // default option is credit card
+  const [bankName, setBankName] = useState('');
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);
-  const [upiId, setUpiId] = useState("")
-  const [paymentMethod, setPaymentMethod] = useState('creditCard'); // default option is credit card
-  const [bankName, setBankName] = useState()
-
 
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
@@ -31,7 +34,18 @@ const BuyNow = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Show the modal after clicking "Pay Now"
 
+    setTimeout(() => {
+      setShowModal(true);
+
+    }, 1000);
+
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    history.push('/')
   };
 
   return (
@@ -40,7 +54,9 @@ const BuyNow = () => {
         {/* Product Details Section */}
         <div className="w-1/2 pr-4">
           <div className="sticky top-0 border p-4 rounded-lg mb-4 bg-white">
-            <h1 className="text-2xl font-bold mb-4">Checkout <span>:{productData.name}</span></h1>
+            <h1 className="text-2xl font-bold mb-4">
+              Checkout <span>:{productData.name}</span>
+            </h1>
             <h2 className="text-2xl font-bold mb-2">{productData.name}</h2>
             <p className="mb-2">Product Name: {productData.name}</p>
             <p className="mb-4">Price: ₹{productData.salePrice}</p>
@@ -193,7 +209,7 @@ const BuyNow = () => {
                   <input
                     type="text"
                     value={upiId}
-                    onChange={(e) => setUpiId(e.target.value)} // Add a state for UPI ID
+                    onChange={(e) => setUpiId(e.target.value)}
                     required
                     className="border p-2 w-full rounded"
                   />
@@ -206,7 +222,7 @@ const BuyNow = () => {
                   <input
                     type="text"
                     value={bankName}
-                    onChange={(e) => setBankName(e.target.value)} // Add a state for Bank Name
+                    onChange={(e) => setBankName(e.target.value)}
                     required
                     className="border p-2 w-full rounded"
                   />
@@ -219,29 +235,26 @@ const BuyNow = () => {
                 </div>
               )}
 
-              {/* Order Summary */}
-              <div className="bg-gray-100 p-4 rounded-lg mt-4">
-                <p className="text-lg font-semibold">Order Summary:</p>
-                <p>Product: {productData.name}</p>
-                <p>Quantity: {quantity}</p>
-                <p>Total Price: ₹{(productData.salePrice * quantity).toFixed(2)}</p>
-              </div>
-
-              <button type="submit" className="mt-6 bg-blue-500 text-white px-4 py-2 rounded w-full">
-                Pay Now ₹{(productData.salePrice * quantity).toFixed(2)}
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Pay Now
               </button>
             </form>
-
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold text-blue-600 mb-2">Secure Checkout</h3>
-              <p className="text-gray-600">
-                Your payment is securely processed with end-to-end encryption, ensuring a safe and
-                smooth transaction.
-              </p>
-            </div>
           </div>
         </div>
       </div>
+
+      {/* Modal for Order Confirmation */}
+      {showModal && (
+        <OrderConfirmModal
+          productData={productData}
+          quantity={quantity}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };
