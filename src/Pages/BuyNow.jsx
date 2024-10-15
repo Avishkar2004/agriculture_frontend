@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import OrderConfirmModal from './OrderConfirmModal';
-// Order confirmation modal component
 
 const BuyNow = () => {
   const history = useHistory()
@@ -32,16 +31,49 @@ const BuyNow = () => {
     setProductData(initialProductData);
   }, [initialProductData]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Show the modal after clicking "Pay Now"
 
-    setTimeout(() => {
-      setShowModal(true);
+    const orderData = {
+      productName: productData.name,
+      quantity: quantity,
+      customerName: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      address: address,
+      city: city,
+      state: state,
+      zipCode: zipCode,
+      country: country,
+      paymentMethod: paymentMethod,
+      creditCard: creditCard,
+      upiId: upiId,
+      bankName: bankName,
+    };
 
-    }, 1000);
+    try {
+      const response = await fetch('http://localhost:8080/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
 
+      if (response.ok) {
+        // Payment success, Show confirmation modal
+        setTimeout(() => {
+          setShowModal(true)
+        }, 1000);
+      } else {
+        throw new Error('Failed to place order');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('There was an error placing your order. Please try again.');
+    }
   };
+
 
   const closeModal = () => {
     setShowModal(false);
