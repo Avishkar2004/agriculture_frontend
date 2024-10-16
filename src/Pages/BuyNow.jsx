@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import OrderConfirmModal from './OrderConfirmModal';
+import { useAuth } from "../actions/authContext"
+
 
 const BuyNow = () => {
   const history = useHistory()
+  const { authenticatedUser } = useAuth()
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,6 +39,8 @@ const BuyNow = () => {
 
     const orderData = {
       productName: productData.name,
+      product_id: productData.id,
+      user_id: authenticatedUser.id,
       quantity: quantity,
       customerName: name,
       email: email,
