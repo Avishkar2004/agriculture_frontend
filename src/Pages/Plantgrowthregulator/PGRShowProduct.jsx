@@ -32,7 +32,13 @@ const PGRShowProduct = ({ PGRDataProp }) => {
 
   const handleBuyNow = (e) => {
     e.preventDefault()
-    history.push("/BuyNow", { productData })
+    const isAuthenticated = document.cookie.includes("auth_token")
+    if (!isAuthenticated) {
+      alert("You must be logged in to buy this product")
+      history.push("/signup")
+    } else {
+      history.push("/BuyNow", { productData })
+    }
   }
 
   const handleSizeChange = (newSize) => {

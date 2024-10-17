@@ -188,7 +188,7 @@ const CreateAcc = () => {
 
                 <div className='mt-3 mb-3 text-center'>
                     <span>Already have an account? </span>
-                    <Link to="/login" className='text-indigo-500 hover:underline'>Log In</Link>
+                    <Link to="/Signin" className='text-indigo-500 hover:underline'>Log In</Link>
                 </div>
             </div>
         </div>

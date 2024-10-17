@@ -10,14 +10,14 @@ const BuyNow = () => {
   const { authenticatedUser } = useAuth()
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('avishkar@gmail.com');
+  const [phoneNumber, setPhoneNumber] = useState('9322810348');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zipCode, setZipCode] = useState('');
   const [country, setCountry] = useState('');
-  const [creditCard, setCreditCard] = useState('');
+  const [creditCard, setCreditCard] = useState('478399229');
   const [upiId, setUpiId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('creditCard'); // default option is credit card
   const [bankName, setBankName] = useState('');
@@ -70,6 +70,9 @@ const BuyNow = () => {
         setTimeout(() => {
           setShowModal(true)
         }, 1000);
+      } else if (response.status === 401) {
+        alert("You must be logged in to buy item")
+        history.push("/signup")
       } else {
         throw new Error('Failed to place order');
       }
