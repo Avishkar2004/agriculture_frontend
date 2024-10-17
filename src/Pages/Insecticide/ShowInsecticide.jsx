@@ -22,8 +22,14 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
 
     const handleBuyNow = (e) => {
         e.preventDefault()
-        history.push("/BuyNow", { productData });
-    };
+        const isAuthenticated = document.cookie.includes("authToken")
+        if (!isAuthenticated) {
+            alert("You must be logged in to buy this product")
+            history.push("/signup")
+        } else {
+            history.push("/BuyNow", { productData })
+        }
+    }
 
     const handleIncrement = () => {
         setCount(count + 1);
@@ -123,7 +129,7 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
             <div className="space-x-52 ml-12 mt-4 mb-4">
                 <div className="flex text-sm gap-12 text-gray-500 font-secondary">
                     <span className="space-x-2 ml-6">
-                        <Link to="/"  className="hover:text-blue-500">
+                        <Link to="/" className="hover:text-blue-500">
                             Home
                         </Link>
                         &gt;

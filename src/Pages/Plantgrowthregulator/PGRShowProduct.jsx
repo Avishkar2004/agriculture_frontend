@@ -32,7 +32,7 @@ const PGRShowProduct = ({ PGRDataProp }) => {
 
   const handleBuyNow = (e) => {
     e.preventDefault()
-    const isAuthenticated = document.cookie.includes("auth_token")
+    const isAuthenticated = document.cookie.includes("authToken")
     if (!isAuthenticated) {
       alert("You must be logged in to buy this product")
       history.push("/signup")

@@ -26,9 +26,15 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
     };
 
     const handleBuyNow = (e) => {
-        e.preventDefault();
-        history.push("/BuyNow", { productData });
-    };
+        e.preventDefault()
+        const isAuthenticated = document.cookie.includes("authToken")
+        if (!isAuthenticated) {
+            alert("You must be logged in to buy this product")
+            history.push("/signup")
+        } else {
+            history.push("/BuyNow", { productData })
+        }
+    }
 
     const handleSizeChange = (newSize) => {
         setSelectedSize(newSize);
