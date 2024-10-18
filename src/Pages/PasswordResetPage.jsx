@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../actions/authContext';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const PasswordResetPage = () => {
     const { login } = useAuth();
@@ -11,10 +12,19 @@ const PasswordResetPage = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [username, setUsername] = useState('');
     const history = useHistory();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    // Toggle the visibility of the password field
+    const handlePassWordToggle = (e) => {
+        e.preventDefault(); // Prevent form submission when the button is clicked
+        setShowPassword(!showPassword);
+    };
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
-
+        setIsLoading(true)
         if (!resetCode || !newPassword || !confirmPassword) {
             setError('All fields are required.');
             return;
@@ -50,6 +60,7 @@ const PasswordResetPage = () => {
                 const errorMessage = await response.text();
                 if (errorMessage !== 'Invalid OTP.') {
                     throw new Error(errorMessage);
+                    setIsLoading(false)
                 } else {
                     console.log('Ignoring "Invalid OTP" error.');
                     setError(null);
@@ -79,6 +90,7 @@ const PasswordResetPage = () => {
             history.push('/');
         } catch (error) {
             setError(error.message);
+            setIsLoading(false)
         }
     };
 
@@ -100,31 +112,43 @@ const PasswordResetPage = () => {
                             className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col relative">
                         <label htmlFor="newPassword" className="text-sm text-gray-600">New Password:</label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             id="newPassword"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
+                        <button
+                            onClick={handlePassWordToggle}
+                            className="absolute right-3 top-9"
+                        >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </button>
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col relative">
                         <label htmlFor="confirmPassword" className="text-sm text-gray-600">Confirm New Password:</label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             id="confirmPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className="border border-gray-300 rounded px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
+                        <button
+                            onClick={handlePassWordToggle}
+                            className="absolute right-3 top-9"
+                        >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </button>
                     </div>
                     <button
                         type="submit"
                         className="w-full bg-blue-500 text-white font-bold px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-300"
                     >
-                        Reset My Password
+                        {isLoading ? "Reseting Password...." : "Reset My Password"}
                     </button>
                 </form>
             </div>
