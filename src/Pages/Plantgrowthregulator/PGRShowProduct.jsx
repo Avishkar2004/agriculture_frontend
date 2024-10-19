@@ -106,23 +106,30 @@ const PGRShowProduct = ({ PGRDataProp }) => {
       const response = await fetch(`http://localhost:8080/plantgrowthregulator/next/${productData.id}`);
       if (response.ok) {
         const nextProduct = await response.json();
-        history.push({
-          pathname: `/plantgrowthregulator/${nextProduct.id}`,
-          state: { PGRProduct: nextProduct }
-        });
-        setProductData(nextProduct);
-        setSelectedSize("50 ml"); // Reset the size to default
+
+        if (nextProduct) {
+          // Update the state with the next product's data
+          history.push({
+            pathname: `/plantgrowthregulator/${nextProduct.name}`,
+            state: { PGRProduct: nextProduct }
+          });
+          setProductData(nextProduct);
+          setSelectedSize("50 ml"); // Reset the size to default
+        } else {
+          console.error("No more products available");
+        }
       } else {
-        console.error('Failed to fetch next product');
+        console.error('Failed to fetch the next product');
       }
     } catch (error) {
       console.error('Error fetching next product:', error);
     }
   };
 
+
   useEffect(() => {
     handleSizeChange("50 ml")
-  }, []);
+  }, [productData]);
 
 
 

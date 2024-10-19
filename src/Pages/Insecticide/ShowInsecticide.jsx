@@ -100,30 +100,39 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
 
 
     const fetchNextProduct = async () => {
+        if (!productData.id) {
+            console.error("Product ID is missing");
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8080/insecticide/next/${productData.id}`);
+
             if (response.ok) {
-                const nextProduct = await response.json();
-                history.push({
-                    pathname: `/insecticide/${nextProduct.id}`,
-                    state: { productData: nextProduct }
-                });
-                setProductData(nextProduct);
-                setSelectedSize("50 ml"); // Reset the size to default
+                const nextProduct = await response.json()
+                if (nextProduct) {
+                    history.push({
+                        pathname: `/insecticide/${nextProduct.id}`,
+                        state: { productData: nextProduct }
+                    })
+                    setProductData(nextProduct)
+                    selectedSize('50 ml')
+                } else {
+                    console.error("No more product available")
+                }
             } else {
-                console.error('Failed to fetch next product');
+                console.error("Failed to fetch next prodcut")
             }
+
         } catch (error) {
             console.error('Error fetching next product:', error);
         }
     };
 
-
-
     useEffect(() => {
-        // console.log('Product Data:', productData);
         handleSizeChange('50 ml');
-    }, []);//you can remove these two of productdata and insecticideProductdata
+    }, [productData]);
+
+
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col">
             <div className="space-x-52 ml-12 mt-4 mb-4">

@@ -103,15 +103,19 @@ const ShowFungicides = ({ productDataProp }) => {
     try {
       const response = await fetch(`http://localhost:8080/fungicides/next/${productData.id}`);
       if (response.ok) {
-        const nextProduct = await response.json();
-        history.push({
-          pathname: `/fungicides/${nextProduct.id}`,
-          state: { productData: nextProduct }
-        });
-        setProductData(nextProduct);
-        setSelectedSize("50 ml"); // Reset the size to default
+        const nextProduct = await response.json()
+        if (nextProduct) {
+          history.push({
+            pathname: `/fungicides/${nextProduct.id}`,
+            state: { productData: nextProduct }
+          });
+          setProductData(nextProduct);
+          setSelectedSize("50 ml"); // Reset the size to default
+        } else {
+          console.error("No more product available ")
+        }
       } else {
-        console.error('Failed to fetch next product');
+        console.error("Failed to fetch next product")
       }
     } catch (error) {
       console.error('Error fetching next product:', error);
@@ -121,7 +125,7 @@ const ShowFungicides = ({ productDataProp }) => {
   useEffect(() => {
     // Select price by default for 50 ml
     handleSizeChange('50 ml');
-  }, []);
+  }, [productData]);
 
 
   return (

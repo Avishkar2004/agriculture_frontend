@@ -104,16 +104,21 @@ const OrganicproductData = ({ OrganicproductData }) => {
   const fetchNextProduct = async () => {
     try {
       const response = await fetch(`http://localhost:8080/organicproduct/next/${productData.id}`);
+
       if (response.ok) {
-        const nextProduct = await response.json();
-        history.push({
-          pathname: `/organicproduct/${nextProduct.id}`,
-          state: { OrganicproductData: nextProduct }
-        });
-        setProductData(nextProduct);
-        setSelectedSize("50 ml"); // Reset the size to default
+        const nextProduct = await response.json()
+        if (nextProduct) {
+          history.push({
+            pathname: `/organicproduct/${nextProduct.name}`,
+            state: { OrganicproductData: nextProduct }
+          });
+          setProductData(nextProduct);
+          setSelectedSize("50 ml"); // Reset the size to default
+        } else {
+          console.error("No more product available ")
+        }
       } else {
-        console.error('Failed to fetch next product');
+        console.error("Failed to fetch next product")
       }
     } catch (error) {
       console.error('Error fetching next product:', error);
@@ -122,7 +127,7 @@ const OrganicproductData = ({ OrganicproductData }) => {
 
   useEffect(() => {
     handleSizeChange('50 ml');
-  }, []);
+  }, [productData]);
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">

@@ -98,25 +98,33 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
     const fetchNextProduct = async () => {
         try {
             const response = await fetch(`http://localhost:8080/micro_nutrients/next/${productData.id}`);
+
             if (response.ok) {
-                const nextProduct = await response.json();
-                history.push({
-                    pathname: `/micro-nutrients/${nextProduct.id}`,
-                    state: { micronutrientProduct: nextProduct }
-                });
-                setProductData(nextProduct);
-                setSelectedSize("50 ml"); // Reset the size to default
+                const nextProduct = await response.json()
+                if (nextProduct) {
+                    history.push({
+                        pathname: `/micro-nutrients/${nextProduct.name}`,
+                        state: { micronutrientProduct: nextProduct }
+                    })
+                    setProductData(nextProduct);
+                    selectedSize("50 ml")
+                }
+                else {
+                    console.error("No more product available")
+                }
             } else {
-                console.error('Failed to fetch next product');
+                console.error("Failed to fetch next product")
             }
+
         } catch (error) {
             console.error('Error fetching next product:', error);
         }
     };
 
+
     useEffect(() => {
         handleSizeChange('50 ml');
-    }, []);
+    }, [productData]);
 
     useEffect(() => {
         console.log("Product data updated", productData);
