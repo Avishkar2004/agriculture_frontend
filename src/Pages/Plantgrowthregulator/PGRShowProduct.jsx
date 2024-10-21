@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Description from '../Description';
 
-const PGRShowProduct = ({ PGRDataProp }) => {
+const PGRShowProduct = () => {
   const history = useHistory();
   const location = useLocation();
   const initialproductData = (location.state && location.state.PGRProduct) || {};
