@@ -28,29 +28,19 @@ import Profile from "../Pages/Profile";
 import ForgotPassword from "../Pages/ForgotPassword";
 import PasswordResetPage from "../Pages/PasswordResetPage";
 import Categories from "../Pages/Categories";
-import SellerHeader from "../Pages/Seller/SellerHeader";
-import Whydo from "../Pages/Seller/Whydo";
+
 import MicronutrientUI from "../Pages/UI/MicronutrientUI";
 
 const AppRoutes = () => {
   return (
     <Router>
-      <Route
-        render={({ location }) => {
-          if (location.pathname === "/become-a-seller") {
-            return <SellerHeader />;
-          } else {
-            return <Header />;
-          }
-        }}
-      />
+      <Header />
 
       <Switch>
         <Route path="/profile" component={Profile} />
         <Route path="/forgot-password" component={ForgotPassword} />
         <Route path="/passwordreset" component={PasswordResetPage} />
         {/* For Become a seller */}
-        <Route path="/become-a-seller" component={Whydo} />
 
         {/* Routes for Plant Growth Regulator */}
         <Route path="/plantgrowthregulator/:productId" component={PGRShowProduct} />

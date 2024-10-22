@@ -151,7 +151,7 @@ const Header = () => {
               <Link to="/Signin" className="text-gray-600 hover:underline">Sign in</Link>
             </div>
           )}
-          <Link to="/become-a-seller" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">
+          <Link to="/#" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors">
             Become a Seller
           </Link>
           <Link to="/cart" className="relative text-gray-800 flex items-center">

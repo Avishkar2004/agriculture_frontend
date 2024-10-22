@@ -69,7 +69,7 @@ const Cart = () => {
                 </p>
                 <button
                     className="mt-4 bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-700"
-                    onClick={() => history.push('/login')} // Redirect to login page
+                    onClick={() => history.push('/Signin')} // Redirect to login page
                 >
                     Log In
                 </button>
