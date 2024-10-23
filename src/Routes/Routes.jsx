@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../Pages/Header";
 import Collection from "../Pages/Collection";
-import Sliders from "../Pages/Slider";
 import FungiUI from "../Pages/UI/FungiUI";
 import OrganicFront from "../Pages/UI/OrganicFront";
 import Blogposts from "../Pages/Blogposts";
@@ -79,7 +78,6 @@ const AppRoutes = () => {
             return (
               <>
                 <Collection />
-                <Sliders />
                 <FungiUI />
                 <OrganicFront />
                 <MicronutrientUI />
