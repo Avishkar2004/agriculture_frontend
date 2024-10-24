@@ -10,8 +10,8 @@ export const AuthProvider = ({ children }) => {
   // Function to handle user login
   const login = (user) => {
     // Ensure to store only non-sensitive user information
-    const { id, username, token } = user;
-    const safeUser = { id, username, token };
+    const { id, username, token, email, created_at } = user;
+    const safeUser = { id, username, token, email, created_at }; // Include createdAt
     // Updating the authenticatedUser state with the provided user information
     setAuthenticatedUser(user);
     localStorage.setItem("authenticatedUser", JSON.stringify(safeUser));

@@ -7,12 +7,6 @@ const Profile = () => {
     const { authenticatedUser, logout } = useAuth();
     const [editMode, setEditMode] = useState(false);
 
-    // Sample cart data (this can be dynamic, loaded from the backend)
-    const cartData = [
-        { id: 1, name: 'Product 1', price: 19.99 },
-        { id: 2, name: 'Product 2', price: 29.99 },
-    ];
-
     const handleLogout = () => {
         logout();
     };
@@ -23,52 +17,45 @@ const Profile = () => {
 
     // Check if the user is logged in
     if (!authenticatedUser) {
-        return <div>Please log in to view your profile.</div>;
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-200 to-gray-400">
+                <div className="bg-white shadow-md rounded-lg p-6">
+                    <p className="text-gray-800 text-lg">
+                        Please log in to view your profile.
+                    </p>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-indigo-500 to-blue-600 flex items-center justify-center">
-            <div className="max-w-4xl w-full bg-white rounded-lg shadow-lg p-8">
-                <div className="mb-6 text-center">
-                    <h2 className="text-4xl font-bold text-gray-800">
+        <div className="min-h-screen bg-gradient-to-r from-gray-200 to-gray-400 flex items-center justify-center">
+            <div className="max-w-5xl w-full bg-white rounded-2xl shadow-2xl p-10">
+                {/* Profile Header */}
+                <div className="mb-8 text-center">
+                    <h2 className="text-5xl font-extrabold text-gray-800">
                         Welcome, {authenticatedUser.username}
                     </h2>
-                    <p className="text-gray-600 text-lg mt-2">
+                    <p className="text-gray-600 text-lg mt-3">
                         {authenticatedUser.email}
                     </p>
                 </div>
 
-                <div className="mb-8">
-                    <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-                        <span className="flex items-center">
-                            <FaUserEdit className="mr-2" />
-                            Shopping Cart
-                        </span>
+                {/* Shopping Cart Section */}
+                <div className="mb-10">
+                    <h3 className="text-3xl font-semibold text-gray-800 mb-5 flex items-center">
+                        <FaUserEdit className="mr-2 text-blue-600" />
+                        Shopping Cart
                     </h3>
-                    <div className="bg-gray-100 p-6 rounded-lg shadow-inner">
-                        <Cart cartDataPass={cartData} />
+                    <div className="bg-gray-100 p-6 rounded-xl shadow-inner">
+                        <Cart />
                     </div>
                 </div>
 
-                <div className="flex justify-end space-x-4">
+                {/* Buttons */}
+                <div className="flex justify-center space-x-6">
                     <button
-                        className={`flex items-center bg-blue-500 text-white px-6 py-3 rounded-md font-semibold transition-transform transform hover:scale-105 ${
-                            editMode ? 'bg-green-500' : ''
-                        }`}
-                        onClick={handleEdit}
-                    >
-                        {editMode ? (
-                            <>
-                                <FaSave className="mr-2" /> Save Changes
-                            </>
-                        ) : (
-                            <>
-                                <FaUserEdit className="mr-2" /> Edit Profile
-                            </>
-                        )}
-                    </button>
-                    <button
-                        className="flex items-center bg-red-500 text-white px-6 py-3 rounded-md font-semibold transition-transform transform hover:scale-105"
+                        className="flex items-center bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105"
                         onClick={handleLogout}
                     >
                         <FaSignOutAlt className="mr-2" /> Logout
