@@ -1,18 +1,43 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '../actions/authContext';
 import Cart from './Cart';
-import { FaUserEdit, FaSave, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
+import { FaUserEdit, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 const Profile = () => {
     const { authenticatedUser, logout } = useAuth();
-    const [editMode, setEditMode] = useState(false);
 
     const handleLogout = () => {
         logout();
     };
 
-    const handleEdit = () => {
-        setEditMode(!editMode);
+    const handleDeleteAccount = async () => {
+        const confirmation = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+        if (confirmation) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/users/${authenticatedUser.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`, // Include token if needed
+                    },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message);
+                    // Optionally, redirect the user or log them out after deletion
+                    logout(); // Call logout to clear session
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Error deleting account:", error);
+                alert("An error occurred while deleting your account.");
+            }
+        }
     };
 
     // Check if the user is logged in
@@ -21,7 +46,7 @@ const Profile = () => {
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-200 to-gray-400">
                 <div className="bg-white shadow-md rounded-lg p-6">
                     <p className="text-gray-800 text-lg">
-                        Please log in to view your profile.
+                        Please <Link to="/Signup" className="text-blue-600 hover:underline">Sign Up</Link> to view your profile.
                     </p>
                 </div>
             </div>
@@ -59,6 +84,12 @@ const Profile = () => {
                         onClick={handleLogout}
                     >
                         <FaSignOutAlt className="mr-2" /> Logout
+                    </button>
+                    <button
+                        className="flex items-center bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105"
+                        onClick={handleDeleteAccount}
+                    >
+                        <RiDeleteBin6Line className="mr-2" /> Delete Account
                     </button>
                 </div>
             </div>
