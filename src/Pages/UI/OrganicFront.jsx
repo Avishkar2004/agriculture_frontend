@@ -87,7 +87,7 @@ const OrganicFront = () => {
                     {organicProduct.salePrice}
                   </p>
                   <p className="text-gray-600 font-secondary text-sm mt-2">
-                    {organicProduct.reviews}
+                    {organicProduct.review_50} Reviews
                   </p>
                   <p className="text-green-600 font-secondary mt-2">
                     {organicProduct.stockStatus}

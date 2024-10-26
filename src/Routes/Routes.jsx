@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../Pages/Header";
 import Collection from "../Pages/Collection";
-import FungiUI from "../Pages/UI/FungiUI";
 import OrganicFront from "../Pages/UI/OrganicFront";
 import Blogposts from "../Pages/Blogposts";
 import BestFungicides from "../Pages/Fungicides/BestFungicides";
@@ -29,6 +28,7 @@ import PasswordResetPage from "../Pages/PasswordResetPage";
 import Categories from "../Pages/Categories";
 
 import MicronutrientUI from "../Pages/UI/MicronutrientUI";
+import Plantgrowthregulator from "../Pages/UI/Plantgrowthregulator";
 
 const AppRoutes = () => {
   return (
@@ -78,7 +78,7 @@ const AppRoutes = () => {
             return (
               <>
                 <Collection />
-                <FungiUI />
+                <Plantgrowthregulator />
                 <OrganicFront />
                 <MicronutrientUI />
                 <Blogposts />

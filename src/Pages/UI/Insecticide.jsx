@@ -89,7 +89,7 @@ const Insecticide = () => {
                     {product.salePrice}
                   </p>
                   <p className="text-gray-600 font-secondary text-sm mt-2">
-                    {product.reviews}
+                    {product.review_50} Reviews
                   </p>
                   <p className="text-green-600 font-secondary mt-2">
                     {product.stockStatus}

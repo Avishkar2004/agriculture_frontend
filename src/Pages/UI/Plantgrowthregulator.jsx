@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../Loader";
 
-const FungiUI = () => {
+const Plantgrowthregulator = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,7 +42,7 @@ const FungiUI = () => {
     <div className="container mx-auto mt-10 mb-5">
       <div className="flex justify-between font-bold">
         <h1 className="text-[#1e2d7d] text-bold text-2xl font-primary">
-          Featured collection
+          PGR collection
         </h1>
         <h1 className="text-[#00badb] transition hover:-translate-x-5 font-[16px] duration-500 cursor-pointer"
           onMouseEnter={handleMouseEnter}
@@ -65,8 +65,8 @@ const FungiUI = () => {
             products.map((product) => (
               <Link
                 to={{
-                  pathname: `/fungicides/${encodeURIComponent(product.name)}`,
-                  state: { productData: product }, // Make sure product contains all necessary data
+                  pathname: `/plantgrowthregulator/${product.name}`,
+                  state: { PGRProduct: product },
                 }}
                 key={product.id}
                 className="border border-x-slate-200 border-solid"
@@ -94,7 +94,7 @@ const FungiUI = () => {
                     {product.salePrice}
                   </p>
                   <p className="text-gray-600 font-secondary text-sm mt-2">
-                    {product.reviews}
+                    {product.review_50} Reviews
                   </p>
                   <p className="text-green-600 font-secondary mt-2">
                     {product.stockStatus}
@@ -112,4 +112,4 @@ const FungiUI = () => {
   );
 };
 
-export default FungiUI;  
+export default Plantgrowthregulator;  
