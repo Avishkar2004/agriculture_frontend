@@ -1,11 +1,14 @@
 import AppRoutes from "./Routes/Routes";
 import { AuthProvider } from "./actions/authContext";
+import ErrorBoundary  from "../src/Pages/ErrorBoundary";
 
 function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
