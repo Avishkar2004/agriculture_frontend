@@ -129,7 +129,7 @@ const LogIn = () => {
 
         <div className="flex items-center justify-between gap-4 mt-6">
           <Link
-            to="/forgot-password"
+            to="/ForgotPasswordAndReset"
             className="w-full text-center hover:underline text-gray-700 py-2 px-4 transition-colors duration-300"
           >
             Forgot Password

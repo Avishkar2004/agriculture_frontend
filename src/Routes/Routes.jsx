@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../Pages/Header";
+import ForgotPasswordAndReset from "../Pages/ForgotPassword";
 import Collection from "../Pages/Collection";
 import OrganicFront from "../Pages/UI/OrganicFront";
 import Blogposts from "../Pages/Blogposts";
@@ -23,8 +24,6 @@ import Insecticide from "../Pages/UI/Insecticide";
 import Fungicides from "../Pages/UI/Fungicide";
 import CreateAcc from "../Pages/CreateAcc";
 import Profile from "../Pages/Profile";
-import ForgotPassword from "../Pages/ForgotPassword";
-import PasswordResetPage from "../Pages/PasswordResetPage";
 import Categories from "../Pages/Categories";
 
 import MicronutrientUI from "../Pages/UI/MicronutrientUI";
@@ -37,8 +36,7 @@ const AppRoutes = () => {
 
       <Switch>
         <Route path="/profile" component={Profile} />
-        <Route path="/forgot-password" component={ForgotPassword} />
-        <Route path="/passwordreset" component={PasswordResetPage} />
+        <Route path="/ForgotPasswordAndReset" component={ForgotPasswordAndReset} />
         {/* For Become a seller */}
 
         {/* Routes for Plant Growth Regulator */}
