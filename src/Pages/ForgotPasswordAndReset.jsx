@@ -201,12 +201,11 @@ const ForgotPasswordAndReset = () => {
                         />
                         <button
                             onClick={handleEmailSubmit}
-                            className="w-full mt-6 bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300 ease-in-out"
-                        >
+                            className={`w-full mt-6 text-white py-2 rounded-lg transition duration-300 ease-in-out ${isLoading ? "bg-green-600" : "bg-indigo-600"}`}>
                             {isLoading ? (
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <CircularProgress color="secondary" size={24} />
-                                    <span className="ml-3">Sending...</span>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center" }} className="text-white rounded-lg bg-green-600 transition duration-300 ease-in-out">
+                                    <CircularProgress size={24} />
+                                    <span className="">Sending...</span>
                                 </Box>
                             ) : (
                                 "Send OTP"

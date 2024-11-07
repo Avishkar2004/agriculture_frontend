@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 import Refund from "./Refund";
 
 const Shipping = () => {

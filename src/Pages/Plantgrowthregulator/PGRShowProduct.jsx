@@ -7,7 +7,7 @@ import StarIcon from "@mui/icons-material/Star";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link, useHistory } from 'react-router-dom';
 import Description from '../Description';
 
 const PGRShowProduct = () => {

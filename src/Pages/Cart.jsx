@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Import useHistory if you're using React Router
+import { useHistory, Link } from 'react-router-dom';
 
 const Cart = () => {
     const [cartData, setCartData] = useState([]);
-    const [isAuthenticated, setIsAuthenticated] = useState(true); // Assume user is authenticated initially
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
     const history = useHistory();
 
     const fetchCartData = async () => {
         try {
             const response = await fetch("http://localhost:8080/cart", {
-                credentials: "include" // Ensures cookies are sent with request
+                credentials: "include"
             });
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    // User is not authenticated
                     setIsAuthenticated(false);
                 }
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -31,7 +30,7 @@ const Cart = () => {
         try {
             const response = await fetch(`http://localhost:8080/cart/${itemId}`, {
                 method: "DELETE",
-                credentials: "include" // Ensures cookies are sent with request
+                credentials: "include"
             });
 
             if (response.ok) {
@@ -55,21 +54,16 @@ const Cart = () => {
         fetchCartData();
     }, []);
 
-    useEffect(() => {
-        const subtotal = calculateSubtotal();
-        // Update subtotal state if necessary
-    }, [cartData]);
-
     if (!isAuthenticated) {
         return (
-            <div className="container mx-auto my-8 text-center">
-                <h2 className="text-3xl font-bold mb-6">Your Cart</h2>
+            <div className="container mx-auto my-8 text-center max-w-lg px-6">
+                <h2 className="text-3xl font-bold mb-6 text-gray-800">Your Cart</h2>
                 <p className="text-lg text-gray-600 mb-4">
                     Missing cart items? Please log in to see the items you added previously.
                 </p>
                 <button
-                    className="mt-4 bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-700"
-                    onClick={() => history.push('/Signin')} // Redirect to login page
+                    className="mt-4 bg-indigo-500 text-white px-6 py-3 rounded hover:bg-indigo-600"
+                    onClick={() => history.push('/Signin')}
                 >
                     Log In
                 </button>
@@ -78,45 +72,48 @@ const Cart = () => {
     }
 
     return (
-        <div className="container mx-auto my-8">
-            <h2 className="text-3xl font-bold mb-6">Your Shopping Cart</h2>
+        <div className="container mx-auto my-8 max-w-4xl px-6">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800">Your Shopping Cart</h2>
 
             <p className="text-sm text-gray-600 mb-4">
                 {cartData.length} {cartData.length === 1 ? 'item' : 'items'} in your cart
             </p>
 
-            <ul className="grid gap-8 cursor-pointer">
+            <ul className="space-y-4">
                 {cartData.map(item => (
                     <CartItem key={item.id} item={item} onDelete={handleRemoveFromCart} />
                 ))}
             </ul>
 
-            <div className="mt-8 border-t pt-6">
-                <p className="text-xl font-bold">Subtotal: ${calculateSubtotal().toFixed(2)}</p>
-                <button className="mt-4 bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-700">
+            <div className="mt-8 border-t pt-6 flex justify-between items-center">
+                <p className="text-xl font-bold text-gray-800">Subtotal: ${calculateSubtotal().toFixed(2)}</p>
+                <Link to={{
+                    pathname: "/checkout",
+                    state: { cartData }
+                }} className="bg-indigo-500 text-white px-6 py-3 rounded-lg hover:bg-indigo-600">
                     Proceed to Checkout
-                </button>
+                </Link>
             </div>
         </div>
     );
 };
 
 const CartItem = ({ item, onDelete }) => (
-    <li className="flex bg-white p-4 rounded-lg shadow-md">
-        <div className="flex-shrink-0">
+    <li className="flex flex-col md:flex-row items-center bg-white p-4 rounded-lg shadow-md border border-gray-200">
+        <div className="w-full md:w-24 h-24 flex-shrink-0">
             <img
                 src={`data:image/avif;base64,${item.image}`}
                 alt={item.name}
-                className="w-24 h-24 object-cover rounded-lg"
+                className="w-full h-full object-cover rounded-lg"
             />
         </div>
-        <div className="flex-1 ml-4">
-            <p className="text-lg font-semibold">{item.name}</p>
+        <div className="flex-1 mt-4 md:mt-0 md:ml-4">
+            <p className="text-lg font-semibold text-gray-800">{item.name}</p>
             <p className="text-gray-600">Price: ${item.price}</p>
             <p className="text-gray-600">Quantity: {item.quantity}</p>
         </div>
         <button
-            className="ml-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+            className="mt-4 md:mt-0 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
             onClick={() => onDelete(item.id)}
         >
             Delete

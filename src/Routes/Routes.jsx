@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../Pages/Header";
-import ForgotPasswordAndReset from "../Pages/ForgotPassword";
+import ForgotPasswordAndReset from "../Pages/ForgotPasswordAndReset";
 import Collection from "../Pages/Collection";
 import OrganicFront from "../Pages/UI/OrganicFront";
 import Blogposts from "../Pages/Blogposts";
@@ -28,6 +28,8 @@ import Categories from "../Pages/Categories";
 
 import MicronutrientUI from "../Pages/UI/MicronutrientUI";
 import Plantgrowthregulator from "../Pages/UI/Plantgrowthregulator";
+import CheckOut from "../Pages/CheckOut";
+import OrderCompleted from "../Pages/OrderCompleted";
 
 const AppRoutes = () => {
   return (
@@ -61,12 +63,16 @@ const AppRoutes = () => {
 
         {/* Route for Buy Now */}
         <Route path="/BuyNow" component={BuyNow} />
+        <Route path="/checkout" component={CheckOut} />
 
         {/* Route for Log In */}
         <Route path="/Signin" component={LogIn} />
         {/* Route for SignUp */}
         <Route path="/Signup" component={CreateAcc} />
         <Route path="/categories" component={Categories} />
+
+        <Route path="/order-completed" component={OrderCompleted} />
+
       </Switch>
 
       {/* Common components rendered only on the home page */}

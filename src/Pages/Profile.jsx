@@ -3,7 +3,7 @@ import { useAuth } from '../actions/authContext';
 import Cart from './Cart';
 import { FaUserEdit, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { Link } from 'react-router-dom/cjs/react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
     const { authenticatedUser, logout } = useAuth();
@@ -20,7 +20,7 @@ const Profile = () => {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`, // Include token if needed
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                     },
                 });
 
@@ -28,8 +28,7 @@ const Profile = () => {
 
                 if (response.ok) {
                     alert(data.message);
-                    // Optionally, redirect the user or log them out after deletion
-                    logout(); // Call logout to clear session
+                    logout();
                 } else {
                     alert(data.message);
                 }
@@ -40,7 +39,6 @@ const Profile = () => {
         }
     };
 
-    // Check if the user is logged in
     if (!authenticatedUser) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-200 to-gray-400">
@@ -54,11 +52,11 @@ const Profile = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-gray-200 to-gray-400 flex items-center justify-center">
-            <div className="max-w-5xl w-full bg-white rounded-2xl shadow-2xl p-10">
+        <div className="min-h-screen bg-gradient-to-r from-gray-200 to-gray-400 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl p-10">
                 {/* Profile Header */}
                 <div className="mb-8 text-center">
-                    <h2 className="text-5xl font-extrabold text-gray-800">
+                    <h2 className="text-4xl font-extrabold text-gray-800">
                         Welcome, {authenticatedUser.username}
                     </h2>
                     <p className="text-gray-600 text-lg mt-3">
@@ -77,16 +75,16 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Buttons */}
+                {/* Action Buttons */}
                 <div className="flex justify-center space-x-6">
                     <button
-                        className="flex items-center bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105"
+                        className="flex items-center bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105 hover:bg-indigo-700"
                         onClick={handleLogout}
                     >
                         <FaSignOutAlt className="mr-2" /> Logout
                     </button>
                     <button
-                        className="flex items-center bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105"
+                        className="flex items-center bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105 hover:bg-red-600"
                         onClick={handleDeleteAccount}
                     >
                         <RiDeleteBin6Line className="mr-2" /> Delete Account
