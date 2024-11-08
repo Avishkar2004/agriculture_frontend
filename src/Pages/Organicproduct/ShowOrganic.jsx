@@ -24,7 +24,7 @@ const OrganicproductData = ({ OrganicproductData }) => {
     const isAuthenticated = document.cookie.includes("authToken")
     if (!isAuthenticated) {
       alert("You must be logged in to buy this product")
-      history.push("/signup")
+      history.push("/signin")
     } else {
       history.push("/BuyNow", { productData })
     }
@@ -126,8 +126,13 @@ const OrganicproductData = ({ OrganicproductData }) => {
   };
 
   useEffect(() => {
-    handleSizeChange('50 ml');
+    if (!productData.reviews) {
+      // Only call handleSizeChange when productData is initialized
+      handleSizeChange("50 ml");
+    }
   }, [productData]);
+
+
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">

@@ -35,7 +35,7 @@ const PGRShowProduct = () => {
     const isAuthenticated = document.cookie.includes("authToken")
     if (!isAuthenticated) {
       alert("You must be logged in to buy this product")
-      history.push("/signup")
+      history.push("/signin")
     } else {
       history.push("/BuyNow", { productData })
     }
@@ -91,7 +91,7 @@ const PGRShowProduct = () => {
         setCartData(responseData.cart)
       } else if (response.status === 401) {
         alert('You must be logged in to add items to the cart.');
-        history.push("/signup")
+        history.push("/signin")
       } else {
         console.error('Failed to add item to cart');
       }
@@ -126,12 +126,12 @@ const PGRShowProduct = () => {
     }
   };
 
-
   useEffect(() => {
-    handleSizeChange("50 ml")
+    if (!productData.reviews) {
+      // Only call handleSizeChange when productData is initialized
+      handleSizeChange("50 ml");
+    }
   }, [productData]);
-
-
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">

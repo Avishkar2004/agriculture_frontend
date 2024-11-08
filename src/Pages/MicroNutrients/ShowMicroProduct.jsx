@@ -30,7 +30,7 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
         const isAuthenticated = document.cookie.includes("authToken")
         if (!isAuthenticated) {
             alert("You must be logged in to buy this product")
-            history.push("/signup")
+            history.push("/signin")
         } else {
             history.push("/BuyNow", { productData })
         }
@@ -107,7 +107,7 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
                         state: { micronutrientProduct: nextProduct }
                     })
                     setProductData(nextProduct);
-                    selectedSize("50 ml")
+                    setSelectedSize("50 ml")
                 }
                 else {
                     console.error("No more product available")
@@ -123,11 +123,10 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
 
 
     useEffect(() => {
-        handleSizeChange('50 ml');
-    }, [productData]);
-
-    useEffect(() => {
-        console.log("Product data updated", productData);
+        if (!productData.reviews) {
+            // Only call handleSizeChange when productData is initialized
+            handleSizeChange("50 ml");
+        }
     }, [productData]);
 
     return (

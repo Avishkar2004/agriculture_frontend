@@ -22,10 +22,11 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
 
     const handleBuyNow = (e) => {
         e.preventDefault()
-        const isAuthenticated = document.cookie.includes("authToken")
+        const isAuthenticated = document.cookie.includes("authenticatedUser")
+        console.log(isAuthenticated)
         if (!isAuthenticated) {
             alert("You must be logged in to buy this product")
-            history.push("/signup")
+            history.push("/signin")
         } else {
             history.push("/BuyNow", { productData })
         }
@@ -115,7 +116,7 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
                         state: { productData: nextProduct }
                     })
                     setProductData(nextProduct)
-                    selectedSize('50 ml')
+                    setSelectedSize('50 ml')
                 } else {
                     console.error("No more product available")
                 }
@@ -129,9 +130,11 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
     };
 
     useEffect(() => {
-        handleSizeChange('50 ml');
-    }, [productData]);
-
+        if (!productData.reviews) {
+          // Only call handleSizeChange when productData is initialized
+          handleSizeChange("50 ml");
+        }
+      }, [productData]);
 
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col">

@@ -25,7 +25,7 @@ const ShowFungicides = ({ productDataProp }) => {
     const isAuthenticated = document.cookie.includes("authToken")
     if (!isAuthenticated) {
       alert("You must be logged in to buy this product")
-      history.push("/signup")
+      history.push("/signin")
     } else {
       history.push("/BuyNow", { productData })
     }
@@ -122,9 +122,12 @@ const ShowFungicides = ({ productDataProp }) => {
     }
   };
 
+ 
   useEffect(() => {
-    // Select price by default for 50 ml
-    handleSizeChange('50 ml');
+    if (!productData.reviews) {
+      // Only call handleSizeChange when productData is initialized
+      handleSizeChange("50 ml");
+    }
   }, [productData]);
 
 
