@@ -29,7 +29,6 @@ const Header = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
       setCartItemCount(data.length);
     } catch (error) {
@@ -108,6 +107,12 @@ const Header = () => {
               onClick={closeDropdown}
             >
               Profile
+            </Link>
+            <Link
+              to="/orders"
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+            >
+              Orders
             </Link>
             <button
               onClick={ProfilehandleLogOut}

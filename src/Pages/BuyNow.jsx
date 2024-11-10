@@ -4,10 +4,9 @@ import { useHistory } from 'react-router-dom';
 import OrderConfirmModal from './OrderConfirmModal';
 import { useAuth } from "../actions/authContext"
 
-
 const BuyNow = () => {
-  const history = useHistory()
-  const { authenticatedUser } = useAuth()
+  const history = useHistory();
+  const { authenticatedUser } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('avishkar@gmail.com');
@@ -19,9 +18,9 @@ const BuyNow = () => {
   const [country, setCountry] = useState('');
   const [creditCard, setCreditCard] = useState('478399229');
   const [upiId, setUpiId] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('creditCard'); // default option is credit card
+  const [paymentMethod, setPaymentMethod] = useState('creditCard');
   const [bankName, setBankName] = useState('');
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [showModal, setShowModal] = useState(false);
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);
@@ -34,8 +33,56 @@ const BuyNow = () => {
     setProductData(initialProductData);
   }, [initialProductData]);
 
+  const validateForm = () => {
+    if (!name || !email || !phoneNumber || !address || !city || !state || !zipCode || !country) {
+      alert("Please fill in all the fields.");
+      return false;
+    }
+
+    // Email validation
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      return false;
+    }
+
+    // Phone number validation
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      alert("Please enter a valid 10-digit phone number.");
+      return false;
+    }
+
+    // Zip code validation (can be adjusted based on location format)
+    const zipRegex = /^[0-9]{5,6}$/;
+    if (!zipRegex.test(zipCode)) {
+      alert("Please enter a valid zip code.");
+      return false;
+    }
+
+    // Payment method specific validations
+    if (paymentMethod === 'creditCard' && !creditCard) {
+      alert("Please enter your credit card details.");
+      return false;
+    }
+
+    if (paymentMethod === 'upi' && !upiId) {
+      alert("Please enter your UPI ID.");
+      return false;
+    }
+
+    if (paymentMethod === 'netBanking' && !bankName) {
+      alert("Please enter your bank name.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     const orderData = {
       productName: productData.name,
@@ -59,6 +106,7 @@ const BuyNow = () => {
     try {
       const response = await fetch('http://localhost:8080/api/orders', {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
         },
@@ -66,13 +114,12 @@ const BuyNow = () => {
       });
 
       if (response.ok) {
-        // Payment success, Show confirmation modal
         setTimeout(() => {
-          setShowModal(true)
+          setShowModal(true);
         }, 1000);
       } else if (response.status === 401) {
-        alert("You must be logged in to buy item")
-        history.push("/signup")
+        alert("You must be logged in to buy item");
+        history.push("/signup");
       } else {
         throw new Error('Failed to place order');
       }
@@ -82,10 +129,9 @@ const BuyNow = () => {
     }
   };
 
-
   const closeModal = () => {
     setShowModal(false);
-    history.push('/')
+    history.push('/');
   };
 
   return (

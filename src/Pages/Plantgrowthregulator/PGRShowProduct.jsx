@@ -1,4 +1,3 @@
-// this is for PGR Product
 import EmailIcon from "@mui/icons-material/Email";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import PinterestIcon from "@mui/icons-material/Pinterest";
@@ -9,8 +8,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom';
 import Description from '../Description';
+import { useAuth } from '../../actions/authContext';
 
 const PGRShowProduct = () => {
+  const { getAuthToken } = useAuth();
   const history = useHistory();
   const location = useLocation();
   const initialproductData = (location.state && location.state.PGRProduct) || {};
@@ -19,7 +20,30 @@ const PGRShowProduct = () => {
   const [cartData, setCartData] = useState(null);
   const [selectedSize, setSelectedSize] = useState('50 ml');
 
+  const fetchNextProduct = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/plantgrowthregulator/next/${productData.id}`);
+      if (response.ok) {
+        const nextProduct = await response.json();
 
+        if (nextProduct) {
+          // Update the state with the next product's data
+          history.push({
+            pathname: `/plantgrowthregulator/${nextProduct.name}`,
+            state: { PGRProduct: nextProduct }
+          });
+          setProductData(nextProduct);
+          setSelectedSize("50 ml"); // Reset the size to default
+        } else {
+          console.error("No more products available");
+        }
+      } else {
+        console.error('Failed to fetch the next product');
+      }
+    } catch (error) {
+      console.error('Error fetching next product:', error);
+    }
+  };
   const handleIncrement = () => {
     setCount(count + 1);
   };
@@ -29,17 +53,6 @@ const PGRShowProduct = () => {
       setCount(count - 1);
     }
   };
-
-  const handleBuyNow = (e) => {
-    e.preventDefault()
-    const isAuthenticated = document.cookie.includes("authToken")
-    if (!isAuthenticated) {
-      alert("You must be logged in to buy this product")
-      history.push("/signin")
-    } else {
-      history.push("/BuyNow", { productData })
-    }
-  }
 
   const handleSizeChange = (newSize) => {
     setSelectedSize(newSize);
@@ -100,36 +113,24 @@ const PGRShowProduct = () => {
     }
   }
 
-
-  const fetchNextProduct = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/plantgrowthregulator/next/${productData.id}`);
-      if (response.ok) {
-        const nextProduct = await response.json();
-
-        if (nextProduct) {
-          // Update the state with the next product's data
-          history.push({
-            pathname: `/plantgrowthregulator/${nextProduct.name}`,
-            state: { PGRProduct: nextProduct }
-          });
-          setProductData(nextProduct);
-          setSelectedSize("50 ml"); // Reset the size to default
-        } else {
-          console.error("No more products available");
-        }
-      } else {
-        console.error('Failed to fetch the next product');
-      }
-    } catch (error) {
-      console.error('Error fetching next product:', error);
+  const handleBuyNow = (e) => {
+    e.preventDefault();
+    const token = getAuthToken();
+    if (!token) {
+      alert("You must be logged in to buy this product");
+      history.push("/signin");
+    } else {
+      history.push("/BuyNow", { productData });
     }
   };
+
+
 
   useEffect(() => {
     if (!productData.reviews) {
       // Only call handleSizeChange when productData is initialized
       handleSizeChange("50 ml");
+
     }
   }, [productData]);
 
@@ -250,9 +251,9 @@ const PGRShowProduct = () => {
             </div>
           </div>
           <div className="mt-6 flex gap-6">
-            <p className="text-2xl font-semibold space-x-9 ">
+            <div className="text-2xl font-semibold space-x-9 ">
               Quantity :
-              <p className="text-4xl space-x-12 text-red-900 ml-32 overflow-hidden -mt-9 item-center border-[2px] border-t-2 border-b-2">
+              <div className="text-4xl space-x-12 text-red-900 ml-32 overflow-hidden -mt-9 item-center border-[2px] border-t-2 border-b-2">
                 <button className="text-gray-400 hover:text-black border-r-2 ml-5 items-center">
                   <button className="mr-5" onClick={handleIncrement}>
                     +
@@ -271,12 +272,13 @@ const PGRShowProduct = () => {
                     </button>
                   </button>
                 </button>
-              </p>
-            </p>
+              </div>
+            </div>
+
             <div className="flex justify-center content-center min-h-12">
-              <button onClick={handleBuyNow} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 ml-12 -mt-2 rounded">
+              <Link to="/#" onClick={handleBuyNow} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 ml-12 -mt-2 rounded">
                 Buy Now
-              </button>
+              </Link>
               <button onClick={handleAddToCart} className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 ml-4 -mt-2 rounded hover:cursor-pointer">
                 Add To Cart
               </button>

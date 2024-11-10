@@ -8,8 +8,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom';
 import Description from '../Description';
+import { useAuth } from "../../actions/authContext";
 
 const OrganicproductData = ({ OrganicproductData }) => {
+  const { getAuthToken } = useAuth()
   const history = useHistory();
   const location = useLocation();
   const initialProductData = (location.state && location.state.OrganicproductData) || {};
@@ -18,17 +20,29 @@ const OrganicproductData = ({ OrganicproductData }) => {
   const [cartData, setCartData] = useState(null);
   const [selectedSize, setSelectedSize] = useState('50 ml');
 
+  const fetchNextProduct = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/organicproduct/next/${productData.id}`);
 
-  const handleBuyNow = (e) => {
-    e.preventDefault()
-    const isAuthenticated = document.cookie.includes("authToken")
-    if (!isAuthenticated) {
-      alert("You must be logged in to buy this product")
-      history.push("/signin")
-    } else {
-      history.push("/BuyNow", { productData })
+      if (response.ok) {
+        const nextProduct = await response.json()
+        if (nextProduct) {
+          history.push({
+            pathname: `/organicproduct/${nextProduct.name}`,
+            state: { OrganicproductData: nextProduct }
+          });
+          setProductData(nextProduct);
+          setSelectedSize("50 ml"); // Reset the size to default
+        } else {
+          console.error("No more product available ")
+        }
+      } else {
+        console.error("Failed to fetch next product")
+      }
+    } catch (error) {
+      console.error('Error fetching next product:', error);
     }
-  }
+  };
 
   const handleIncrement = () => {
     setCount(count + 1);
@@ -39,7 +53,6 @@ const OrganicproductData = ({ OrganicproductData }) => {
       setCount(count - 1);
     }
   };
-
 
   const handleSizeChange = (newSize) => {
     setSelectedSize(newSize);
@@ -100,31 +113,16 @@ const OrganicproductData = ({ OrganicproductData }) => {
     }
   }
 
-
-  const fetchNextProduct = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/organicproduct/next/${productData.id}`);
-
-      if (response.ok) {
-        const nextProduct = await response.json()
-        if (nextProduct) {
-          history.push({
-            pathname: `/organicproduct/${nextProduct.name}`,
-            state: { OrganicproductData: nextProduct }
-          });
-          setProductData(nextProduct);
-          setSelectedSize("50 ml"); // Reset the size to default
-        } else {
-          console.error("No more product available ")
-        }
-      } else {
-        console.error("Failed to fetch next product")
-      }
-    } catch (error) {
-      console.error('Error fetching next product:', error);
+  const handleBuyNow = (e) => {
+    e.preventDefault()
+    const isAuthenticated = getAuthToken()
+    if (!isAuthenticated) {
+      alert("You must be logged in to buy this product")
+      history.push("/signin")
+    } else {
+      history.push("/BuyNow", { productData })
     }
-  };
-
+  }
   useEffect(() => {
     if (!productData.reviews) {
       // Only call handleSizeChange when productData is initialized

@@ -7,8 +7,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import Description from '../Description';
+import { useAuth } from '../../actions/authContext';
 
 const ShowMicroProduct = ({ MicroDataProp = {} }) => {
+    const { getAuthToken } = useAuth()
     const history = useHistory();
     const location = useLocation();
     const initialMicroShowProduct = (location.state && location.state.micronutrientProduct) || {};
@@ -17,6 +19,32 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
     const [cartData, setCartData] = useState(null);
     const [selectedSize, setSelectedSize] = useState("50 ml");
 
+    const fetchNextProduct = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/micro_nutrients/next/${productData.id}`);
+
+            if (response.ok) {
+                const nextProduct = await response.json()
+                if (nextProduct) {
+                    history.push({
+                        pathname: `/micro-nutrients/${nextProduct.name}`,
+                        state: { micronutrientProduct: nextProduct }
+                    })
+                    setProductData(nextProduct);
+                    setSelectedSize("50 ml")
+                }
+                else {
+                    console.error("No more product available")
+                }
+            } else {
+                console.error("Failed to fetch next product")
+            }
+
+        } catch (error) {
+            console.error('Error fetching next product:', error);
+        }
+    };
+
     const handleIncrement = () => {
         setCount(count + 1);
     };
@@ -24,17 +52,6 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
     const handleDecrement = () => {
         setCount(count - 1 > 0 ? count - 1 : 1); // Ensure count doesn't go below 1
     };
-
-    const handleBuyNow = (e) => {
-        e.preventDefault()
-        const isAuthenticated = document.cookie.includes("authToken")
-        if (!isAuthenticated) {
-            alert("You must be logged in to buy this product")
-            history.push("/signin")
-        } else {
-            history.push("/BuyNow", { productData })
-        }
-    }
 
     const handleSizeChange = (newSize) => {
         setSelectedSize(newSize);
@@ -95,32 +112,16 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
         }
     }
 
-    const fetchNextProduct = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/micro_nutrients/next/${productData.id}`);
-
-            if (response.ok) {
-                const nextProduct = await response.json()
-                if (nextProduct) {
-                    history.push({
-                        pathname: `/micro-nutrients/${nextProduct.name}`,
-                        state: { micronutrientProduct: nextProduct }
-                    })
-                    setProductData(nextProduct);
-                    setSelectedSize("50 ml")
-                }
-                else {
-                    console.error("No more product available")
-                }
-            } else {
-                console.error("Failed to fetch next product")
-            }
-
-        } catch (error) {
-            console.error('Error fetching next product:', error);
+    const handleBuyNow = (e) => {
+        e.preventDefault()
+        const isAuthenticated = getAuthToken()
+        if (!isAuthenticated) {
+            alert("You must be logged in to buy this product")
+            history.push("/signin")
+        } else {
+            history.push("/BuyNow", { productData })
         }
-    };
-
+    }
 
     useEffect(() => {
         if (!productData.reviews) {

@@ -1,32 +1,24 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-
 const AuthContext = createContext();
 
-// Creating a provider component for managing authentication state
 export const AuthProvider = ({ children }) => {
-  // Initializing state to hold information about the currently authenticated user
-  const [authenticatedUser, setAuthenticatedUser] = useState(null);
+  const [authenticatedUser, setAuthenticatedUser] = useState(() => {
+    const storedUser = localStorage.getItem("authenticatedUser");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
-  // Function to handle user login
   const login = (user) => {
-    // Ensure to store only non-sensitive user information
-    const { id, username, token,  } = user;
-    const safeUser = { id, username, token, }; // Include createdAt
-    // Updating the authenticatedUser state with the provided user information
-    setAuthenticatedUser(user);
-    localStorage.setItem("authenticatedUser", JSON.stringify(safeUser));
+    setAuthenticatedUser(user); // Directly set user with token in context
+    localStorage.setItem("authenticatedUser", JSON.stringify(user)); // Store full user
   };
 
   // Function to handle user logout
   const logout = () => {
-    // Clearing the authenticatedUser state (logging out)
     setAuthenticatedUser(null);
     localStorage.removeItem("authenticatedUser");
   };
 
-  // Function to retrieve the authentication token of the authenticated user
   const getAuthToken = () => {
-    // Returning the authentication token if a user is authenticated, otherwise returning null
     return authenticatedUser ? authenticatedUser.token : null;
   };
 
@@ -36,8 +28,9 @@ export const AuthProvider = ({ children }) => {
       setAuthenticatedUser(JSON.parse(storedUser));
     }
   }, []);
+  useEffect(() => {
+  }, [authenticatedUser]);
 
-  // Rendering the AuthContext.Provider with the provided children and passing the authentication context value
   return (
     <AuthContext.Provider
       value={{ authenticatedUser, login, logout, getAuthToken }}
@@ -47,16 +40,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook for accessing the authentication context and its values
 export const useAuth = () => {
-  // Accessing the authentication context using the useContext hook
   const context = useContext(AuthContext);
-
-  // If the context is not found (meaning useAuth is not used within an AuthProvider), throw an error
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-
-  // Returning the authentication context, providing access to authentication state and methods
   return context;
 };

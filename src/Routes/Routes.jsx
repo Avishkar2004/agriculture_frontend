@@ -30,6 +30,7 @@ import MicronutrientUI from "../Pages/UI/MicronutrientUI";
 import Plantgrowthregulator from "../Pages/UI/Plantgrowthregulator";
 import CheckOut from "../Pages/CheckOut";
 import OrderCompleted from "../Pages/OrderCompleted";
+import Orders from "../Pages/Orders";
 
 const AppRoutes = () => {
   return (
@@ -38,6 +39,7 @@ const AppRoutes = () => {
 
       <Switch>
         <Route path="/profile" component={Profile} />
+        <Route path="/orders" component={Orders} />
         <Route path="/ForgotPasswordAndReset" component={ForgotPasswordAndReset} />
         {/* For Become a seller */}
 
