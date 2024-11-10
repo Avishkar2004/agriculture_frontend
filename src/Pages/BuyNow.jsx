@@ -28,10 +28,9 @@ const BuyNow = () => {
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
   };
+  const totalPrice = productData.totalPrice; // This will be productData.price * quantity
 
-  useEffect(() => {
-    setProductData(initialProductData);
-  }, [initialProductData]);
+
 
   const validateForm = () => {
     if (!name || !email || !phoneNumber || !address || !city || !state || !zipCode || !country) {
@@ -134,6 +133,11 @@ const BuyNow = () => {
     history.push('/');
   };
 
+  useEffect(() => {
+    setProductData(initialProductData);
+  }, [initialProductData]);
+
+
   return (
     <div className="container mx-auto my-8">
       <div className="flex">
@@ -145,7 +149,7 @@ const BuyNow = () => {
             </h1>
             <h2 className="text-2xl font-bold mb-2">{productData.name}</h2>
             <p className="mb-2">Product Name: {productData.name}</p>
-            <p className="mb-4">Price: ₹{productData.salePrice}</p>
+            <p className="mb-4">Price: ₹{productData.totalPrice}</p>
             <img
               src={`data:image/avif;base64, ${productData.image}`}
               alt={productData.name}
