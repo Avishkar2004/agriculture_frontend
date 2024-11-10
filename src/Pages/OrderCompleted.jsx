@@ -4,9 +4,10 @@ import { useLocation, Link } from 'react-router-dom';
 const OrderCompleted = () => {
     const location = useLocation();
     const [orderId, setOrderId] = useState('');
+    const [orderStatus, setOrderStatus] = useState(null); // State for tracking order status
+    const [loading, setLoading] = useState(true); // For loading state
 
     const cartData = location.state?.cartData || [];
-
 
     const calculateTotal = () => {
         return cartData.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
@@ -21,10 +22,32 @@ const OrderCompleted = () => {
         return orderId;
     };
 
+    // Function to fetch order status
+    const fetchOrderStatus = async (orderId) => {
+        setLoading(true);
+        try {
+            const response = await fetch(`http://localhost:8080/api/orders/${orderId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch order status');
+            }
+            const data = await response.json();
+            setOrderStatus(data.status); // Assuming the response contains a 'status' field
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         setOrderId(generateOrderId());
     }, []);
 
+    useEffect(() => {
+        if (orderId) {
+            fetchOrderStatus(orderId);
+        }
+    }, [orderId]);
 
     return (
         <div className="container mx-auto my-8 max-w-4xl px-6">
@@ -58,12 +81,26 @@ const OrderCompleted = () => {
                 </div>
             </div>
 
+            {/* Order Status Section */}
+            <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">Track Your Order</h3>
+                {loading ? (
+                    <p className="text-gray-600">Loading order status...</p>
+                ) : orderStatus ? (
+                    <p className="text-lg text-gray-600">
+                        <span className="font-semibold">Order Status:</span> {orderStatus}
+                    </p>
+                ) : (
+                    <p className="text-lg text-gray-600">Unable to retrieve order status.</p>
+                )}
+            </div>
+
             <div className="mt-8 text-center space-y-4">
                 <p className="text-lg text-gray-600 mb-4">You can track your order and view its status in your account.</p>
-                <Link to="/" className="bg-indigo-500 text-white px-7 py-3 rounded-lg hover:bg-indigo-600 shadow-md">
+                <Link to="#" className="bg-indigo-500 text-white px-7 py-3 rounded-lg hover:bg-indigo-600 shadow-md">
                     Go to Homepage
                 </Link>
-                <Link to="/shop" className="bg-blue-500 text-white px-7 py-3 rounded-lg hover:bg-blue-600 shadow-md ml-4">
+                <Link to="#" className="bg-blue-500 text-white px-7 py-3 rounded-lg hover:bg-blue-600 shadow-md ml-4">
                     Continue Shopping
                 </Link>
             </div>

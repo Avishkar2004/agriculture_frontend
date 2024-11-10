@@ -54,7 +54,7 @@ const Orders = () => {
                                     <td className="px-6 py-4">{order.product_price}</td>
                                     <td className="px-6 py-4">{order.address}</td>
                                     <td className="px-6 py-4">{order.payment_method}</td>
-                                    <td className="px-6 py-4">{order.created_at}</td>
+                                    <td className="px-6 py-4">{order.order_status}</td>
                                 </tr>
                             ))}
                         </tbody>
