@@ -53,7 +53,7 @@ const CreateAcc = () => {
 
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:8080/users", {
+            const response = await fetch("/users", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 credentials: "include",

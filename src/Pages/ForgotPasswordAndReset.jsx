@@ -28,7 +28,7 @@ const ForgotPasswordAndReset = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/forgotpassword', {
+            const response = await fetch('/forgotpassword', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
@@ -71,7 +71,7 @@ const ForgotPasswordAndReset = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/resetpassword', {
+            const response = await fetch('/resetpassword', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

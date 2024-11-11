@@ -9,7 +9,7 @@ const Orders = () => {
         // Fetch orders from the backend using fetch API
         const fetchOrders = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/placedorders", { credentials: "include" });
+                const response = await fetch("/api/placedorders", { credentials: "include" });
                 if (!response.ok) {
                     throw new Error("Failed to fetch orders");
                 }

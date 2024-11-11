@@ -17,7 +17,7 @@ const Fungicides = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/fungicides");
+        const response = await fetch("/fungicides");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

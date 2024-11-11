@@ -12,7 +12,7 @@ const Micronutrients = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:8080/micro-nutrients");
+                const response = await fetch("/micro-nutrients");
                 if (!response.ok) {
                     throw new Error("Failed to fetch micro-nutrients data");
                 }

@@ -22,7 +22,7 @@ const OrganicproductData = ({ OrganicproductData }) => {
 
   const fetchNextProduct = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/organicproduct/next/${productData.id}`);
+      const response = await fetch(`/organicproduct/next/${productData.id}`);
 
       if (response.ok) {
         const nextProduct = await response.json()
@@ -82,7 +82,7 @@ const OrganicproductData = ({ OrganicproductData }) => {
     try {
       const { id, name, price, image, quantity, productType } = productData
       // Ensure image is base64-encoded if available
-      const response = await fetch('http://localhost:8080/cart', {
+      const response = await fetch('/cart', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

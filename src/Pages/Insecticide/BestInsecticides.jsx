@@ -12,7 +12,7 @@ const BestInsecticides = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/insecticide");
+        const response = await fetch("/insecticide");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

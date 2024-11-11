@@ -27,7 +27,7 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/insecticide/next/${productData.id}`);
+            const response = await fetch(`/insecticide/next/${productData.id}`);
 
             if (response.ok) {
                 const nextProduct = await response.json()
@@ -86,7 +86,7 @@ const ShowInsecticide = ({ InsecticideProductData }) => {
         try {
             const { id, name, price, image, quantity, productType } = productData
             // Ensure image is base64-encoded if available
-            const response = await fetch('http://localhost:8080/cart', {
+            const response = await fetch('/cart', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

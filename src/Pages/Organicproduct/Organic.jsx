@@ -12,7 +12,7 @@ const Organic = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/organicproduct");
+        const response = await fetch("/organicproduct");
         if (!response.ok) {
           throw new Error("Failed to fetch organicproduct data");
         }

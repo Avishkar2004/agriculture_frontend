@@ -26,7 +26,7 @@ const OrderCompleted = () => {
     const fetchOrderStatus = async (orderId) => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:8080/api/orders/${orderId}`);
+            const response = await fetch(`/api/orders/${orderId}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch order status');
             }

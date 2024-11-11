@@ -22,7 +22,7 @@ const PGRShowProduct = () => {
 
   const fetchNextProduct = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/plantgrowthregulator/next/${productData.id}`);
+      const response = await fetch(`/plantgrowthregulator/next/${productData.id}`);
       if (response.ok) {
         const nextProduct = await response.json();
 
@@ -82,7 +82,7 @@ const PGRShowProduct = () => {
     try {
       const { id, name, price, image, quantity, productType } = productData
 
-      const response = await fetch('http://localhost:8080/cart', {
+      const response = await fetch('/cart', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

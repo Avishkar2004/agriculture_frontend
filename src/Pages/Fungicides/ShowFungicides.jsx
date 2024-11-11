@@ -23,7 +23,7 @@ const ShowFungicides = ({ productDataProp }) => {
 
   const fetchNextProduct = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/fungicides/next/${productData.id}`);
+      const response = await fetch(`/fungicides/next/${productData.id}`);
       if (response.ok) {
         const nextProduct = await response.json()
         if (nextProduct) {
@@ -80,7 +80,7 @@ const ShowFungicides = ({ productDataProp }) => {
     try {
       const { id, name, price, image, quantity, productType } = productData
       // Ensure image is base64-encoded if available
-      const response = await fetch('http://localhost:8080/cart', {
+      const response = await fetch('/cart', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

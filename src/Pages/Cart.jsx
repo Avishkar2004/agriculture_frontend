@@ -8,7 +8,7 @@ const Cart = () => {
 
     const fetchCartData = async () => {
         try {
-            const response = await fetch("http://localhost:8080/cart", {
+            const response = await fetch("/cart", {
                 credentials: "include"
             });
 
@@ -28,7 +28,7 @@ const Cart = () => {
 
     const handleRemoveFromCart = async (itemId) => {
         try {
-            const response = await fetch(`http://localhost:8080/cart/${itemId}`, {
+            const response = await fetch(`/cart/${itemId}`, {
                 method: "DELETE",
                 credentials: "include"
             });

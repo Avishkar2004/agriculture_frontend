@@ -16,7 +16,7 @@ const Profile = () => {
         const confirmation = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
         if (confirmation) {
             try {
-                const response = await fetch(`http://localhost:8080/api/users/${authenticatedUser.id}`, {
+                const response = await fetch(`/api/users/${authenticatedUser.id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',

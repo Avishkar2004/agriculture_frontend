@@ -24,7 +24,7 @@ const Header = () => {
 
   const fetchCartData = async () => {
     try {
-      const response = await fetch('http://localhost:8080/cart', {
+      const response = await fetch('/cart', {
         method: 'GET',
         credentials: 'include',
       });
@@ -42,7 +42,7 @@ const Header = () => {
   const handleSearch = async (query) => {
     if (query.length > 2) {
       try {
-        const response = await fetch(`http://localhost:8080/search?q=${query}`, {
+        const response = await fetch(`/search?q=${query}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -69,7 +69,7 @@ const Header = () => {
 
   const ProfilehandleLogOut = async () => {
     try {
-      const response = await fetch('http://localhost:8080/logout', {
+      const response = await fetch('/logout', {
         method: 'POST',
         credentials: 'include',
       });

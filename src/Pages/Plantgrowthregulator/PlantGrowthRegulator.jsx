@@ -12,7 +12,7 @@ const PlantGrowthRegulator = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/plantgrowthregulator");
+        const response = await fetch("/plantgrowthregulator");
         if (!response.ok) {
           throw new Error("Failed to fetch Plantgrowthregulator data");
         }
