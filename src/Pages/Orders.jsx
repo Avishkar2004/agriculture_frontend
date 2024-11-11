@@ -51,7 +51,7 @@ const Orders = () => {
                                 <tr key={order.id} className="border-t hover:bg-gray-100">
                                     <td className="px-6 py-4">{order.product_name}</td>
                                     <td className="px-6 py-4">{order.quantity}</td>
-                                    <td className="px-6 py-4">{order.product_price}</td>
+                                    <td className="px-6 py-4">{order.price}</td>
                                     <td className="px-6 py-4">{order.address}</td>
                                     <td className="px-6 py-4">{order.payment_method}</td>
                                     <td className="px-6 py-4">{order.order_status}</td>

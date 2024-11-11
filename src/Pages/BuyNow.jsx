@@ -100,6 +100,7 @@ const BuyNow = () => {
       creditCard: creditCard,
       upiId: upiId,
       bankName: bankName,
+      price: productData.totalPrice
     };
 
     try {
