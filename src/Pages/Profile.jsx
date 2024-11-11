@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../actions/authContext';
 import Cart from './Cart';
 import { FaUserEdit, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
@@ -7,13 +7,19 @@ import { Link } from 'react-router-dom';
 
 const Profile = () => {
     const { authenticatedUser, logout } = useAuth();
+    const [isCartEmpty, setIsCartEmpty] = useState(true);
 
     const handleLogout = () => {
         logout();
     };
 
     const handleDeleteAccount = async () => {
-        const confirmation = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+        if (!isCartEmpty) {
+            alert("Please empty your cart before deleting your account.");
+            return;
+        }
+
+        const confirmation = window.confirm("Are you sure you want to delete your account?");
         if (confirmation) {
             try {
                 const response = await fetch(`/api/users/${authenticatedUser.id}`, {
@@ -71,7 +77,7 @@ const Profile = () => {
                         Shopping Cart
                     </h3>
                     <div className="bg-gray-100 p-6 rounded-xl shadow-inner">
-                        <Cart />
+                        <Cart onCartStatusChange={setIsCartEmpty} /> {/* Update cart status */}
                     </div>
                 </div>
 
