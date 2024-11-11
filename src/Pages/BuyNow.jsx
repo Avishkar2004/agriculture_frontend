@@ -28,8 +28,8 @@ const BuyNow = () => {
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
   };
-  const totalPrice = productData.totalPrice; // This will be productData.price * quantity
 
+  const totalPrice = productData.totalPrice; // This will be productData.price * quantity
 
 
   const validateForm = () => {

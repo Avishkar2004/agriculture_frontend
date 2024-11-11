@@ -100,15 +100,25 @@ const Cart = () => {
 
 const CartItem = ({ item, onDelete }) => (
     <li className="flex flex-col md:flex-row items-center bg-white p-4 rounded-lg shadow-md border border-gray-200">
-        <div className="w-full md:w-24 h-24 flex-shrink-0">
-            <img
-                src={`data:image/avif;base64,${item.image}`}
-                alt={item.name}
-                className="w-full h-full object-cover rounded-lg"
-            />
-        </div>
+        <Link to={{
+            pathname: `/product/${item.name}`,
+            state: { product: item }
+        }}>
+            <div className="w-full md:w-24 h-24 flex-shrink-0">
+                <img
+                    src={`data:image/avif;base64,${item.image}`}
+                    alt={item.name}
+                    className="w-full h-full object-cover rounded-lg"
+                />
+            </div>
+        </Link>
         <div className="flex-1 mt-4 md:mt-0 md:ml-4">
-            <p className="text-lg font-semibold text-gray-800">{item.name}</p>
+            <Link to={{
+                pathname: `/product/${item.name}`,
+                state: { product: item }
+            }} className="text-lg font-semibold to-gray-800">
+                <p className="text-lg font-semibold text-gray-800">{item.name}</p>
+            </Link>
             <p className="text-gray-600">Price: ${item.price}</p>
             <p className="text-gray-600">Quantity: {item.quantity}</p>
         </div>

@@ -31,6 +31,7 @@ import Plantgrowthregulator from "../Pages/UI/Plantgrowthregulator";
 import CheckOut from "../Pages/CheckOut";
 import OrderCompleted from "../Pages/OrderCompleted";
 import Orders from "../Pages/Orders";
+import ProductDetails from "../Pages/ProductDetails";
 
 const AppRoutes = () => {
   return (
@@ -72,7 +73,7 @@ const AppRoutes = () => {
         {/* Route for SignUp */}
         <Route path="/Signup" component={CreateAcc} />
         <Route path="/categories" component={Categories} />
-
+        <Route path="/product/:id/" component={ProductDetails} />
         <Route path="/order-completed" component={OrderCompleted} />
 
       </Switch>
