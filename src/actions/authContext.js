@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode"; // Adjusted import
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -7,28 +9,45 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  const login = (user) => {
-    setAuthenticatedUser(user); // Directly set user with token in context
-    localStorage.setItem("authenticatedUser", JSON.stringify(user)); // Store full user
+  const isTokenExpired = (token) => {
+    try {
+      const decodedToken = jwtDecode(token);
+      return decodedToken.exp * 1000 < Date.now();
+    } catch {
+      return true; // Treat invalid token as expired
+    }
   };
 
-  // Function to handle user logout
+  const login = (user) => {
+    setAuthenticatedUser(user);
+    localStorage.setItem("authenticatedUser", JSON.stringify(user));
+  };
+
   const logout = () => {
     setAuthenticatedUser(null);
     localStorage.removeItem("authenticatedUser");
   };
 
-  const getAuthToken = () => {
-    return authenticatedUser ? authenticatedUser.token : null;
-  };
+  const getAuthToken = () =>
+    authenticatedUser ? authenticatedUser.token : null;
 
+  // Check token expiration when component mounts
   useEffect(() => {
-    const storedUser = localStorage.getItem("authenticatedUser");
-    if (storedUser) {
-      setAuthenticatedUser(JSON.parse(storedUser));
+    if (authenticatedUser && isTokenExpired(authenticatedUser.token)) {
+      logout();
     }
   }, []);
+
+  // Periodic check for token expiration
   useEffect(() => {
+    const checkInterval = setInterval(() => {
+      if (authenticatedUser && isTokenExpired(authenticatedUser.token)) {
+        logout();
+        window.location.reload();
+      }
+    }, 10000); // Check every 10 seconds
+
+    return () => clearInterval(checkInterval);
   }, [authenticatedUser]);
 
   return (
