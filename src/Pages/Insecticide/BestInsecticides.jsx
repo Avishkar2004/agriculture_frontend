@@ -63,32 +63,36 @@ const BestInsecticides = () => {
             </p>
           </div>
           <hr className="mt-5 border-[1px]" />
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-12 ml-3 mt-5 font-secondary justify-center sm:gap-24">
-            <p className="text-center sm:text-left">Showing 1 - {insecticideData.length} of {insecticideData.length} products</p>
-            <p className="flex items-center justify-center sm:justify-start">
+          <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-6 md:space-x-12 lg:space-x-16 xl:space-x-24 ml-3 mt-5 font-secondary justify-center text-md">
+            <p className="text-center sm:text-left">
+              Showing 1 - {insecticideData.length} of {insecticideData.length} products
+            </p>
+
+            {/* Display dropdown */}
+            <div className="flex items-center justify-center sm:justify-start">
               <label>
                 Display:
-                <select name="Display" className="ml-2">
+                <select name="Display" className="ml-2 p-1 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="24 per page">24 per page</option>
                   <option value="36 per page">36 per page</option>
                   <option value="48 per page">48 per page</option>
                 </select>
               </label>
-            </p>
-            <p className="flex items-center justify-center sm:justify-start">
+            </div>
+
+            {/* Sort By dropdown */}
+            <div className="flex items-center justify-center sm:justify-start">
               <label>
                 Sort By:
-                <select name="Best Selling" className="ml-2">
-                  <option value="apple">Best Selling</option>
-                  <option value="banana">Alphabetically, A-Z</option>
-                  <option value="orange">Alphabetically, Z-A</option>
-                  <option value="orange">Price, low to high</option>
-                  <option value="orange">Price, high to low</option>
-                  <option value="orange">Date, old to new</option>
-                  <option value="orange">Data, new to old</option>
+                <select name="Sort By" className="ml-2 p-1 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="best-selling">Best Selling</option>
+                  <option value="top-rated">Top Rated</option>
+                  <option value="most-reviewed">Most Reviewed</option>
+                  <option value="price-low-high">Price: Low to High</option>
+                  <option value="price-high-low">Price: High to Low</option>
                 </select>
               </label>
-            </p>
+            </div>
           </div>
           <hr className="mt-5 border-[1px]" />
           {loading ? (
