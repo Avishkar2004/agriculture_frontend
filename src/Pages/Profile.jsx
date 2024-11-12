@@ -14,11 +14,6 @@ const Profile = () => {
     };
 
     const handleDeleteAccount = async () => {
-        if (!isCartEmpty) {
-            alert("Please empty your cart before deleting your account.");
-            return;
-        }
-
         const confirmation = window.confirm("Are you sure you want to delete your account?");
         if (confirmation) {
             try {
@@ -35,6 +30,7 @@ const Profile = () => {
                 if (response.ok) {
                     alert(data.message);
                     logout();
+                    window.location.reload()
                 } else {
                     alert(data.message);
                 }

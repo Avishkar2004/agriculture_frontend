@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PlantGrowthRegulators from "../../Components/Banner/PlantGrowthRegulator.jpg";
 import Recentlyviewed from '../Recentlyviewed';
-import Loader from '../Loader';
+import ShimmerCard from '../ShimmerCard';
 
 const PlantGrowthRegulator = () => {
   const [PlantgrowthregulatorData, setPlantgrowthregulatorData] = useState([]);
@@ -87,8 +87,8 @@ const PlantGrowthRegulator = () => {
           <hr className="mt-5 border-[1px]" />
 
           {loading ? (
-            <div className="flex justify-center mt-5">
-              <Loader /> {/* Use a beautiful loader component */}
+            <div>
+              <ShimmerCard count={3} />
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-5">

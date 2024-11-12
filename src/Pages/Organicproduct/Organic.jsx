@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import OrganicProduct from "../../Components/Banner/orgnicProduct.jpg";
 import Recentlyviewed from "../Recentlyviewed";
 import Loader from "../Loader";
+import ShimmerCard from "../ShimmerCard";
 
 const Organic = () => {
   const [OrganicproductData, setOrganicproductData] = useState([]);
@@ -80,8 +81,8 @@ const Organic = () => {
           <hr className="mt-5 border-[1px]" />
           {/* if you want to put gap in between components you need gap */}
           {loading ? (
-            <div className="flex justify-center mt-5">
-              <Loader /> {/* Use a beautiful loader component */}
+            <div>
+              < ShimmerCard count={3} /> {/* Use a beautiful loader component */}
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mt-5">
