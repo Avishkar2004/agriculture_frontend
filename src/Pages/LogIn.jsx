@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../actions/authContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const LogIn = () => {
   const history = useHistory();
   const { login } = useAuth();
+  const location = useLocation()
   const [serverResponse, setServerResponse] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
@@ -51,7 +52,8 @@ const LogIn = () => {
       if (success) {
         localStorage.setItem('authenticatedUser', JSON.stringify({ user }));
         login(user);
-        history.push('/');
+        const redirectTo = location.state?.from || "/" //! Redirect to previous or home page
+        history.push(redirectTo)
         window.location.reload();
       } else {
         setErrorMessage(message);

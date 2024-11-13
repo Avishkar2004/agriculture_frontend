@@ -98,13 +98,15 @@ const PGRShowProduct = () => {
         }),
         credentials: "include"
       })
-
       if (response.ok) {
         const responseData = await response.json()
         setCartData(responseData.cart)
       } else if (response.status === 401) {
         alert('You must be logged in to add items to the cart.');
-        history.push("/signin")
+        history.push({
+          pathname: "/signin",
+          state: { from: location } //! Pass current location for redirect after login / sign in
+        })
       } else {
         console.error('Failed to add item to cart');
       }
@@ -123,8 +125,6 @@ const PGRShowProduct = () => {
       history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice: productData.price * count } });
     }
   };
-
-
 
   useEffect(() => {
     if (!productData.reviews) {

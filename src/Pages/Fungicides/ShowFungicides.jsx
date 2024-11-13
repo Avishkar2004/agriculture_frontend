@@ -96,13 +96,15 @@ const ShowFungicides = ({ productDataProp }) => {
         }),
         credentials: "include"
       })
-
       if (response.ok) {
         const responseData = await response.json()
         setCartData(responseData.cart)
       } else if (response.status === 401) {
         alert('You must be logged in to add items to the cart.');
-        history.push("/signup")
+        history.push({
+          pathname: "/signin",
+          state: { from: location }
+        })
       } else {
         console.error('Failed to add item to cart');
       }

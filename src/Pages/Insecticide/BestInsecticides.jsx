@@ -104,7 +104,7 @@ const BestInsecticides = () => {
               {insecticideData.map((product) => (
                 <Link
                   to={{
-                    pathname: `/insecticide/${encodeURIComponent(product.name)}`,
+                    pathname: `/insecticide/${encodeURIComponent(product.id)}`,
                     state: { productData: product },
                   }}
                   key={product.id}
