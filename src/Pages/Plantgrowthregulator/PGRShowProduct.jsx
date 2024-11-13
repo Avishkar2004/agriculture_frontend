@@ -57,21 +57,14 @@ const PGRShowProduct = () => {
   const handleSizeChange = (newSize) => {
     setSelectedSize(newSize);
 
-    let updatedData;
-    if (newSize === '50 ml') {
-      updatedData = {
-        reviews: initialproductData.review_50,
-        save: initialproductData.save_50,
-        price: initialproductData.price_small,
-      };
-    } else if (newSize === '100 ml') {
-      updatedData = {
-        reviews: initialproductData.review_100,
-        save: initialproductData.save_100,
-        price: initialproductData.salePrice,
-      };
-    }
+    // Prepare updated product data based on selected size
+    const updatedData = {
+      reviews: newSize === '50 ml' ? initialproductData.review_50 : initialproductData.review_100,
+      save: newSize === '50 ml' ? initialproductData.save_50 : initialproductData.save_100,
+      price: newSize === '50 ml' ? initialproductData.price_small : initialproductData.salePrice,
+    };
 
+    // Update the productData state with the new values
     setProductData((prevData) => ({
       ...prevData,
       ...updatedData,
@@ -133,7 +126,6 @@ const PGRShowProduct = () => {
     if (!productData.reviews) {
       // Only call handleSizeChange when productData is initialized
       handleSizeChange("50 ml");
-
     }
   }, [productData]);
 
@@ -239,10 +231,26 @@ const PGRShowProduct = () => {
           </div>
           <div className="flex justify-between items-center mt-4">
             <div>
-              <p className="text-2xl flex mt-3 gap-12 font-semibold">
-                Price: <p className="text-[#00badb]">{productData.salePrice ? productData.salePrice - productData.save : productData.price_small - productData.save}</p>
-                <p className="text-base mt-1.5 text-gray-700 line-through">{productData.price && `(${productData.salePrice})`}</p>
-              </p>
+              <div className="text-2xl mt-3 gap-12 font-semibold flex items-baseline">
+                <span>Price:</span>
+                <span className="text-[#00badb]">
+                  {/* Calculate the displayed price based on selected size and current productData */}
+                  {selectedSize === '50 ml'
+                    ? productData.price_small - productData.save
+                    : productData.salePrice - productData.save}
+                </span>
+                {/* Show the original price with a strikethrough if there is a discount */}
+                {selectedSize === '50 ml' && productData.price_small ? (
+                  <span className="text-base text-gray-700 line-through ml-3">
+                    {productData.price_small}
+                  </span>
+                ) : selectedSize === '100 ml' && productData.salePrice ? (
+                  <span className="text-base text-gray-700 line-through ml-3">
+                    {productData.salePrice}
+                  </span>
+                ) : null}
+              </div>
+
               <p className="text-sm mt-3 ml-[107px] text-gray-700">
                 Tax included
                 <span className="text-[#00badb] cursor-pointer">
