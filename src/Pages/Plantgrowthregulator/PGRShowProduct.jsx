@@ -120,7 +120,10 @@ const PGRShowProduct = () => {
     const token = getAuthToken();
     if (!token) {
       alert("You must be logged in to buy this product");
-      history.push("/signin");
+      history.push({
+        pathname: "/signin",
+        state: { from: location }
+      });
     } else {
       history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice: productData.price * count } });
     }

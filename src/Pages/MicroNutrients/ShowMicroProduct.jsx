@@ -120,7 +120,10 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
         const isAuthenticated = getAuthToken()
         if (!isAuthenticated) {
             alert("You must be logged in to buy this product")
-            history.push("/signin")
+            history.push({
+                pathname: "/signin",
+                state: { from: location }
+            })
         } else {
             history.push("/BuyNow", { productData })
         }
