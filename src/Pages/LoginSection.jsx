@@ -14,7 +14,6 @@ const LoginSection = () => {
                     LOGIN
                 </h2>
             </div>
-
             {authenticatedUser ? (
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-6">
@@ -48,7 +47,6 @@ const LoginSection = () => {
                             </li>
                         </ul>
                     </div>
-
                     <p className="mt-6 text-sm text-gray-500">
                         Please note that upon clicking "Logout" you will lose all items in cart and will be redirected to the homepage.
                     </p>

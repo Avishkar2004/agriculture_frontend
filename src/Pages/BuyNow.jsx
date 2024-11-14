@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import OrderConfirmModal from './OrderConfirmModal';
-import { useAuth } from "../actions/authContext";
 import LoginSection from './LoginSection';
 import DeliveryAddress from './DeliveryAddress';
 import OrderSummary from './OrderSummary';
@@ -10,7 +9,6 @@ import { AiOutlineUser, AiOutlineHome, AiOutlineFileText, AiOutlineCreditCard } 
 
 const BuyNow = () => {
   const history = useHistory();
-  const { authenticatedUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [expandedSection, setExpandedSection] = useState("login"); // Track the expanded section
   const location = useLocation();

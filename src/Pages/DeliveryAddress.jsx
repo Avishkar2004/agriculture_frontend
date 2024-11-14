@@ -18,9 +18,25 @@ const DeliveryAddress = () => {
         setAddress({ ...address, [e.target.name]: e.target.value });
     };
 
-    const handleSave = () => {
-        // Add save functionality, like form validation and API call
-        console.log("Saved Address:", address);
+    const handleSave = async () => {
+        try {
+            const response = await fetch("/api/delivery-address/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(address),
+                credentials: "include" //Includes credentials (Cookies on the request
+            })
+            if (response.ok) {
+                const data = await response.json()
+                console.log("Address saved successfully", data)
+            } else {
+                console.error("Error saving address:", response.statusText)
+            }
+        } catch (error) {
+            console.error("Error saving address:", error)
+        }
     };
 
     const handleCancel = () => {
