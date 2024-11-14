@@ -36,30 +36,26 @@ const DeliveryAddresses = () => {
     };
 
     return (
-        <div className="p-6 rounded-lg bg-white ">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Saved Delivery Addresses</h2>
+        <div className="p-6 rounded-lg">
             <div className="space-y-4">
                 {addresses.length > 0 ? (
                     addresses.map((address) => (
                         <div
                             key={address.id}
-                            className={`bg-gray-100 rounded-lg relative`}
+                            className={`relative bg-white rounded-lg border p-4 hover:shadow-lg cursor-pointer transition-all duration-300 ${highlightedAddress === address.id ? 'border-blue-500' : 'border-gray-300'
+                                }`}
                         >
                             {/* Circle indicator for selection */}
-                            {highlightedAddress === address.id && (
-                                <div className="absolute top-0 left-0 -translate-x-3 translate-y-3 rounded-full bg-blue-500 text-white p-2">
-                                    <span className="text-xs font-bold">✔</span>
-                                </div>
-                            )}
+
 
                             <div
-                                className="p-4 flex justify-between items-center cursor-pointer"
+                                className="flex justify-between items-center"
                                 onClick={() => {
                                     toggleAccordion(address.id);
                                     handleSelectAddress(address.id);
                                 }}
                             >
-                                <div className="text-sm text-gray-800">
+                                <div className="text-sm text-gray-800 font-medium">
                                     {address.city}, {address.street_address}, {address.state} - {address.pincode}
                                 </div>
                                 <div className="text-sm text-gray-500">
@@ -70,8 +66,9 @@ const DeliveryAddresses = () => {
                                     )}
                                 </div>
                             </div>
+
                             {selectedAddress === address.id && (
-                                <div className="p-4 bg-white rounded-b-lg border-t border-gray-200">
+                                <div className="mt-4 p-4 bg-gray-50 rounded-b-lg border-t border-gray-200">
                                     <p className="text-sm text-gray-600">Phone: <span className="font-semibold text-gray-800">{address.phone_number}</span></p>
                                     <p className="text-sm text-gray-600">Type: <span className="font-semibold text-gray-800">{address.address_type}</span></p>
                                 </div>
