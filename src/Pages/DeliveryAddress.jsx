@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DeliveryAddresses from './DeliveryAddresses'
 
 const DeliveryAddress = () => {
     const [address, setAddress] = useState({
@@ -13,10 +14,17 @@ const DeliveryAddress = () => {
         landmark: '',
         addressType: 'Home', // default value
     });
-
     const handleChange = (e) => {
-        setAddress({ ...address, [e.target.name]: e.target.value });
+        const { name, value, type } = e.target;
+
+        // Update addressType directly if it's a radio button
+        if (type === "radio" && name === "addressType") {
+            setAddress({ ...address, addressType: value });
+        } else {
+            setAddress({ ...address, [name]: value });
+        }
     };
+
 
     const handleSave = async () => {
         try {
@@ -57,7 +65,7 @@ const DeliveryAddress = () => {
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-lg">
-            <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">Delivery Address</h2>
+            <DeliveryAddresses />
             <form>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Name */}

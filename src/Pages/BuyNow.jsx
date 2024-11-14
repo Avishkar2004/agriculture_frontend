@@ -10,7 +10,7 @@ import { AiOutlineUser, AiOutlineHome, AiOutlineFileText, AiOutlineCreditCard } 
 const BuyNow = () => {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
-  const [expandedSection, setExpandedSection] = useState("login"); // Track the expanded section
+  const [expandedSection, setExpandedSection] = useState("address"); // Track the expanded section
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);
