@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useHistory, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../actions/authContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { MdErrorOutline, MdCheckCircle } from 'react-icons/md'; // Import icons for error and success
+
 
 const LogIn = () => {
   const history = useHistory();
@@ -121,10 +123,18 @@ const LogIn = () => {
           </button>
 
           {errorMessage && (
-            <div className="text-red-500 text-sm mt-4">{errorMessage}</div>
+            <div className="flex items-center text-red-600 bg-red-100 rounded-lg p-3 mt-4 text-sm">
+              <MdErrorOutline className="mr-2 text-xl" />
+              <span>{errorMessage}</span>
+            </div>
           )}
-          {serverResponse && (
-            <div className="text-green-500 text-sm mt-4">{serverResponse}</div>
+
+          {/* Success Message */}
+          {serverResponse && !errorMessage && (
+            <div className="flex items-center text-green-600 bg-green-100 rounded-lg p-3 mt-4 text-sm">
+              <MdCheckCircle className="mr-2 text-xl" />
+              <span>{serverResponse}</span>
+            </div>
           )}
         </form>
 

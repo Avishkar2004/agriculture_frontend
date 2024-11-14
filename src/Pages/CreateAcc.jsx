@@ -174,7 +174,7 @@ const CreateAcc = () => {
                         {error.fieldErrors.confirmPassword && <p className="text-red-500 text-sm mt-2">{error.fieldErrors.confirmPassword}</p>}
                     </div>
 
-                    {error.formError && <p className="text-red-500 text-sm mt-4">{error.formError}</p>}
+                    {error.formError && <p className="text-red-500 text-sm mt-4 text-center font-semibold">{error.formError}</p>}
 
                     {/* Submit Button */}
                     <button
