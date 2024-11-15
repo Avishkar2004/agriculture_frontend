@@ -10,7 +10,8 @@ import { AiOutlineUser, AiOutlineHome, AiOutlineFileText, AiOutlineCreditCard } 
 const BuyNow = () => {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
-  const [expandedSection, setExpandedSection] = useState("address"); // Track the expanded section
+  const [expandedSection, setExpandedSection] = useState("address");
+  const [isAddressSelected, setIsAddressSelected] = useState(false); // New state to track if address is selected
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);
@@ -56,7 +57,6 @@ const BuyNow = () => {
   return (
     <div className="container mx-auto my-8">
       <div className="flex">
-        {/* Product Details Section */}
         <div className="w-1/2 pr-4">
           <div className="sticky top-0 border p-4 rounded-lg mb-4 bg-white">
             <h1 className="text-2xl font-bold mb-4">Checkout</h1>
@@ -78,9 +78,7 @@ const BuyNow = () => {
           </div>
         </div>
 
-        {/* Accordion Checkout Form Section */}
         <div className="w-full md:w-1/2 p-4">
-          {/* Login Section */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -95,7 +93,6 @@ const BuyNow = () => {
             {expandedSection === 'login' && <LoginSection />}
           </div>
 
-          {/* Delivery Address */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -107,10 +104,12 @@ const BuyNow = () => {
               </div>
               <span className="text-xl">{expandedSection === 'address' ? '-' : '+'}</span>
             </button>
-            {expandedSection === 'address' && <DeliveryAddress />}
+            {expandedSection === 'address' && <DeliveryAddress onAddressSelect={() => {
+              setIsAddressSelected(true);
+              setExpandedSection('summary');
+            }} />}
           </div>
 
-          {/* Order Summary */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -125,7 +124,6 @@ const BuyNow = () => {
             {expandedSection === 'summary' && <OrderSummary productData={productData} />}
           </div>
 
-          {/* Payment Option */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -142,7 +140,6 @@ const BuyNow = () => {
         </div>
       </div>
 
-      {/* Modal for Order Confirmation */}
       {showModal && (
         <OrderConfirmModal
           productData={productData}
