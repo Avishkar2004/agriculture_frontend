@@ -13,12 +13,19 @@ const Organic = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/organicproduct");
-        if (!response.ok) {
-          throw new Error("Failed to fetch organicproduct data");
+        const cachedData = localStorage.getItem("OrganicproductData")
+        if (cachedData) {
+          setOrganicproductData(JSON.parse(cachedData))
+          setLoading(false)
+        } else {
+          const response = await fetch("/organicproduct");
+          if (!response.ok) {
+            throw new Error("Failed to fetch organicproduct data");
+          }
+          const data = await response.json();
+          localStorage.setItem("OrganicproductData", JSON.stringify(data))
+          setOrganicproductData(data);
         }
-        const data = await response.json();
-        setOrganicproductData(data);
       } catch (error) {
         setError(error.message);
       } finally {

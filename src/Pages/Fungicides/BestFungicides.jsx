@@ -12,12 +12,20 @@ const BestFungicides = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/fungicides");
-        if (!response.ok) {
-          throw new Error("Failed to fetch fungicides data");
+        const cachedData = localStorage.getItem("fungicidesData")
+        if (cachedData) {
+          setFungicidesData(JSON.parse(cachedData))
+          setLoading(false)
+        } else {
+
+          const response = await fetch("/fungicides");
+          if (!response.ok) {
+            throw new Error("Failed to fetch fungicides data");
+          }
+          const data = await response.json();
+          localStorage.setItem("fungicidesData", JSON.stringify(data))
+          setFungicidesData(data);
         }
-        const data = await response.json();
-        setFungicidesData(data);
       } catch (error) {
         setError(error.message);
       } finally {

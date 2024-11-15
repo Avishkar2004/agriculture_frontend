@@ -12,13 +12,20 @@ const BestInsecticides = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/insecticide");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+        const cachedData = localStorage.getItem("insecticideData")
+        if (cachedData) {
+          setInsecticideData(JSON.parse(cachedData))
+          setLoading(false)
+        } else {
+
+          const response = await fetch("/insecticide");
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          localStorage.setItem("insecticideData", JSON.stringify(data))
+          setInsecticideData(data);
         }
-        const data = await response.json();
-        // console.log("Received products:", data);
-        setInsecticideData(data.slice(0, 1000) || []);
       } catch (error) {
         console.error("Error fetching data:", error.message);
         setError("An error occurred while fetching data");

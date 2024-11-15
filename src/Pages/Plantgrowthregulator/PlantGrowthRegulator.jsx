@@ -12,12 +12,19 @@ const PlantGrowthRegulator = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/plantgrowthregulator");
-        if (!response.ok) {
-          throw new Error("Failed to fetch Plantgrowthregulator data");
+        const cachedData = localStorage.getItem("PlantGrowthRegulatorData")
+        if (cachedData) {
+          setPlantgrowthregulatorData(JSON.parse(cachedData))
+          setLoading(false)
+        } else {
+          const response = await fetch("/plantgrowthregulator");
+          if (!response.ok) {
+            throw new Error("Failed to fetch Plantgrowthregulator data");
+          }
+          const data = await response.json();
+          localStorage.setItem("PlantGrowthRegulatorData", JSON.stringify(data))
+          setPlantgrowthregulatorData(data);
         }
-        const data = await response.json();
-        setPlantgrowthregulatorData(data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -67,9 +74,9 @@ const PlantGrowthRegulator = () => {
               <label>
                 Display:
                 <select name="Display" className="ml-2 p-1 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="24 per page">24 per page</option>
-                  <option value="36 per page">36 per page</option>
-                  <option value="48 per page">48 per page</option>
+                  <option value="24 per page">10 per page</option>
+                  <option value="36 per page">20 per page</option>
+                  <option value="48 per page">30 per page</option>
                 </select>
               </label>
             </div>
@@ -82,16 +89,12 @@ const PlantGrowthRegulator = () => {
                   <option value="best-selling">Best Selling</option>
                   <option value="top-rated">Top Rated</option>
                   <option value="most-reviewed">Most Reviewed</option>
-                  <option value="price-low-high">Price: Low to High</option>
-                  <option value="price-high-low">Price: High to Low</option>
                 </select>
               </label>
             </div>
 
           </div>
-
           <hr className="mt-5 border-[1px]" />
-
           {loading ? (
             <div>
               <ShimmerCard count={3} />

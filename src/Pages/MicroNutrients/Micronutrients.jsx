@@ -13,12 +13,20 @@ const Micronutrients = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("/micro-nutrients");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch micro-nutrients data");
+                const cachedData = localStorage.getItem("micronutrientData")
+                if (cachedData) {
+                    setMicronutrientData(JSON.parse(cachedData))
+                    setLoading(false)
+                } else {
+
+                    const response = await fetch("/micro-nutrients");
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch micro-nutrients data");
+                    }
+                    const data = await response.json();
+                    localStorage.setItem("micronutrientData", JSON.stringify(data))
+                    setMicronutrientData(data);
                 }
-                const data = await response.json();
-                setMicronutrientData(data);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -81,17 +89,17 @@ const Micronutrients = () => {
 
                         {/* Sort By dropdown */}
                         <div className="flex items-center justify-center sm:justify-start">
-              <label>
-                Sort By:
-                <select name="Sort By" className="ml-2 p-1 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="best-selling">Best Selling</option>
-                  <option value="top-rated">Top Rated</option>
-                  <option value="most-reviewed">Most Reviewed</option>
-                  <option value="price-low-high">Price: Low to High</option>
-                  <option value="price-high-low">Price: High to Low</option>
-                </select>
-              </label>
-            </div>
+                            <label>
+                                Sort By:
+                                <select name="Sort By" className="ml-2 p-1 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="best-selling">Best Selling</option>
+                                    <option value="top-rated">Top Rated</option>
+                                    <option value="most-reviewed">Most Reviewed</option>
+                                    <option value="price-low-high">Price: Low to High</option>
+                                    <option value="price-high-low">Price: High to Low</option>
+                                </select>
+                            </label>
+                        </div>
                     </div>
                     <hr className="mt-5 border-[1px]" />
                     {loading ? (

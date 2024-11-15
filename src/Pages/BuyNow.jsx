@@ -10,7 +10,7 @@ import { AiOutlineUser, AiOutlineHome, AiOutlineFileText, AiOutlineCreditCard } 
 const BuyNow = () => {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
-  const [expandedSection, setExpandedSection] = useState("address");
+  const [expandedSection, setExpandedSection] = useState("login");
   const [isAddressSelected, setIsAddressSelected] = useState(false); // New state to track if address is selected
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
