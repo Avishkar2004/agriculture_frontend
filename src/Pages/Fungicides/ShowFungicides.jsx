@@ -124,7 +124,7 @@ const ShowFungicides = () => {
         state: { from: location }
       })
     } else {
-      history.push("/BuyNow", { productData })
+      history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice: productData.price * count } })
     }
   }
 
