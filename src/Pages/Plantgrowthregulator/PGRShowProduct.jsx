@@ -186,7 +186,9 @@ const PGRShowProduct = () => {
           </p>
           <span className="bg-green-300">Save {productData.save}</span>
           <div className="flex mt-3 mb-3">
-            <p>HPM</p>
+            <p className="text-lg font-semibold text-gray-800">
+              <span className="text-blue-600">{productData.brands}</span>
+            </p>
             <div className="flex ml-[35.5rem] space-x-3">
               <FacebookIcon
                 color="info"
@@ -207,7 +209,6 @@ const PGRShowProduct = () => {
             </div>
           </div>
           <hr className="border-[1px] border-gray-800 border-r" />
-
           <p className="text-[#1e2d7d] mt-8">Size: <span className="text-xl">{selectedSize}</span></p>
           <div className="flex mt-8 space-x-3">
             <button

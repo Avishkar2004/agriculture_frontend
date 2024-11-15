@@ -185,7 +185,9 @@ const OrganicproductData = ({ OrganicproductData }) => {
           </p>
           <span className="bg-green-300">Save {productData.save}</span>
           <div className="flex mt-3 mb-3">
-            <p>HPM</p>
+            <p className="text-lg font-semibold text-gray-800">
+              <span className="text-blue-600">{productData.brands}</span>
+            </p>
             <div className="flex ml-[35.5rem] space-x-3">
               <FacebookIcon
                 color="info"

@@ -189,8 +189,9 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
                     </p>
                     <span className="bg-green-300">Save {productData.save}</span>
                     <div className="flex mt-3 mb-3">
-                        <p>HPM</p>
-                        <div className="flex ml-[35.5rem] space-x-3">
+                        <p className="text-lg font-semibold text-gray-800">
+                            <span className="text-blue-600">{productData.brands}</span>
+                        </p>                        <div className="flex ml-[35.5rem] space-x-3">
                             <FacebookIcon
                                 color="info"
                                 className="cursor-pointer hover:text-blue-700"
