@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../Pages/Header";
 import ForgotPasswordAndReset from "../Pages/ForgotPasswordAndReset";
@@ -32,10 +32,31 @@ import CheckOut from "../Pages/CheckOut";
 import OrderCompleted from "../Pages/OrderCompleted";
 import Orders from "../Pages/Orders";
 import ProductDetails from "../Pages/ProductDetails";
+import Messages from "../Pages/Messages";
+import { FaComments } from "react-icons/fa"; // For chat icon
+
 
 const AppRoutes = () => {
+  const [isChatVisible, setIsChatVisible] = useState(false); // State to control chat visibility
+
   return (
     <Router>
+      <div
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-green-600 transition"
+        onClick={() => setIsChatVisible((prev) => !prev)}
+      >
+        <FaComments size={43} />
+      </div>
+      {/* Chat Component (conditionally rendered) */}
+      {isChatVisible && (
+        <div
+          className={`fixed top-36 right-0 w-auto h-[calc(100vh-64px)] bg-white shadow-lg border-r border-gray-300 z-50 transition-transform ${isChatVisible ? "translate-x-0" : "-translate-x-full"
+            }`}
+        >
+          <Messages onClose={() => setIsChatVisible(false)} />
+        </div>
+
+      )}
       <Header />
 
       <Switch>

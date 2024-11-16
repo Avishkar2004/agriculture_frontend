@@ -1,0 +1,98 @@
+import React, { useState, useEffect } from "react";
+import useSocket from "../hooks/useSocket";
+import { FaTimes } from "react-icons/fa";
+
+const Messages = ({ onClose }) => {
+  const socket = useSocket();
+  const [messages, setMessages] = useState([]); // State to hold messages from the server
+  const [inputMessage, setInputMessage] = useState("");
+
+  useEffect(() => {
+    if (!socket) return; // Ensure socket is initialized
+
+    // Listen for welcome messages
+    socket.on("welcome", (data) => {
+      setMessages((prev) => [...prev, data.message]);
+    });
+
+    // Listen for server broadcasts
+    socket.on("server-message", (data) => {
+      setMessages((prev) => [...prev, data.text]);
+    });
+
+    return () => {
+      // Clean up socket listeners on component unmount
+      socket.off("welcome");
+      socket.off("server-message");
+    };
+  }, [socket]);
+
+  const sendMessage = () => {
+    if (socket && inputMessage.trim()) {
+      socket.emit("client-message", {
+        text: inputMessage,
+      });
+      setMessages((prev) => [...prev, `You: ${inputMessage}`]); // Add to messages list immediately
+      setInputMessage(""); // Clear the input field
+    }
+  };
+
+  return (
+    <div
+      className="fixed right-5 h-[calc(80vh-100px)] bg-white shadow-lg border border-gray-300 rounded-lg z-50 flex flex-col"
+    >
+      {/* Header */}
+      <div className="bg-green-500 text-white flex justify-between items-center p-4 rounded-t-lg">
+        <h2 className="font-semibold text-lg">Real-Time Chat</h2>
+        <button
+          onClick={onClose}
+          className="text-white hover:text-gray-200 transition"
+          aria-label="Close Chat"
+        >
+          <FaTimes size={20} />
+        </button>
+      </div>
+
+      {/* Chat Messages */}
+      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+        {messages.length === 0 ? (
+          <p className="text-gray-500 text-center">No messages yet.</p>
+        ) : (
+          <ul className="space-y-2">
+            {messages.map((msg, index) => (
+              <li
+                key={index}
+                className={`px-4 py-2 rounded-lg ${
+                  msg.startsWith("You:")
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-gray-200 text-gray-800"
+                }`}
+              >
+                {msg}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Input Field */}
+      <div className="p-4 flex gap-2 border-t border-gray-200">
+        <input
+          type="text"
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          placeholder="Type your message"
+          className="flex-grow px-4 py-2 border rounded-lg focus:ring focus:ring-green-200 outline-none"
+        />
+        <button
+          onClick={sendMessage}
+          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Messages;
