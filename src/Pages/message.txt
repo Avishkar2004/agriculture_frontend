@@ -1,3 +1,33 @@
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import { useAuth } from "../actions/authContext";
+
+const useSocket = () => {
+  const { getAuthToken } = useAuth();
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const token = getAuthToken();
+
+    if (token) {
+      const newSocket = io("http://localhost:8000", {
+        auth: { token }, // Pass the token for authentication
+      });
+
+      setSocket(newSocket);
+
+      return () => {
+        newSocket.disconnect();
+      };
+    }
+  }, []);
+
+  return socket;
+};
+
+export default useSocket;
+
+
 import React, { useState, useEffect } from "react";
 import useSocket from "../hooks/useSocket";
 import { FaTimes } from "react-icons/fa";
@@ -19,8 +49,9 @@ const Messages = ({ onClose }) => {
     socket.on("server-message", (data) => {
       setMessages((prev) => [...prev, data.text]);
     });
-    // Clean up the socket listeners on component unmount
+
     return () => {
+      // Clean up socket listeners on component unmount
       socket.off("welcome");
       socket.off("server-message");
     };
