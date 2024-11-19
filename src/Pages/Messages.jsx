@@ -4,23 +4,25 @@ import { FaTimes } from "react-icons/fa";
 
 const Messages = ({ onClose }) => {
   const socket = useSocket();
-  const [messages, setMessages] = useState([]); // State to hold messages from the server
+  const [messages, setMessages] = useState([]); // State to hold all messages
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
-    if (!socket) return; // Ensure socket is initialized
+
+    if (!socket) return;
 
     // Listen for welcome messages
     socket.on("welcome", (data) => {
-      setMessages((prev) => [...prev, data.message]);
+      setMessages((prev) => [...prev, { text: data.message, sender: "server" }]);
     });
 
     // Listen for server broadcasts
     socket.on("server-message", (data) => {
-      setMessages((prev) => [...prev, data.text]);
+      setMessages((prev) => [...prev, { text: data.text, sender: "server" }]);
     });
-    // Clean up the socket listeners on component unmount
+
     return () => {
+      // Clean up socket listeners on component unmount
       socket.off("welcome");
       socket.off("server-message");
     };
@@ -28,18 +30,15 @@ const Messages = ({ onClose }) => {
 
   const sendMessage = () => {
     if (socket && inputMessage.trim()) {
-      socket.emit("client-message", {
-        text: inputMessage,
-      });
-      setMessages((prev) => [...prev, `You: ${inputMessage}`]); // Add to messages list immediately
-      setInputMessage(""); // Clear the input field
+      const userMessage = { text: inputMessage, sender: "user" };
+      setMessages((prev) => [...prev, userMessage]); // Display user message immediately
+      socket.emit("client-message", { text: inputMessage }); // Send to server
+      setInputMessage(""); // Clear input
     }
   };
 
   return (
-    <div
-      className="fixed right-5 h-[calc(80vh-100px)] bg-white shadow-lg border border-gray-300 rounded-lg z-50 flex flex-col"
-    >
+    <div className="fixed right-5 h-[calc(80vh-100px)] bg-white shadow-lg border border-gray-300 rounded-lg z-50 flex flex-col">
       {/* Header */}
       <div className="bg-green-500 text-white flex justify-between items-center p-4 rounded-t-lg">
         <h2 className="font-semibold text-lg">Real-Time Chat</h2>
@@ -61,12 +60,12 @@ const Messages = ({ onClose }) => {
             {messages.map((msg, index) => (
               <li
                 key={index}
-                className={`px-4 py-2 rounded-lg ${msg.startsWith("You:")
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-gray-200 text-gray-800"
+                className={`px-4 py-2 rounded-lg ${msg.sender === "user"
+                  ? "bg-blue-100 text-blue-800 self-end"
+                  : "bg-gray-200 text-gray-800 self-start"
                   }`}
               >
-                {msg}
+                {msg.text}
               </li>
             ))}
           </ul>

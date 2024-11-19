@@ -93,7 +93,7 @@ const Header = () => {
         className="flex items-center gap-2 cursor-pointer py-2 px-3 bg-gray-50 rounded-lg shadow hover:bg-gray-200 transition duration-300"
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
-        <span className="text-gray-900 font-semibold">{authenticatedUser.username}</span>
+        <span className="text-gray-900 font-semibold">{authenticatedUser?.username}</span>
         {isDropdownOpen ? (
           <KeyboardArrowUpIcon className="text-gray-700" />
         ) : (

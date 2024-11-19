@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Adjusted import
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -19,8 +19,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = (user) => {
-    setAuthenticatedUser(user);
-    localStorage.setItem("authenticatedUser", JSON.stringify(user));
+    try {
+      if (!user?.token || typeof user.token !== "string") {
+        throw new Error("Invalid or missing token");
+      }
+      const decodedToken = jwtDecode(user.token);
+      const userInfo = { ...user, decodedToken };
+      setAuthenticatedUser(userInfo);
+      localStorage.setItem("authenticatedUser", JSON.stringify(userInfo));
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      setAuthenticatedUser(null); // Ensure state remains consistent
+    }
   };
 
   const logout = () => {
@@ -36,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     if (authenticatedUser && isTokenExpired(authenticatedUser.token)) {
       logout();
     }
-  }, []);
+  }, [authenticatedUser]);
 
   // Periodic check for token expiration
   useEffect(() => {

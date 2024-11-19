@@ -34,6 +34,7 @@ import Orders from "../Pages/Orders";
 import ProductDetails from "../Pages/ProductDetails";
 import Messages from "../Pages/Messages";
 import { FaComments } from "react-icons/fa"; // For chat icon
+import GoogleCallback from "../Pages/GoogleCallback";
 
 
 const AppRoutes = () => {
@@ -59,7 +60,10 @@ const AppRoutes = () => {
       )}
       <Header />
 
+
       <Switch>
+
+
         <Route path="/profile" component={Profile} />
         <Route path="/orders" component={Orders} />
         <Route path="/ForgotPasswordAndReset" component={ForgotPasswordAndReset} />
@@ -96,6 +100,7 @@ const AppRoutes = () => {
         <Route path="/categories" component={Categories} />
         <Route path="/product/:id/" component={ProductDetails} />
         <Route path="/order-completed" component={OrderCompleted} />
+        <Route path="/auth/google/callback" component={GoogleCallback} />
 
       </Switch>
 

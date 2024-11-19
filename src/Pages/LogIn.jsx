@@ -123,7 +123,7 @@ const LogIn = () => {
           </button>
 
           {errorMessage && (
-            <div className="flex items-center text-red-600 bg-red-100 rounded-lg p-3 mt-4 text-sm">
+            <div className="flex items-center text-red-600 justify-center bg-red-100 rounded-lg p-3 mt-4 text-sm">
               <MdErrorOutline className="mr-2 text-xl" />
               <span>{errorMessage}</span>
             </div>
@@ -131,7 +131,7 @@ const LogIn = () => {
 
           {/* Success Message */}
           {serverResponse && !errorMessage && (
-            <div className="flex items-center text-green-600 bg-green-100 rounded-lg p-3 mt-4 text-sm">
+            <div className="flex items-center text-green-600 justify-center bg-green-100 rounded-lg p-3 mt-4 text-sm">
               <MdCheckCircle className="mr-2 text-xl" />
               <span>{serverResponse}</span>
             </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import zxcvbn from 'zxcvbn';
 import { useAuth } from '../actions/authContext';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField, Button } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const CreateAcc = () => {
@@ -79,6 +79,12 @@ const CreateAcc = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    // Google Login handler
+    const handleGoogleLogin = async () => {
+        window.location.href = "http://localhost:8080/auth/google";
+
     };
 
     return (
@@ -185,6 +191,19 @@ const CreateAcc = () => {
                         {loading ? "Loading..." : "Sign Up"}
                     </button>
                 </form>
+
+                {/* Google Login Button */}
+                <div className="mt-6 text-center">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        onClick={handleGoogleLogin}
+                        disabled={loading}
+                    >
+                        {loading ? "Loading..." : "Login with Google"}
+                    </Button>
+                </div>
 
                 <div className='mt-3 mb-3 text-center'>
                     <span>Already have an account? </span>
