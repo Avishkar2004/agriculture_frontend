@@ -69,8 +69,9 @@ const Profile = () => {
                 {/* Shopping Cart Section */}
                 <div className="mb-10">
                     <h3 className="text-3xl font-semibold text-gray-800 mb-5 flex items-center">
-                        <FaUserEdit className="mr-2 text-blue-600" />
-                        Shopping Cart
+                        
+                        <FaUserEdit  className="mr-2 text-blue-600" />
+                          Shopping Cart
                     </h3>
                     <div className="bg-gray-100 p-6 rounded-xl shadow-inner">
                         <Cart onCartStatusChange={setIsCartEmpty} /> {/* Update cart status */}

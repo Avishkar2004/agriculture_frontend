@@ -24,7 +24,11 @@ export const AuthProvider = ({ children }) => {
         throw new Error("Invalid or missing token");
       }
       const decodedToken = jwtDecode(user.token);
-      const userInfo = { ...user, decodedToken };
+      const userInfo = {
+        ...user,
+        decodedToken,
+        avatar: user.avatar || decodedToken.avatar,
+      };
       setAuthenticatedUser(userInfo);
       localStorage.setItem("authenticatedUser", JSON.stringify(userInfo));
     } catch (error) {

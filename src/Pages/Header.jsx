@@ -93,6 +93,15 @@ const Header = () => {
         className="flex items-center gap-2 cursor-pointer py-2 px-3 bg-gray-50 rounded-lg shadow hover:bg-gray-200 transition duration-300"
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
+        {authenticatedUser?.avatar ? (
+          <img
+            src={authenticatedUser.avatar}
+            alt={authenticatedUser.username}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+        ) : (
+          <AccountCircleIcon className="text-gray-700 w-8 h-8" />
+        )}
         <span className="text-gray-900 font-semibold">{authenticatedUser?.username}</span>
         {isDropdownOpen ? (
           <KeyboardArrowUpIcon className="text-gray-700" />
@@ -100,6 +109,7 @@ const Header = () => {
           <KeyboardArrowDownIcon className="text-gray-700" />
         )}
       </div>
+
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
           <Link
