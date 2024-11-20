@@ -100,7 +100,7 @@ const Header = () => {
             className="w-8 h-8 rounded-full object-cover"
           />
         ) : (
-          <AccountCircleIcon className="text-gray-700 w-8 h-8" />
+          <AccountCircleIcon className="text-gray-700 w-8 h-8" /> // Default icon avatar if no custom avatar
         )}
         <span className="text-gray-900 font-semibold">{authenticatedUser?.username}</span>
         {isDropdownOpen ? (
@@ -117,8 +117,11 @@ const Header = () => {
             className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
             onClick={closeDropdown}
           >
-            <AccountCircleIcon className="text-black" />
-            Profile
+            <img
+              src={authenticatedUser.avatar}
+              alt={authenticatedUser.username}
+              className="w-7 h-7 rounded-full object-cover"
+            />            Profile
           </Link>
           <Link
             to="/orders"

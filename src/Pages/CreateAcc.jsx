@@ -4,6 +4,7 @@ import zxcvbn from 'zxcvbn';
 import { useAuth } from '../actions/authContext';
 import { IconButton, InputAdornment, TextField, Button } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import GoogleButton from 'react-google-button';
 
 const CreateAcc = () => {
     const history = useHistory();
@@ -194,15 +195,10 @@ const CreateAcc = () => {
 
                 {/* Google Login Button */}
                 <div className="mt-6 text-center">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        fullWidth
+                    <GoogleButton
+                        style={{ marginTop: '1rem', width: '100%' }}
                         onClick={handleGoogleLogin}
-                        disabled={loading}
-                    >
-                        {loading ? "Loading..." : "Login with Google"}
-                    </Button>
+                    />
                 </div>
 
                 <div className='mt-3 mb-3 text-center'>

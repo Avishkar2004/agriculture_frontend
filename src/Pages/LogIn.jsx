@@ -3,7 +3,7 @@ import { useHistory, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../actions/authContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MdErrorOutline, MdCheckCircle } from 'react-icons/md'; // Import icons for error and success
-
+import GoogleButton from "react-google-button"
 
 const LogIn = () => {
   const history = useHistory();
@@ -28,6 +28,11 @@ const LogIn = () => {
   const handlePassWordToggle = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8080/auth/google"
+  }
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -69,6 +74,8 @@ const LogIn = () => {
       setIsLoading(false);
     }
   };
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-200 to-gray-400 p-4">
@@ -119,7 +126,7 @@ const LogIn = () => {
             className={`w-full py-2 px-4 rounded-md ${isLoading ? 'bg-gray-500' : 'bg-blue-700'} text-white font-semibold transition-colors duration-300`}
             disabled={isLoading}
           >
-            {isLoading ? 'Logging In...' : 'Log In'}
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
 
           {errorMessage && (
@@ -128,7 +135,6 @@ const LogIn = () => {
               <span>{errorMessage}</span>
             </div>
           )}
-
           {/* Success Message */}
           {serverResponse && !errorMessage && (
             <div className="flex items-center text-green-600 justify-center bg-green-100 rounded-lg p-3 mt-4 text-sm">
@@ -137,6 +143,10 @@ const LogIn = () => {
             </div>
           )}
         </form>
+        <GoogleButton
+          style={{ marginTop: '1rem', width: '100%' }}
+          onClick={handleGoogleLogin}
+        />
 
         <div className="flex items-center justify-between gap-4 mt-6">
           <Link
