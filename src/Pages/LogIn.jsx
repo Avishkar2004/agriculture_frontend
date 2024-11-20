@@ -4,6 +4,9 @@ import { useAuth } from '../actions/authContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { MdErrorOutline, MdCheckCircle } from 'react-icons/md'; // Import icons for error and success
 import GoogleButton from "react-google-button"
+import GitHubIcon from '@mui/icons-material/GitHub';
+import { Button } from '@mui/material';
+
 
 const LogIn = () => {
   const history = useHistory();
@@ -33,6 +36,9 @@ const LogIn = () => {
     window.location.href = "http://localhost:8080/auth/google"
   }
 
+  const handleGitHubLogin = () => {
+    window.location.href = "http://localhost:8080/auth/github"
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -147,6 +153,22 @@ const LogIn = () => {
           style={{ marginTop: '1rem', width: '100%' }}
           onClick={handleGoogleLogin}
         />
+        <div className="mt-2 text-center">
+          <Button
+            onClick={handleGitHubLogin}
+            variant="contained"
+            startIcon={<GitHubIcon />}
+            style={{
+              backgroundColor: "#333",
+              color: "white",
+              marginTop: "1rem",
+              width: "100%",
+              textTransform: "none",
+            }}
+          >
+            Sign in with GitHub
+          </Button>
+        </div>
 
         <div className="flex items-center justify-between gap-4 mt-6">
           <Link

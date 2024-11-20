@@ -5,7 +5,7 @@ import { useAuth } from '../actions/authContext';
 import { IconButton, InputAdornment, TextField, Button } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import GoogleButton from 'react-google-button';
-
+import GitHubIcon from '@mui/icons-material/GitHub';
 const CreateAcc = () => {
     const history = useHistory();
     const { login } = useAuth();
@@ -85,16 +85,20 @@ const CreateAcc = () => {
     // Google Login handler
     const handleGoogleLogin = async () => {
         window.location.href = "http://localhost:8080/auth/google";
-
     };
+
+    // Github Login handler
+    const handleGithubLogin = () => {
+        window.location.href = "http://localhost:8080/auth/github" // Backend route for Github login
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
-                <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Sign Up</h2>
+                <h2 className="text-3xl font-semibold text-gray-800 mb-2 text-center">Sign Up</h2>
                 <form onSubmit={handleSignup}>
                     {/* Username Input */}
-                    <div className="mb-6">
+                    <div className="mb-2">
                         <label htmlFor="username" className="block text-gray-700 text-sm font-medium mb-2">Username</label>
                         <TextField
                             id="username"
@@ -109,7 +113,7 @@ const CreateAcc = () => {
                     </div>
 
                     {/* Email Input */}
-                    <div className="mb-6">
+                    <div className="mb-2">
                         <label htmlFor="email" className="block text-gray-700 text-sm font-medium mb-2">Email</label>
                         <TextField
                             id="email"
@@ -124,7 +128,7 @@ const CreateAcc = () => {
                     </div>
 
                     {/* Password Input */}
-                    <div className="mb-6">
+                    <div className="mb-2">
                         <label htmlFor="password" className="block text-gray-700 text-sm font-medium mb-2">Password</label>
                         <TextField
                             id="password"
@@ -154,7 +158,7 @@ const CreateAcc = () => {
                     </div>
 
                     {/* Confirm Password Input */}
-                    <div className="mb-6">
+                    <div className="mb-2">
                         <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-medium mb-2">Confirm Password</label>
                         <TextField
                             id="confirmPassword"
@@ -186,7 +190,7 @@ const CreateAcc = () => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300"
+                        className="w-full mt-2 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300"
                         disabled={loading}
                     >
                         {loading ? "Loading..." : "Sign Up"}
@@ -194,13 +198,28 @@ const CreateAcc = () => {
                 </form>
 
                 {/* Google Login Button */}
-                <div className="mt-6 text-center">
+                <div className="mt-2 text-center">
                     <GoogleButton
                         style={{ marginTop: '1rem', width: '100%' }}
                         onClick={handleGoogleLogin}
                     />
                 </div>
-
+                <div className="mt-2 text-center">
+                    <Button
+                        onClick={handleGithubLogin}
+                        variant="contained"
+                        startIcon={<GitHubIcon />}
+                        style={{
+                            backgroundColor: "#333",
+                            color: "white",
+                            marginTop: "1rem",
+                            width: "100%",
+                            textTransform: "none",
+                        }}
+                    >
+                        Sign in with GitHub
+                    </Button>
+                </div>
                 <div className='mt-3 mb-3 text-center'>
                     <span>Already have an account? </span>
                     <Link to="/Signin" className='text-indigo-500 hover:underline'>Log In</Link>
