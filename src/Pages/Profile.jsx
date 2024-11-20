@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useAuth } from '../actions/authContext';
-import Cart from './Cart';
-import { FaUserEdit, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
+import React, { useState } from "react";
+import { useAuth } from "../actions/authContext";
+import Cart from "./Cart";
+import { FaUserEdit, FaSignOutAlt } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const Profile = () => {
     const { authenticatedUser, logout } = useAuth();
@@ -14,14 +14,16 @@ const Profile = () => {
     };
 
     const handleDeleteAccount = async () => {
-        const confirmation = window.confirm("Are you sure you want to delete your account?");
+        const confirmation = window.confirm(
+            "Are you sure you want to delete your account?"
+        );
         if (confirmation) {
             try {
                 const response = await fetch(`/api/users/${authenticatedUser.id}`, {
-                    method: 'DELETE',
+                    method: "DELETE",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
                     },
                 });
 
@@ -30,7 +32,7 @@ const Profile = () => {
                 if (response.ok) {
                     alert(data.message);
                     logout();
-                    window.location.reload()
+                    window.location.reload();
                 } else {
                     alert(data.message);
                 }
@@ -43,10 +45,14 @@ const Profile = () => {
 
     if (!authenticatedUser) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-200 to-gray-400">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-r ">
                 <div className="bg-white shadow-md rounded-lg p-6">
                     <p className="text-gray-800 text-lg">
-                        Please <Link to="/Signup" className="text-blue-600 hover:underline">Sign Up</Link> to view your profile.
+                        Please{" "}
+                        <Link to="/Signup" className="text-blue-600 hover:underline">
+                            Sign Up
+                        </Link>{" "}
+                        to view your profile.
                     </p>
                 </div>
             </div>
@@ -54,27 +60,31 @@ const Profile = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-gray-200 to-gray-400 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-r from-green-100 to-green-400 flex items-center justify-center px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl p-10">
                 {/* Profile Header */}
                 <div className="mb-8 text-center">
+                    <div className="relative w-32 h-32 mx-auto mb-4">
+                        <img
+                            src={authenticatedUser.avatar || "/default-avatar.png"}
+                            alt="Profile Avatar"
+                            className="w-full h-full object-cover rounded-full shadow-lg"
+                        />
+                    </div>
                     <h2 className="text-4xl font-extrabold text-gray-800">
                         Welcome, {authenticatedUser.username}
                     </h2>
-                    <p className="text-gray-600 text-lg mt-3">
-                        {authenticatedUser.email}
-                    </p>
+                    <p className="text-gray-600 text-lg mt-3">{authenticatedUser.email}</p>
                 </div>
 
                 {/* Shopping Cart Section */}
                 <div className="mb-10">
                     <h3 className="text-3xl font-semibold text-gray-800 mb-5 flex items-center">
-
                         <FaUserEdit className="mr-2 text-blue-600" />
                         Shopping Cart
                     </h3>
                     <div className="bg-gray-100 p-6 rounded-xl shadow-inner">
-                        <Cart onCartStatusChange={setIsCartEmpty} /> {/* Update cart status */}
+                        <Cart onCartStatusChange={setIsCartEmpty} />
                     </div>
                 </div>
 
