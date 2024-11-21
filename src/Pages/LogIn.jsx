@@ -61,7 +61,7 @@ const LogIn = () => {
         return;
       }
       const { success, message, user } = await response.json();
-      console.log("Token from Login", user.token)
+      // console.log("Token from Login", user.token)
       if (success) {
         localStorage.setItem('authenticatedUser', JSON.stringify({ user }));
         login(user);

@@ -25,6 +25,9 @@ export const AuthProvider = ({ children }) => {
       }
       const decodedToken = jwtDecode(user.token);
       const userInfo = {
+        id: decodedToken.id,
+        username: decodedToken.username,
+        email: decodedToken.email,
         ...user,
         decodedToken,
         avatar: user.avatar || decodedToken.avatar,

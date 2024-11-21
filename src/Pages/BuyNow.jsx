@@ -6,17 +6,38 @@ import DeliveryAddress from './DeliveryAddress';
 import OrderSummary from './OrderSummary';
 import PaymentOption from './PaymentOption';
 import { AiOutlineUser, AiOutlineHome, AiOutlineFileText, AiOutlineCreditCard } from 'react-icons/ai';
+import { useAuth } from '../actions/authContext';
 
 const BuyNow = () => {
   const history = useHistory();
+  const { authenticatedUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [expandedSection, setExpandedSection] = useState("login");
-  const [isAddressSelected, setIsAddressSelected] = useState(false); // New state to track if address is selected
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState({}); // New state for selected address
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);
 
   const handleSubmit = async (orderData) => {
+    console.log('Selected Address:', selectedAddress);  // Log to ensure it's not null
+
+    if (!selectedAddress) {
+      alert("Please select a delivery address");
+      return;
+    }
+    const orderPayload = {
+      ...orderData,
+      product_id: productData.id,
+      product_name: productData.name,
+      user_id: authenticatedUser?.id,
+      customerName: authenticatedUser?.username,
+      email: authenticatedUser?.email,
+      phoneNumber: selectedAddress?.phone_number, // Use phone_number from selectedAddress
+    };
+
+    console.log("Final Order Payload:", orderPayload); // Debug log
+
     try {
       const response = await fetch('/api/orders', {
         method: 'POST',
@@ -24,7 +45,7 @@ const BuyNow = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(orderPayload),
       });
 
       if (response.ok) {
@@ -104,10 +125,16 @@ const BuyNow = () => {
               </div>
               <span className="text-xl">{expandedSection === 'address' ? '-' : '+'}</span>
             </button>
-            {expandedSection === 'address' && <DeliveryAddress onAddressSelect={() => {
-              setIsAddressSelected(true);
-              setExpandedSection('summary');
-            }} />}
+            {expandedSection === 'address' && (
+              <DeliveryAddress
+                onAddressSelect={(address) => {
+                  console.log("Received address in BuyNow:", address);  // Debug log
+                  setSelectedAddress(address); // Update selectedAddress
+                  setIsAddressSelected(true);
+                  setExpandedSection('summary');
+                }}
+              />
+            )}
           </div>
 
           <div className="mb-4">

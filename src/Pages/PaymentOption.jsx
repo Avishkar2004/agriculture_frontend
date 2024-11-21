@@ -44,13 +44,12 @@ const PaymentOption = ({ onSubmit, productData }) => {
             setLoading(false);
             return;
         }
-
         // Simulate API call
         setTimeout(() => {
             setLoading(false);
             onSubmit({ ...productData, paymentMethod, paymentDetails });
             alert('Payment successful!');
-        }, 2000);
+        },);
     };
 
     return (
