@@ -14,14 +14,15 @@ const BuyNow = () => {
   const [showModal, setShowModal] = useState(false);
   const [expandedSection, setExpandedSection] = useState("login");
   const [isAddressSelected, setIsAddressSelected] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState({}); // New state for selected address
+  const [selectedAddress, setSelectedAddress] = useState(null); // New state for selected address
+
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);
 
-  const handleSubmit = async (orderData) => {
-    console.log('Selected Address:', selectedAddress);  // Log to ensure it's not null
 
+  const handleSubmit = async (orderData) => {
+    // console.log('Selected Address:', selectedAddress);  // Log to ensure it's not null
     if (!selectedAddress) {
       alert("Please select a delivery address");
       return;
@@ -33,11 +34,15 @@ const BuyNow = () => {
       user_id: authenticatedUser?.id,
       customerName: authenticatedUser?.username,
       email: authenticatedUser?.email,
-      phoneNumber: selectedAddress?.phone_number, // Use phone_number from selectedAddress
+      phoneNumber: selectedAddress?.phone_number,
+      address: selectedAddress?.locality,
+      city: selectedAddress?.city,
+      state: selectedAddress?.state,
+      zipCode: selectedAddress?.pincode,
+      country: "India",
     };
 
     console.log("Final Order Payload:", orderPayload); // Debug log
-
     try {
       const response = await fetch('/api/orders', {
         method: 'POST',
@@ -128,7 +133,6 @@ const BuyNow = () => {
             {expandedSection === 'address' && (
               <DeliveryAddress
                 onAddressSelect={(address) => {
-                  console.log("Received address in BuyNow:", address);  // Debug log
                   setSelectedAddress(address); // Update selectedAddress
                   setIsAddressSelected(true);
                   setExpandedSection('summary');
@@ -170,6 +174,7 @@ const BuyNow = () => {
       {showModal && (
         <OrderConfirmModal
           productData={productData}
+          totalPrice={productData.totalPrice} // Pass totalPrice to the modal
           onClose={closeModal}
         />
       )}

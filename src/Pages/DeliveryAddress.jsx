@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from "js-cookie"
 import { FaChevronDown, FaChevronUp, FaCheckCircle } from 'react-icons/fa';
 
-const DeliveryAddress = () => {
+const DeliveryAddress = ({ onAddressSelect }) => {
     const [address, setAddress] = useState({
         name: '',
         phoneNumber: '',
@@ -24,7 +24,6 @@ const DeliveryAddress = () => {
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
-
         // Update addressType directly if it's a radio button
         if (type === "radio" && name === "addressType") {
             setAddress({ ...address, addressType: value });
@@ -82,10 +81,8 @@ const DeliveryAddress = () => {
             if (response.ok) {
                 const data = await response.json();
                 setAddresses(data);
-
                 // Store the fetched addresses in the cookies
                 Cookies.set("userAddresses", JSON.stringify(data), { expires: 7 });
-
                 // Set the first address as selected by default if there are any addresses
                 if (data.length > 0) {
                     setSelectedAddress(data[0].id);  // Set the first address as selected
@@ -104,9 +101,9 @@ const DeliveryAddress = () => {
     };
 
     const handleSelectAddress = (address) => {
-        // Log address to ensure it's the correct object
-        console.log('Selected Address:', address);
-        setSelectedAddress(address); // Set the entire address object
+        setSelectedAddress(address) //store the selected address locally
+        setHighlightedAddress(address.id)
+        onAddressSelect(address)
     };
 
     const handleShowAllToggle = () => {

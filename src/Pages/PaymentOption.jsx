@@ -48,7 +48,7 @@ const PaymentOption = ({ onSubmit, productData }) => {
         setTimeout(() => {
             setLoading(false);
             onSubmit({ ...productData, paymentMethod, paymentDetails });
-            alert('Payment successful!');
+            // alert('Payment successful!');
         },);
     };
 
