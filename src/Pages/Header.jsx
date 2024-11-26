@@ -1,11 +1,15 @@
+import React, { useEffect, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CloseIcon from "@mui/icons-material/Close";
+import SellIcon from '@mui/icons-material/Sell';
+
+import MenuIcon from "@mui/icons-material/Menu";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../actions/authContext";
 import HeaderPhoto from './Logo.webp';
@@ -14,6 +18,8 @@ const Header = () => {
   const inputRef = useRef(null);
   const { authenticatedUser, logout } = useAuth() || {};
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const [cartItemCount, setCartItemCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -86,6 +92,81 @@ const Header = () => {
   useEffect(() => {
     fetchCartData();
   }, []);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
+
+  const renderSidebar = () => (
+    <div className={`fixed top-0 left-0 h-full bg-white z-50 shadow-lg transform transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <button
+        className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+        onClick={toggleSidebar}
+      >
+        <CloseIcon />
+      </button>
+      <div className="mt-20 flex flex-col space-y-4 px-8">
+        {authenticatedUser ? (
+          <>
+            {/* My Profile Link */}
+            <Link
+              to="/profile"
+              className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-indigo-100 transition duration-200 rounded-md"
+              onClick={closeDropdown}
+            >
+              <AccountCircleIcon className="text-indigo-500" />
+              <span className="font-medium">My Profile</span>
+            </Link>
+
+            {/* My Orders Link */}
+            <Link
+              to="/orders"
+              className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-green-100 transition duration-200 rounded-md"
+              onClick={closeDropdown}
+            >
+              <ListAltIcon className="text-green-500" />
+              <span className="font-medium">My Orders</span>
+            </Link>
+
+            {/* Settings Link */}
+            <Link
+              to="/settings"
+              className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-yellow-100 transition duration-200 rounded-md"
+              onClick={closeDropdown}
+            >
+              <AccountCircleIcon className="text-yellow-500" />
+              <span className="font-medium">Settings</span>
+            </Link>
+
+            {/* Help Center Link */}
+            <Link
+              to="/help"
+              className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-blue-100 transition duration-200 rounded-md"
+              onClick={closeDropdown}
+            >
+              <AccountCircleIcon className="text-blue-500" />
+              <span className="font-medium">Help Center</span>
+            </Link>
+
+            {/* Logout Button */}
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 px-6 py-3 w-full text-gray-800 hover:bg-red-100 transition duration-200 rounded-md"
+            >
+              <ExitToAppIcon className="text-red-500" />
+              <span className="font-medium text-red-600">Logout</span>
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/Signup" className="text-gray-700 hover:text-gray-900">Sign up</Link>
+            <Link to="/Signin" className="text-gray-700 hover:text-gray-900">Sign in</Link>
+          </>
+        )}
+        <Link to="/#" className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-indigo-100 transition duration-200 rounded-md">
+          <SellIcon className="text-green-500" />
+          Be a Seller</Link>
+      </div>
+    </div>
+  );
 
   const renderUserDropdown = () => (
     <div className="relative inline-block text-left">
@@ -196,8 +277,15 @@ const Header = () => {
               {cartItemCount}
             </span>
           </Link>
+          <button className="md:hidden text-white" onClick={toggleSidebar}>
+            <MenuIcon />
+          </button>
         </div>
       </div>
+
+      {/* Sidebar for small screens */}
+      {renderSidebar()}
+
       {searchResults.length > 0 ? (
         <div className="container mx-auto mt-4 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-gray-800 text-xl mb-4 font-semibold">Search Results:</h2>
@@ -218,18 +306,6 @@ const Header = () => {
         </div>
       ) : searchQuery.length > 2 && (
         <div className="container mx-auto mt-4 bg-gradient-to-r from-blue-50 to-white p-8 rounded-lg shadow-lg text-center">
-          <div className="bg-blue-100 p-6 rounded-full mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-12 h-12 text-blue-400"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.535 4.535m0 0a9 9 0 11-12.728 0 9 9 0 0112.728 0zM9.75 9.75l-1.5 1.5m0 0l-.75.75M6.75 14.25l-1.5 1.5M9.75 9.75h.008v.008h-.008z" />
-            </svg>
-          </div>
           <h3 className="text-gray-700 text-lg">No results found</h3>
         </div>
       )}
