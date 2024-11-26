@@ -96,13 +96,13 @@ const Header = () => {
         {authenticatedUser?.avatar ? (
           <img
             src={authenticatedUser.avatar}
-            alt={authenticatedUser.username}
+            alt={authenticatedUser.username || "User"}
             className="w-8 h-8 rounded-full object-cover"
           />
         ) : (
-          <AccountCircleIcon className="text-gray-700 w-8 h-8" /> // Default icon avatar if no custom avatar
+          <AccountCircleIcon className="text-gray-700 w-8 h-8" />
         )}
-        <span className="text-gray-900 font-semibold">{authenticatedUser?.username}</span>
+        <span className="text-gray-900 font-semibold">{authenticatedUser?.username || "Guest"}</span>
         {isDropdownOpen ? (
           <KeyboardArrowUpIcon className="text-gray-700" />
         ) : (
@@ -111,35 +111,54 @@ const Header = () => {
       </div>
 
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
           <Link
             to="/profile"
             className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
             onClick={closeDropdown}
           >
-            <img
-              src={authenticatedUser.avatar}
-              alt={authenticatedUser.username}
-              className="w-7 h-7 rounded-full object-cover"
-            />            Profile
+            <AccountCircleIcon className="text-indigo-500" />
+            My Profile
           </Link>
           <Link
             to="/orders"
             className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
+            onClick={closeDropdown}
           >
-            <ListAltIcon className="text-black" />
-            Orders
+            <ListAltIcon className="text-green-500" />
+            My Orders
+          </Link>
+          <Link
+            to="/settings"
+            className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
+            onClick={closeDropdown}
+          >
+            <AccountCircleIcon className="text-yellow-500" />
+            Settings
+          </Link>
+          <Link
+            to="/help"
+            className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
+            onClick={closeDropdown}
+          >
+            <AccountCircleIcon className="text-blue-500" />
+            Help Center
           </Link>
           <button
-            onClick={ProfilehandleLogOut}
+            onClick={() => {
+              if (window.confirm("Are you sure you want to logout?")) {
+                ProfilehandleLogOut();
+              }
+            }}
             className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
           >
-            <ExitToAppIcon className="text-black" />
+            <ExitToAppIcon className="text-red-500" />
             Logout
           </button>
         </div>
       )}
     </div>
+
   );
 
   return (
