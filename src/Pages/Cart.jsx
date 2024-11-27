@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useHistory, Link } from "react-router-dom";
 
 const Cart = () => {
     const [cartData, setCartData] = useState([]);
@@ -9,7 +9,7 @@ const Cart = () => {
     const fetchCartData = async () => {
         try {
             const response = await fetch("/cart", {
-                credentials: "include"
+                credentials: "include",
             });
 
             if (!response.ok) {
@@ -30,11 +30,13 @@ const Cart = () => {
         try {
             const response = await fetch(`/cart/${itemId}`, {
                 method: "DELETE",
-                credentials: "include"
+                credentials: "include",
             });
 
             if (response.ok) {
-                setCartData((prevData) => prevData.filter((item) => item.id !== itemId));
+                setCartData((prevData) =>
+                    prevData.filter((item) => item.id !== itemId)
+                );
             } else {
                 console.error("Failed to remove item from cart");
             }
@@ -44,10 +46,10 @@ const Cart = () => {
     };
 
     const calculateSubtotal = () => {
-        if (cartData.length === 0) {
-            return 0;
-        }
-        return cartData.reduce((total, item) => total + (item.price * item.quantity), 0);
+        return cartData.reduce(
+            (total, item) => total + item.price * item.quantity,
+            0
+        );
     };
 
     useEffect(() => {
@@ -56,14 +58,16 @@ const Cart = () => {
 
     if (!isAuthenticated) {
         return (
-            <div className="container mx-auto my-8 text-center max-w-lg px-6">
-                <h2 className="text-3xl font-bold mb-6 text-gray-800">Your Cart</h2>
-                <p className="text-lg text-gray-600 mb-4">
-                    Missing cart items? Please log in to see the items you added previously.
+            <div className="container mx-auto my-16 text-center max-w-lg px-6">
+                <h2 className="text-4xl font-extrabold mb-6 text-gray-900">
+                    Your Cart is Empty
+                </h2>
+                <p className="text-lg text-gray-600 mb-6">
+                    Please log in to access your cart items.
                 </p>
                 <button
-                    className="mt-4 bg-indigo-500 text-white px-6 py-3 rounded hover:bg-indigo-600"
-                    onClick={() => history.push('/Signin')}
+                    className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-6 py-3 rounded-md shadow-lg hover:shadow-xl transition"
+                    onClick={() => history.push("/Signin")}
                 >
                     Log In
                 </button>
@@ -72,25 +76,39 @@ const Cart = () => {
     }
 
     return (
-        <div className="container mx-auto my-8 max-w-4xl px-6">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">Your Shopping Cart</h2>
-
-            <p className="text-sm text-gray-600 mb-4">
-                {cartData.length} {cartData.length === 1 ? 'item' : 'items'} in your cart
+        <div className="container mx-auto my-16 max-w-5xl px-6">
+            <h2 className="text-4xl font-extrabold mb-8 text-gray-900">
+                Your Shopping Cart
+            </h2>
+            <p className="text-gray-700 text-sm mb-4">
+                {cartData.length}{" "}
+                {cartData.length === 1 ? "item" : "items"} in your cart
             </p>
 
-            <ul className="space-y-4">
-                {cartData.map(item => (
-                    <CartItem key={item.id} item={item} onDelete={handleRemoveFromCart} />
+            <ul className="space-y-6">
+                {cartData.map((item) => (
+                    <CartItem
+                        key={item.id}
+                        item={item}
+                        onDelete={handleRemoveFromCart}
+                    />
                 ))}
             </ul>
 
-            <div className="mt-8 border-t pt-6 flex justify-between items-center">
-                <p className="text-xl font-bold text-gray-800">Subtotal: ${calculateSubtotal().toFixed(2)}</p>
-                <Link to={{
-                    pathname: "/checkout",
-                    state: { cartData }
-                }} className="bg-indigo-500 text-white px-6 py-3 rounded-lg hover:bg-indigo-600">
+            <div className="mt-10 border-t pt-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                <p className="text-xl font-semibold text-gray-900">
+                    Subtotal:{" "}
+                    <span className="text-indigo-600">
+                        ${calculateSubtotal().toFixed(2)}
+                    </span>
+                </p>
+                <Link
+                    to={{
+                        pathname: "/checkout",
+                        state: { cartData },
+                    }}
+                    className="bg-gradient-to-r from-green-400 to-teal-500 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition"
+                >
                     Proceed to Checkout
                 </Link>
             </div>
@@ -99,34 +117,38 @@ const Cart = () => {
 };
 
 const CartItem = ({ item, onDelete }) => (
-    <li className="flex flex-col md:flex-row items-center bg-white p-4 rounded-lg shadow-md border border-gray-200">
-        <Link to={{
-            pathname: `/product/${item.name}`,
-            state: { product: item }
-        }}>
-            <div className="w-full md:w-24 h-24 flex-shrink-0">
-                <img
-                    src={`data:image/avif;base64,${item.image}`}
-                    alt={item.name}
-                    className="w-full h-full object-cover rounded-lg"
-                />
-            </div>
-        </Link>
-        <div className="flex-1 mt-4 md:mt-0 md:ml-4">
-            <Link to={{
+    <li className="flex flex-col sm:flex-row items-center bg-white p-6 rounded-lg shadow-md border border-gray-200 transition hover:shadow-lg">
+        <Link
+            to={{
                 pathname: `/product/${item.name}`,
-                state: { product: item }
-            }} className="text-lg font-semibold to-gray-800">
-                <p className="text-lg font-semibold text-gray-800">{item.name}</p>
+                state: { product: item },
+            }}
+            className="w-full sm:w-32 h-32 flex-shrink-0"
+        >
+            <img
+                src={`data:image/avif;base64,${item.image}`}
+                alt={item.name}
+                className="w-full h-full object-cover rounded-lg"
+            />
+        </Link>
+        <div className="flex-1 mt-4 sm:mt-0 sm:ml-6">
+            <Link
+                to={{
+                    pathname: `/product/${item.name}`,
+                    state: { product: item },
+                }}
+                className="text-lg font-semibold text-gray-800 hover:underline"
+            >
+                {item.name}
             </Link>
-            <p className="text-gray-600">Price: ${item.price}</p>
+            <p className="text-gray-600 mt-2">Price: ${item.price}</p>
             <p className="text-gray-600">Quantity: {item.quantity}</p>
         </div>
         <button
-            className="mt-4 md:mt-0 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+            className="mt-4 sm:mt-0 bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition"
             onClick={() => onDelete(item.id)}
         >
-            Delete
+            Remove
         </button>
     </li>
 );

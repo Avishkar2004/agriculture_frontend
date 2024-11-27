@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../actions/authContext";
 import Cart from "./Cart";
-import { FaUserEdit, FaSignOutAlt } from "react-icons/fa";
+import { FaUserEdit, FaSignOutAlt } from "react-icons/fa"
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
@@ -58,18 +59,23 @@ const Profile = () => {
             </div>
         );
     }
-
     return (
-        <div className="min-h-screen bg-gradient-to-r from-green-100 to-green-400 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl p-10">
                 {/* Profile Header */}
                 <div className="mb-8 text-center">
                     <div className="relative w-32 h-32 mx-auto mb-4">
-                        <img
-                            src={authenticatedUser.avatar || "/default-avatar.png"}
-                            alt="Profile Avatar"
-                            className="w-full h-full object-cover rounded-full shadow-lg"
-                        />
+                        {authenticatedUser.avatar ? (
+                            <img
+                                src={authenticatedUser.avatar}
+                                alt="Profile Avatar"
+                                className="w-full h-full object-cover rounded-full shadow-lg"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full shadow-lg text-gray-500">
+                                <AccountCircleIcon style={{ fontSize: "4rem" }} />
+                            </div>
+                        )}
                     </div>
                     <h2 className="text-4xl font-extrabold text-gray-800">
                         Welcome, {authenticatedUser.username}
