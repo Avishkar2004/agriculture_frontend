@@ -1,66 +1,55 @@
 import React, { useEffect, useRef, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CloseIcon from "@mui/icons-material/Close";
-import SellIcon from '@mui/icons-material/Sell';
-
-import MenuIcon from "@mui/icons-material/Menu";
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import {
+  Search as SearchIcon,
+  ShoppingCartOutlined as ShoppingCartOutlinedIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon,
+  AccountCircle as AccountCircleIcon,
+  ListAlt as ListAltIcon,
+  ExitToApp as ExitToAppIcon,
+  Sell as SellIcon,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useAuth } from "../actions/authContext";
-import HeaderPhoto from './Logo.webp';
+import HeaderPhoto from "./Logo.webp";
 
 const Header = () => {
   const inputRef = useRef(null);
   const { authenticatedUser, logout } = useAuth() || {};
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const [cartItemCount, setCartItemCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  const closeDropdown = () => {
-    setIsDropdownOpen(false);
-  };
-
-  const fetchCartData = async () => {
-    try {
-      const response = await fetch('/cart', {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  useEffect(() => {
+    // Fetch cart data on mount
+    const fetchCartData = async () => {
+      try {
+        const response = await fetch("/cart", { method: "GET", credentials: "include" });
+        if (response.ok) {
+          const data = await response.json();
+          setCartItemCount(data.length);
+        }
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
       }
-      const data = await response.json();
-      setCartItemCount(data.length);
-    } catch (error) {
-      console.error('Error fetching cart data:', error);
-    }
-  };
+    };
+    fetchCartData();
+  }, []);
 
   const handleSearch = async (query) => {
     if (query.length > 2) {
       try {
-        const response = await fetch(`/search?q=${query}`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const response = await fetch(`/search?q=${query}`, { method: "GET", credentials: "include" });
+        if (response.ok) {
+          const data = await response.json();
+          setSearchResults(data);
         }
-
-        const data = await response.json();
-        setSearchResults(data);
       } catch (error) {
-        console.error('Error fetching search results:', error);
+        console.error("Error fetching search results:", error);
       }
     } else {
       setSearchResults([]);
@@ -73,27 +62,24 @@ const Header = () => {
     handleSearch(query);
   };
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   const ProfilehandleLogOut = async () => {
     try {
-      const response = await fetch('/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const response = await fetch("/logout", { method: "POST", credentials: "include" });
+      if (response.ok) {
+        logout();
+        window.location.reload();
       }
-      logout();
-      window.location.reload();
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
+
   };
 
-  useEffect(() => {
-    fetchCartData();
-  }, []);
-
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
 
   const renderSidebar = () => (
     <div className={`fixed top-0 left-0 h-full bg-white z-50 shadow-lg transform transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
@@ -161,131 +147,136 @@ const Header = () => {
             <Link to="/Signin" className="text-gray-700 hover:text-gray-900">Sign in</Link>
           </>
         )}
-        <Link to="/#" className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-indigo-100 transition duration-200 rounded-md">
+        <Link to="/#" className="flex items-center gap-3 px-6 py-3 text-gray-800 transition duration-200 rounded-md">
           <SellIcon className="text-green-500" />
           Be a Seller</Link>
       </div>
     </div>
   );
 
-  const renderUserDropdown = () => (
-    <div className="relative inline-block text-left">
-      <div
-        className="flex items-center gap-2 cursor-pointer py-2 px-3 bg-gray-50 rounded-lg shadow hover:bg-gray-200 transition duration-300"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-      >
-        {authenticatedUser?.avatar ? (
-          <img
-            src={authenticatedUser.avatar}
-            alt={authenticatedUser.username || "User"}
-            className="w-8 h-8 rounded-full object-cover"
-          />
-        ) : (
-          <AccountCircleIcon className="text-gray-700 w-8 h-8" />
-        )}
-        <span className="text-gray-900 font-semibold">{authenticatedUser?.username || "Guest"}</span>
-        {isDropdownOpen ? (
-          <KeyboardArrowUpIcon className="text-gray-700" />
-        ) : (
-          <KeyboardArrowDownIcon className="text-gray-700" />
-        )}
-      </div>
-
-      {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-          <Link
-            to="/profile"
-            className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
-            onClick={closeDropdown}
-          >
-            <AccountCircleIcon className="text-indigo-500" />
-            My Profile
-          </Link>
-          <Link
-            to="/orders"
-            className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
-            onClick={closeDropdown}
-          >
-            <ListAltIcon className="text-green-500" />
-            My Orders
-          </Link>
-          <Link
-            to="/settings"
-            className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
-            onClick={closeDropdown}
-          >
-            <AccountCircleIcon className="text-yellow-500" />
-            Settings
-          </Link>
-          <Link
-            to="/help"
-            className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
-            onClick={closeDropdown}
-          >
-            <AccountCircleIcon className="text-blue-500" />
-            Help Center
-          </Link>
-          <button
-            onClick={() => {
-              if (window.confirm("Are you sure you want to logout?")) {
-                ProfilehandleLogOut();
-              }
-            }}
-            className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200"
-          >
-            <ExitToAppIcon className="text-red-500" />
-            Logout
-          </button>
-        </div>
-      )}
-    </div>
-
-  );
 
   return (
-    <header className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-6 shadow-lg">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="flex items-center space-x-3 text-2xl font-bold">
-          <img src={HeaderPhoto} alt="Header" className="w-14 h-auto rounded-lg" />
+    <header className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-4 shadow-lg">
+      <div className="container mx-auto flex justify-between items-center px-4 py-4">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-3 text-lg md:text-2xl font-bold">
+          <img src={HeaderPhoto} alt="Header" className="w-12 md:w-14 h-auto rounded-lg" />
         </Link>
-        <div className="flex-grow max-w-3xl mx-4 relative">
+
+        {/* Search Bar */}
+        <div className="hidden md:flex flex-grow max-w-lg mx-4 relative text-black">
           <input
             ref={inputRef}
             type="text"
-            className="w-full px-5 py-3 text-gray-800 bg-white border border-gray-200 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Search products, categories..."
+            className="w-full px-4 py-2 rounded-full border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 transition shadow-sm"
+            placeholder="Search for products..."
             value={searchQuery}
             onChange={handleInputChange}
           />
-          <SearchIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 text-indigo-400 cursor-pointer" />
+          <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" />
         </div>
+
+        {/* Actions */}
         <div className="flex items-center space-x-4">
-          {authenticatedUser ? (
-            renderUserDropdown()
-          ) : (
-            <div className="space-x-4">
-              <Link to="/Signup" className="hover:underline">Sign up</Link>
-              <Link to="/Signin" className="hover:underline">Sign in</Link>
-            </div>
+          {/* Become a Seller Button */}
+          {authenticatedUser && (
+            <Link
+              to="/sell"
+              className="hidden md:flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full transition-all duration-300 shadow-md"
+            >
+              <SellIcon className="mr-2" />
+              Become a Seller
+            </Link>
           )}
-          <Link to="/#" className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">
-            Become a Seller
+
+          {/* Authenticated User Dropdown */}
+          {authenticatedUser ? (
+            <div className="relative">
+              <button
+                className="flex items-center space-x-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md focus:outline-none transition duration-300"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <AccountCircleIcon className="text-white" />
+                <span>{authenticatedUser.username}</span>
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 bg-white text-gray-800 w-48 mt-2 rounded-lg shadow-lg overflow-hidden">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-3 hover:bg-indigo-100 text-gray-700 transition duration-200"
+                    onClick={closeDropdown}
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/orders"
+                    className="block px-4 py-3 hover:bg-green-100 text-gray-700 transition duration-200"
+                    onClick={closeDropdown}
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-3 hover:bg-yellow-100 text-gray-700 transition duration-200"
+                    onClick={closeDropdown}
+                  >
+                    Settings
+                  </Link>
+                  <Link
+                    to="/help"
+                    className="block px-4 py-3 hover:bg-blue-100 text-gray-700 transition duration-200"
+                    onClick={closeDropdown}
+                  >
+                    Help Center
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="block w-full text-left px-4 py-3 hover:bg-red-100 text-gray-700 transition duration-200"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link to="/Signup" className="text-white hover:underline">
+                Sign up
+              </Link>
+              <Link to="/Signin" className="text-white hover:underline">
+                Sign in
+              </Link>
+            </>
+          )}
+
+          {/* Cart */}
+          <Link
+            to="/cart"
+            className="relative text-white hover:text-gray-300 transition-all duration-300"
+          >
+            <ShoppingCartOutlinedIcon className="text-2xl" />
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white rounded-full px-2 py-1">
+                {cartItemCount}
+              </span>
+            )}
           </Link>
-          <Link to="/cart" className="relative text-white flex items-center">
-            <ShoppingCartOutlinedIcon className="h-6 w-6" />
-            <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full px-2">
-              {cartItemCount}
-            </span>
-          </Link>
-          <button className="md:hidden text-white" onClick={toggleSidebar}>
-            <MenuIcon />
+
+          {/* Sidebar Toggle */}
+          <button
+            className="md:hidden text-white hover:text-gray-300 transition-all duration-300"
+            onClick={toggleSidebar}
+          >
+            <MenuIcon className="text-2xl" />
           </button>
         </div>
       </div>
 
-      {/* Sidebar for small screens */}
+
+      {/* Sidebar */}
       {renderSidebar()}
 
+      {/* Search Results */}
       {searchResults.length > 0 ? (
         <div className="container mx-auto mt-4 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-gray-800 text-xl mb-4 font-semibold">Search Results:</h2>
