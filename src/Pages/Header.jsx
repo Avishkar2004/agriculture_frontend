@@ -64,18 +64,6 @@ const Header = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const ProfilehandleLogOut = async () => {
-    try {
-      const response = await fetch("/logout", { method: "POST", credentials: "include" });
-      if (response.ok) {
-        logout();
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-
-  };
 
   const closeDropdown = () => {
     setIsDropdownOpen(false);
@@ -112,6 +100,8 @@ const Header = () => {
               <span className="font-medium">My Orders</span>
             </Link>
 
+
+
             {/* Settings Link */}
             <Link
               to="/settings"
@@ -132,13 +122,19 @@ const Header = () => {
               <span className="font-medium">Help Center</span>
             </Link>
 
+            {/* My Order Button */}
+            <Link to="/#" className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-green-100 transition duration-200 rounded-md">
+              <SellIcon className="text-green-500" />
+              <span className="font-medium">My Orders</span>
+            </Link>
+
             {/* Logout Button */}
             <button
               onClick={logout}
               className="flex items-center gap-3 px-6 py-3 w-full text-gray-800 hover:bg-red-100 transition duration-200 rounded-md"
             >
               <ExitToAppIcon className="text-red-500" />
-              <span className="font-medium text-red-600">Logout</span>
+              <span onClick={logout} className="font-medium text-red-600">Logout</span>
             </button>
           </>
         ) : (
@@ -147,9 +143,7 @@ const Header = () => {
             <Link to="/Signin" className="text-gray-700 hover:text-gray-900">Sign in</Link>
           </>
         )}
-        <Link to="/#" className="flex items-center gap-3 px-6 py-3 text-gray-800 transition duration-200 rounded-md">
-          <SellIcon className="text-green-500" />
-          Be a Seller</Link>
+
       </div>
     </div>
   );
@@ -193,47 +187,57 @@ const Header = () => {
           {authenticatedUser ? (
             <div className="relative">
               <button
-                className="flex items-center space-x-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md focus:outline-none transition duration-300"
+                className="flex items-center space-x-2 px-2 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md focus:outline-none transition duration-300"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
                 <AccountCircleIcon className="text-white" />
                 <span>{authenticatedUser.username}</span>
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 bg-white text-gray-800 w-48 mt-2 rounded-lg shadow-lg overflow-hidden">
+                <div className="absolute right-0 bg-white text-gray-800 w-56 mt-2 rounded-lg shadow-lg overflow-hidden">
                   <Link
                     to="/profile"
-                    className="block px-4 py-3 hover:bg-indigo-100 text-gray-700 transition duration-200"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-indigo-100 transition duration-200 text-gray-700"
                     onClick={closeDropdown}
                   >
-                    My Profile
+                    <AccountCircleIcon className="text-indigo-500 text-lg" />
+
+                    <span className="font-medium">My Profile</span>
+
                   </Link>
                   <Link
                     to="/orders"
-                    className="block px-4 py-3 hover:bg-green-100 text-gray-700 transition duration-200"
+                    className="flex items-center px-4 py-3 gap-3 hover:bg-green-100 text-gray-700 transition duration-200"
                     onClick={closeDropdown}
                   >
-                    My Orders
+                    <ListAltIcon className="text-green-500 text-lg" />
+
+                    <span className="font-medium">My Orders</span>
                   </Link>
                   <Link
                     to="/settings"
-                    className="block px-4 py-3 hover:bg-yellow-100 text-gray-700 transition duration-200"
+                    className="flex items-center px-4 py-3 gap-3 hover:bg-yellow-100 text-gray-700 transition duration-200"
                     onClick={closeDropdown}
                   >
-                    Settings
+                    <AccountCircleIcon className="text-yellow-500 text-lg" />
+
+                    <span className="font-medium">Settings</span>
+
                   </Link>
                   <Link
                     to="/help"
-                    className="block px-4 py-3 hover:bg-blue-100 text-gray-700 transition duration-200"
+                    className="flex items-center px-4 py-3 gap-3 hover:bg-blue-100 text-gray-700 transition duration-200"
                     onClick={closeDropdown}
                   >
-                    Help Center
+                    <AccountCircleIcon className="text-blue-500 text-lg" />
+                    <span className="font-medium"> Help Center</span>
                   </Link>
                   <button
                     onClick={logout}
-                    className="block w-full text-left px-4 py-3 hover:bg-red-100 text-gray-700 transition duration-200"
+                    className="flex items-center w-full text-left px-4 py-3 gap-3 hover:bg-red-100 text-gray-700 transition duration-200"
                   >
-                    Logout
+                    <ExitToAppIcon className="text-red-500 text-lg" />
+                    <span className="font-medium">Logout</span>
                   </button>
                 </div>
               )}

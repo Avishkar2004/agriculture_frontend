@@ -13,15 +13,12 @@ const GoogleCallback = () => {
 
     if (token) {
       try {
-        // console.log("Token received from query params:", token);
-
         // Save token to local storage
         localStorage.setItem("authToken", token);
 
         // Decode the token to extract user information
         const user = jwtDecode(token); // Extract user information, username
 
-        // console.log("Decoded user:", user);
         login({ token, ...user });
         history.push("/");
       } catch (error) {
@@ -32,7 +29,18 @@ const GoogleCallback = () => {
     }
   }, [history, login]);
 
-  return <div>Loading...</div>;
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex flex-col items-center">
+        {/* Loader */}
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-500 border-opacity-70"></div>
+        {/* Message */}
+        <p className="mt-4 text-lg text-gray-700 font-medium">
+          Authenticating, please wait...
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default GoogleCallback;
