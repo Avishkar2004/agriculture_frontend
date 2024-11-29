@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
         decodedToken,
         avatar: user.avatar || decodedToken.avatar,
       };
+      // console.log("Email", decodedToken.email);
       setAuthenticatedUser(userInfo);
       localStorage.setItem("authenticatedUser", JSON.stringify(userInfo));
     } catch (error) {
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setAuthenticatedUser(null);
     localStorage.removeItem("authenticatedUser");
+    window.location.reload();
   };
 
   const getAuthToken = () =>

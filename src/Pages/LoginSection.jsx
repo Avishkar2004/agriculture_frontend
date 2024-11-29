@@ -3,7 +3,7 @@ import { useAuth } from "../actions/authContext";
 import { FaTruck, FaBell, FaStar, FaSignOutAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-const LoginSection = () => {
+const LoginSection = ({ goToNextSection }) => {
     const { authenticatedUser, logout } = useAuth();
 
     return (
@@ -26,7 +26,7 @@ const LoginSection = () => {
                             Logout & Sign in to another account
                         </button>
                     </div>
-                    <button className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 focus:outline-none">
+                    <button onClick={() => goToNextSection("address")} className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 focus:outline-none">
                         CONTINUE CHECKOUT
                     </button>
 

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useAuth } from '../actions/authContext'; // Assuming you have an AuthContext to get the authenticated user
 
-const OrderSummary = ({ productData }) => {
+const OrderSummary = ({ productData, onContinue }) => {
   const [quantity, setQuantity] = useState(1);
+  const { authenticatedUser } = useAuth();
 
   const totalPrice = productData.totalPrice * quantity;
 
@@ -23,12 +25,11 @@ const OrderSummary = ({ productData }) => {
         <div className="flex justify-between items-center">
           <span>Product Image:</span>
           <img
-            src={`data:image/avif;base64,${productData.image}`}  // Assuming productData.image contains the image URL
+            src={`data:image/avif;base64,${productData.image}`} // Assuming productData.image contains the image URL
             alt={productData.name}
             className="w-16 h-16 object-cover rounded-md"
           />
         </div>
-
 
         {/* Shipping */}
         <div className="flex justify-between text-lg text-gray-700">
@@ -41,6 +42,26 @@ const OrderSummary = ({ productData }) => {
       <div className="mt-6 border-t pt-4 flex justify-between text-xl font-semibold text-gray-900">
         <span>Total:</span>
         <span>₹{totalPrice}</span>
+      </div>
+
+      {/* Email Confirmation */}
+      {authenticatedUser?.email && (
+        <div className="mt-4 text-gray-600 text-center">
+          <p>
+            An order confirmation email will be sent to:{" "}
+            <span className="font-semibold text-gray-800">{authenticatedUser.email}</span>
+          </p>
+        </div>
+      )}
+
+      {/* Continue Button */}
+      <div className="mt-6 text-center">
+        <button
+          className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 focus:outline-none"
+          onClick={onContinue} // Callback for "Continue" button
+        >
+          Continue
+        </button>
       </div>
     </div>
   );

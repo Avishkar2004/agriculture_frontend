@@ -21,8 +21,11 @@ const BuyNow = () => {
   const [productData, setProductData] = useState(initialProductData);
 
 
+  const goToNextSection = (section) => {
+    setExpandedSection(section)
+  }
+
   const handleSubmit = async (orderData) => {
-    // console.log('Selected Address:', selectedAddress);  // Log to ensure it's not null
     if (!selectedAddress) {
       alert("Please select a delivery address");
       return;
@@ -33,7 +36,7 @@ const BuyNow = () => {
       product_name: productData.name,
       user_id: authenticatedUser?.id,
       customerName: authenticatedUser?.username,
-      email: authenticatedUser?.email,
+      email: `authenticatedUser?.email`,
       phoneNumber: selectedAddress?.phone_number,
       address: selectedAddress?.locality,
       city: selectedAddress?.city,
@@ -103,7 +106,6 @@ const BuyNow = () => {
             </div>
           </div>
         </div>
-
         <div className="w-full md:w-1/2 p-4">
           <div className="mb-4">
             <button
@@ -116,9 +118,8 @@ const BuyNow = () => {
               </div>
               <span className="text-xl">{expandedSection === 'login' ? '-' : '+'}</span>
             </button>
-            {expandedSection === 'login' && <LoginSection />}
+            {expandedSection === 'login' && <LoginSection goToNextSection={goToNextSection} />}
           </div>
-
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -152,7 +153,7 @@ const BuyNow = () => {
               </div>
               <span className="text-xl">{expandedSection === 'summary' ? '-' : '+'}</span>
             </button>
-            {expandedSection === 'summary' && <OrderSummary productData={productData} />}
+            {expandedSection === 'summary' && <OrderSummary onContinue={() => setExpandedSection('payment')} productData={productData} />}
           </div>
 
           <div className="mb-4">
@@ -170,7 +171,6 @@ const BuyNow = () => {
           </div>
         </div>
       </div>
-
       {showModal && (
         <OrderConfirmModal
           productData={productData}

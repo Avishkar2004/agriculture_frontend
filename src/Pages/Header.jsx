@@ -44,7 +44,7 @@ const Header = () => {
   }, []);
 
   const handleSearch = async (query) => {
-    if (query.length > 2) {
+    if (query.length > 1) {
       setIsLoading(true);
       setError(null);
       try {
@@ -72,6 +72,18 @@ const Header = () => {
     setSearchQuery(query);
     handleSearch(query);
   };
+
+  const ProfilehandleLogOut = async () => {
+    try {
+      const response = await fetch("/logout", { method: "POST", credentials: "include" })
+      if (response.ok) {
+        logout()
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error("Error logging out:", error)
+    }
+  }
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -178,7 +190,7 @@ const Header = () => {
             onChange={handleInputChange}
           />
           <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" />
-          {searchQuery.length > 2 && (
+          {searchQuery.length > 1 && (
             <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg max-h-60 overflow-y-auto">
               {isLoading && <p className="text-gray-500 text-center py-2">Loading...</p>}
               {!isLoading && searchResults.length > 0 ? (
@@ -225,8 +237,20 @@ const Header = () => {
                 className="flex items-center space-x-2 px-2 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md focus:outline-none transition duration-300"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <AccountCircleIcon className="text-white" />
-                <span>{authenticatedUser.username}</span>
+
+
+                {authenticatedUser.avatar ? (
+                  <img src={authenticatedUser.avatar}
+                    alt={authenticatedUser.username}
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <AccountCircleIcon className="w-8 h-8 text-white" />
+                )}
+                <span className="text-sm font-medium">
+                  {authenticatedUser.username}
+                </span>
+                {isDropdownOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 bg-white text-gray-800 w-56 mt-2 rounded-lg shadow-lg overflow-hidden">
@@ -235,8 +259,15 @@ const Header = () => {
                     className="flex items-center gap-3 px-4 py-3 hover:bg-indigo-100 transition duration-200 text-gray-700"
                     onClick={closeDropdown}
                   >
-                    <AccountCircleIcon className="text-indigo-500 text-lg" />
-
+                    {authenticatedUser.avatar ? (
+                      <img
+                        src={authenticatedUser.avatar}
+                        alt={authenticatedUser.username}
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <AccountCircleIcon className="w-8 h-8 text-blue-600" />
+                    )}
                     <span className="font-medium">My Profile</span>
 
                   </Link>
@@ -268,7 +299,11 @@ const Header = () => {
                     <span className="font-medium"> Help Center</span>
                   </Link>
                   <button
-                    onClick={logout}
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to logout?")) {
+                        ProfilehandleLogOut();
+                      }
+                    }}
                     className="flex items-center w-full text-left px-4 py-3 gap-3 hover:bg-red-100 text-gray-700 transition duration-200"
                   >
                     <ExitToAppIcon className="text-red-500 text-lg" />
