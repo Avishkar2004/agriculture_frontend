@@ -22,6 +22,9 @@ const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
@@ -42,19 +45,27 @@ const Header = () => {
 
   const handleSearch = async (query) => {
     if (query.length > 2) {
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await fetch(`/search?q=${query}`, { method: "GET", credentials: "include" });
         if (response.ok) {
           const data = await response.json();
           setSearchResults(data);
+        } else {
+          setError("Failed to fetch search results.");
         }
-      } catch (error) {
-        console.error("Error fetching search results:", error);
+      } catch (err) {
+        console.error("Error fetching search results:", err);
+        setError("Something went wrong. Please try again later.");
+      } finally {
+        setIsLoading(false);
       }
     } else {
       setSearchResults([]);
     }
   };
+
 
   const handleInputChange = (e) => {
     const query = e.target.value;
@@ -148,7 +159,6 @@ const Header = () => {
     </div>
   );
 
-
   return (
     <header className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center px-4 py-4">
@@ -168,6 +178,31 @@ const Header = () => {
             onChange={handleInputChange}
           />
           <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" />
+          {searchQuery.length > 2 && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg max-h-60 overflow-y-auto">
+              {isLoading && <p className="text-gray-500 text-center py-2">Loading...</p>}
+              {!isLoading && searchResults.length > 0 ? (
+                searchResults.map((product) => (
+                  <Link
+                    key={product.id}
+                    to={`/product/${product.id}`}
+                    className="flex items-center gap-4 px-4 py-2 hover:bg-gray-100 transition"
+                  >
+                    <img
+                      src={`data:image/jpeg;base64,${product.image}`}
+                      alt={product.name}
+                      className="w-10 h-10 object-contain bg-gray-100 rounded"
+                    />
+                    <span className="text-gray-800 font-medium">{product.name}</span>
+                  </Link>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center py-2">
+                  {error ? error : "No results found."}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Actions */}
@@ -275,35 +310,8 @@ const Header = () => {
           </button>
         </div>
       </div>
-
-
       {/* Sidebar */}
       {renderSidebar()}
-
-      {/* Search Results */}
-      {searchResults.length > 0 ? (
-        <div className="container mx-auto mt-4 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-gray-800 text-xl mb-4 font-semibold">Search Results:</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {searchResults.map((product) => (
-              <div key={product.id} className="border border-gray-200 p-4 rounded-lg hover:shadow-lg transition duration-300">
-                <img
-                  src={`data:image/jpeg;base64,${product.image}`}
-                  alt={product.name}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-                <h3 className="text-lg font-semibold text-gray-900 mt-2">{product.name}</h3>
-                <p className="text-gray-700">{product.description}</p>
-                <p className="text-indigo-600 font-bold">Price: ${product.salePrice}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : searchQuery.length > 2 && (
-        <div className="container mx-auto mt-4 bg-gradient-to-r from-blue-50 to-white p-8 rounded-lg shadow-lg text-center">
-          <h3 className="text-gray-700 text-lg">No results found</h3>
-        </div>
-      )}
     </header>
   );
 };
