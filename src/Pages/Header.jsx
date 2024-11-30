@@ -197,7 +197,7 @@ const Header = () => {
                 searchResults.map((product) => (
                   <Link
                     key={product.id}
-                    to={`/product/${product.id}`}
+                    to={`/searchproduct/${product.id}`}
                     className="flex items-center gap-4 px-4 py-2 hover:bg-gray-100 transition"
                   >
                     <img

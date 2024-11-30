@@ -31,10 +31,11 @@ import Plantgrowthregulator from "../Pages/UI/Plantgrowthregulator";
 import CheckOut from "../Pages/CheckOut";
 import OrderCompleted from "../Pages/OrderCompleted";
 import Orders from "../Pages/Orders";
-import ProductDetails from "../Pages/ProductDetails";
+import CartProductDetails from "../Pages/CartProductDetails";
 import Messages from "../Pages/Messages";
 import { FaComments } from "react-icons/fa"; // For chat icon
 import GoogleCallback from "../Pages/GoogleCallback";
+import SearchProductDetails from "../Pages/SearchProductDetails";
 
 
 const AppRoutes = () => {
@@ -98,10 +99,10 @@ const AppRoutes = () => {
         {/* Route for SignUp */}
         <Route path="/Signup" component={CreateAcc} />
         <Route path="/categories" component={Categories} />
-        <Route path="/product/:id/" component={ProductDetails} />
+        <Route path="/product/:id/" component={CartProductDetails} />
+        <Route path="/searchproduct/:id" component={SearchProductDetails} />
         <Route path="/order-completed" component={OrderCompleted} />
         <Route path="/auth/google/callback" component={GoogleCallback} />
-
       </Switch>
 
       {/* Common components rendered only on the home page */}
