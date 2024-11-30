@@ -6,7 +6,6 @@ const Orders = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch orders from the backend using fetch API
         const fetchOrders = async () => {
             try {
                 const response = await fetch("/api/placedorders", { credentials: "include" });
@@ -25,36 +24,82 @@ const Orders = () => {
         fetchOrders();
     }, []);
 
-    if (loading) return <div className="text-center py-4 text-xl">Loading...</div>;
-    if (error) return <div className="text-center py-4 text-xl text-red-500">{error}</div>;
+    if (loading)
+        return <div className="text-center py-8 text-xl font-semibold text-gray-600">Loading your orders...</div>;
+    if (error)
+        return <div className="text-center py-8 text-xl font-semibold text-red-500">{error}</div>;
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold text-center mb-6">Your Orders</h1>
+        <div className="container mx-auto p-6">
+            <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">Your Orders</h1>
             {orders.length === 0 ? (
-                <p className="text-center text-lg text-gray-500">No orders found.</p>
+                <div className="text-center flex flex-col items-center">
+                    <img
+                        src="https://via.placeholder.com/300x200?text=No+Orders"
+                        alt="No Orders"
+                        className="mb-6"
+                    />
+                    <p className="text-lg text-gray-500">You haven’t placed any orders yet.</p>
+                    <button
+                        className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow hover:bg-blue-600"
+                        onClick={() => window.location.href = "/shop"}
+                    >
+                        Start Shopping
+                    </button>
+                </div>
             ) : (
-                <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-                    <table className="min-w-full table-auto">
-                        <thead>
-                            <tr className="bg-blue-500 text-white">
-                                <th className="px-6 py-3 text-left">Product Name</th>
-                                <th className="px-6 py-3 text-left">Quantity</th>
-                                <th className="px-6 py-3 text-left">Price</th>
-                                <th className="px-6 py-3 text-left">Address</th>
-                                <th className="px-6 py-3 text-left">Payment Method</th>
-                                <th className="px-6 py-3 text-left">Status</th>
+                <div className="overflow-hidden bg-white shadow-lg rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-blue-500">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                                    Product Name
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                                    Quantity
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                                    Price
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                                    Address
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                                    Payment Method
+                                </th>
+                                <th className="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                                    Status
+                                </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="bg-white divide-y divide-gray-200">
                             {orders.map((order) => (
-                                <tr key={order.id} className="border-t hover:bg-gray-100">
-                                    <td className="px-6 py-4">{order.product_name}</td>
-                                    <td className="px-6 py-4">{order.quantity}</td>
-                                    <td className="px-6 py-4">{order.price}</td>
-                                    <td className="px-6 py-4">{order.address}</td>
-                                    <td className="px-6 py-4">{order.payment_method}</td>
-                                    <td className="px-6 py-4">{order.order_status}</td>
+                                <tr key={order.id} className="hover:bg-gray-50">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {order.product_name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {order.quantity}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ₹{order.price.toLocaleString()}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {order.address}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
+                                        {order.payment_method}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        <span
+                                            className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${order.order_status === "delivered"
+                                                    ? "bg-green-100 text-green-800"
+                                                    : "bg-yellow-100 text-yellow-800"
+                                                }`}
+                                        >
+                                            {order.order_status}
+                                        </span>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

@@ -191,7 +191,7 @@ const Header = () => {
           />
           <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" />
           {searchQuery.length > 1 && (
-            <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg max-h-60 overflow-y-auto">
+            <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg rounded-md max-h-60 overflow-y-auto">
               {isLoading && <p className="text-gray-500 text-center py-2">Loading...</p>}
               {!isLoading && searchResults.length > 0 ? (
                 searchResults.map((product) => (
