@@ -32,11 +32,11 @@ const BuyNow = () => {
     }
     const orderPayload = {
       ...orderData,
-      product_id: productData.id,
-      product_name: productData.name,
+      product_id: productData?.id,
+      product_name: productData?.name,
       user_id: authenticatedUser?.id,
       customerName: authenticatedUser?.username,
-      email: `authenticatedUser?.email`,
+      email: authenticatedUser?.email,
       phoneNumber: selectedAddress?.phone_number,
       address: selectedAddress?.locality,
       city: selectedAddress?.city,
