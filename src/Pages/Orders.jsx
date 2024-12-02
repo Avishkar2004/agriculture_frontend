@@ -34,15 +34,10 @@ const Orders = () => {
             <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">Your Orders</h1>
             {orders.length === 0 ? (
                 <div className="text-center flex flex-col items-center">
-                    <img
-                        src="https://via.placeholder.com/300x200?text=No+Orders"
-                        alt="No Orders"
-                        className="mb-6"
-                    />
                     <p className="text-lg text-gray-500">You haven’t placed any orders yet.</p>
                     <button
                         className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow hover:bg-blue-600"
-                        onClick={() => window.location.href = "/shop"}
+                        onClick={() => window.location.href = "/#"}
                     >
                         Start Shopping
                     </button>
@@ -93,8 +88,8 @@ const Orders = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         <span
                                             className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${order.order_status === "delivered"
-                                                    ? "bg-green-100 text-green-800"
-                                                    : "bg-yellow-100 text-yellow-800"
+                                                ? "bg-green-100 text-green-800"
+                                                : "bg-yellow-100 text-yellow-800"
                                                 }`}
                                         >
                                             {order.order_status}

@@ -122,9 +122,6 @@ const Header = () => {
               <ListAltIcon className="text-green-500" />
               <span className="font-medium">My Orders</span>
             </Link>
-
-
-
             {/* Settings Link */}
             <Link
               to="/settings"
@@ -269,7 +266,6 @@ const Header = () => {
                       <AccountCircleIcon className="w-8 h-8 text-blue-600" />
                     )}
                     <span className="font-medium">My Profile</span>
-
                   </Link>
                   <Link
                     to="/orders"
