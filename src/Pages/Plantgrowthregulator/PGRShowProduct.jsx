@@ -9,9 +9,10 @@ import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom';
 import Description from '../Description';
 import { useAuth } from '../../actions/authContext';
+import { Box, Button, Modal, TextField } from "@mui/material";
 
 const PGRShowProduct = () => {
-  const { getAuthToken } = useAuth();
+  const { getAuthToken, authenticatedUser } = useAuth() || {};
   const history = useHistory();
   const location = useLocation();
   const initialproductData = (location.state && location.state.PGRProduct) || {};
@@ -19,6 +20,20 @@ const PGRShowProduct = () => {
   const [count, setCount] = useState(1);
   const [cartData, setCartData] = useState(null);
   const [selectedSize, setSelectedSize] = useState('50 ml');
+  const [reviews, setReviews] = useState([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [newReview, setNewReview] = useState({ username: '', rating: 0, comment: '' });
+
+  const toggleReviewModal = () => {
+    setIsReviewModalOpen(!isReviewModalOpen)
+    if (!isReviewModalOpen) {
+      setNewReview({
+        username: authenticatedUser ? authenticatedUser.username : "",
+        rating: 0,
+        comment: ""
+      })
+    }
+  }
 
   const fetchNextProduct = async () => {
     try {
@@ -59,6 +74,7 @@ const PGRShowProduct = () => {
 
     // Prepare updated product data based on selected size
     const updatedData = {
+
       reviews: newSize === '50 ml' ? initialproductData.review_50 : initialproductData.review_100,
       save: newSize === '50 ml' ? initialproductData.save_50 : initialproductData.save_100,
       price: newSize === '50 ml' ? initialproductData.price_small : initialproductData.salePrice,
@@ -122,12 +138,63 @@ const PGRShowProduct = () => {
     }
   };
 
+
+
+  const handleReviewSubmit = async () => {
+    try {
+      const response = await fetch('/api/reviews/addreviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: productData.id,
+          user_id: authenticatedUser.id,
+          username: authenticatedUser.username,
+          rating: newReview.rating,
+          comment: newReview.comment,
+          ...newReview
+        }),
+      });
+      if (response.ok) {
+        const createdReview = await response.json();
+        setReviews((prev) => [...prev, createdReview]); // Append the new review
+        toggleReviewModal();
+        setNewReview({ username: '', rating: 0, comment: '' });
+      } else {
+        console.error('Failed to submit review');
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  };
+
+  const fetchReviews = async () => {
+    if (!productData.id) return; // Ensure the product ID exists before fetching reviews
+    try {
+      const response = await fetch(`/api/reviews/getreview/${productData.id}`); // Pass the correct ID
+      if (response.ok) {
+        const reviewData = await response.json();
+        setReviews(reviewData);
+      } else {
+        console.error('Failed to fetch reviews:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+  
+
   useEffect(() => {
     if (!productData.reviews) {
       // Only call handleSizeChange when productData is initialized
       handleSizeChange("50 ml");
     }
   }, [productData]);
+
+  useEffect(() => {
+    if (productData.id) {
+      fetchReviews();
+    }
+  }, [productData.id])
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
@@ -182,7 +249,7 @@ const PGRShowProduct = () => {
             <StarIcon color="warning" />
             <StarIcon color="warning" />
             <StarIcon color="warning" />
-            <StarIcon color="warning" /> {productData.reviews} reviews
+            <StarIcon color="warning" /> {reviews.length} reviews
           </p>
           <span className="bg-green-300">Save {productData.save}</span>
           <div className="flex mt-3 mb-3">
@@ -298,6 +365,92 @@ const PGRShowProduct = () => {
           </div>
         </div>
       </div>
+      <div className="bg-white p-8 mt-6 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-semibold text-gray-900">Customer Reviews</h2>
+        {reviews.length > 0 ? (
+          <div className="mt-6 space-y-6">
+            {reviews.map((review) => (
+              <div key={review.id} className="border p-5 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out">
+                <div className="flex items-center space-x-4">
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-800">{review.username}</h3>
+                    <div className="flex items-center mt-1">
+                      {Array.from({ length: review.rating }).map((_, i) => (
+                        <StarIcon key={i} className="text-yellow-500" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-4 text-gray-700">{review.comment}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-6 text-gray-600 text-lg">No reviews yet. Be the first to review this product!</p>
+        )}
+        <button
+          onClick={toggleReviewModal}
+          className="mt-6 w-full py-3 px-6 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+        >
+          Write a Review
+        </button>
+      </div>
+
+      {/* Review Modal */}
+      <Modal open={isReviewModalOpen} onClose={toggleReviewModal}>
+        <Box
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"
+        >
+          <h2 className="text-2xl font-semibold mb-6 text-gray-900">Write a Review</h2>
+          <p className="mb-4 text-gray-600">
+            {authenticatedUser ? (
+              <span className="font-medium">{authenticatedUser.username}</span>
+            ) : (
+              <span>
+                <Link to="/Signup" className="text-blue-600 hover:underline">Sign up</Link> or
+                <Link to="/Signin" className="ml-2 text-blue-600 hover:underline">Sign in</Link>
+              </span>
+            )}
+          </p>
+          <TextField
+            label="Rating (1-5)"
+            type="number"
+            value={newReview.rating}
+            onChange={(e) =>
+              setNewReview((prev) => ({ ...prev, rating: Number(e.target.value) }))
+            }
+            inputProps={{ min: 1, max: 5 }}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Comment"
+            multiline
+            rows={4}
+            value={newReview.comment}
+            onChange={(e) =>
+              setNewReview((prev) => ({ ...prev, comment: e.target.value }))
+            }
+            fullWidth
+            margin="normal"
+          />
+          <div className="flex justify-between mt-6">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleReviewSubmit}
+              disabled={!newReview.rating || !newReview.comment}
+            >
+              Submit Review
+            </Button>
+            <Button variant="outlined" color="secondary" onClick={toggleReviewModal}>
+              Cancel
+            </Button>
+          </div>
+        </Box>
+      </Modal>
+
+
       <Description />
     </div>
   );
