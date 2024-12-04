@@ -23,17 +23,9 @@ const PGRShowProduct = () => {
   const [reviews, setReviews] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [newReview, setNewReview] = useState({ username: '', rating: 0, comment: '' });
+  const [reviewError, setReviewError] = useState(null);
 
-  const toggleReviewModal = () => {
-    setIsReviewModalOpen(!isReviewModalOpen)
-    if (!isReviewModalOpen) {
-      setNewReview({
-        username: authenticatedUser ? authenticatedUser.username : "",
-        rating: 0,
-        comment: ""
-      })
-    }
-  }
+
 
   const fetchNextProduct = async () => {
     try {
@@ -139,6 +131,16 @@ const PGRShowProduct = () => {
   };
 
 
+  const toggleReviewModal = () => {
+    setIsReviewModalOpen(!isReviewModalOpen)
+    if (!isReviewModalOpen) {
+      setNewReview({
+        username: authenticatedUser ? authenticatedUser.username : "",
+        rating: 0,
+        comment: ""
+      })
+    }
+  }
 
   const handleReviewSubmit = async () => {
     try {
@@ -154,11 +156,16 @@ const PGRShowProduct = () => {
           ...newReview
         }),
       });
+
       if (response.ok) {
         const createdReview = await response.json();
         setReviews((prev) => [...prev, createdReview]); // Append the new review
         toggleReviewModal();
         setNewReview({ username: '', rating: 0, comment: '' });
+        setReviewError(null);  // Reset error on success
+      } else if (response.status === 400) {
+        const errorData = await response.json();
+        setReviewError(errorData.error);  // Display the error message in the UI
       } else {
         console.error('Failed to submit review');
       }
@@ -166,6 +173,7 @@ const PGRShowProduct = () => {
       console.error('Error submitting review:', error);
     }
   };
+
 
   const fetchReviews = async () => {
     if (!productData.id) return; // Ensure the product ID exists before fetching reviews
@@ -181,7 +189,7 @@ const PGRShowProduct = () => {
       console.error('Error fetching reviews:', error);
     }
   };
-  
+
 
   useEffect(() => {
     if (!productData.reviews) {
@@ -400,7 +408,7 @@ const PGRShowProduct = () => {
       <Modal open={isReviewModalOpen} onClose={toggleReviewModal}>
         <Box
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"
-        >
+          >
           <h2 className="text-2xl font-semibold mb-6 text-gray-900">Write a Review</h2>
           <p className="mb-4 text-gray-600">
             {authenticatedUser ? (
@@ -412,6 +420,7 @@ const PGRShowProduct = () => {
               </span>
             )}
           </p>
+            {reviewError && <p className="text-red-500 text-sm mt-4">{reviewError}</p>}
           <TextField
             label="Rating (1-5)"
             type="number"
@@ -449,9 +458,7 @@ const PGRShowProduct = () => {
           </div>
         </Box>
       </Modal>
-
-
-      <Description />
+      {/* <Description /> */}
     </div>
   );
 };
