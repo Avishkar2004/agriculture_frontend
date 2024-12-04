@@ -10,6 +10,7 @@ import { Link, useHistory } from 'react-router-dom';
 import Description from '../Description';
 import { useAuth } from '../../actions/authContext';
 import { Box, Button, Modal, TextField } from "@mui/material";
+import Reviews from "../Reviews";
 
 const PGRShowProduct = () => {
   const { getAuthToken, authenticatedUser } = useAuth() || {};
@@ -131,48 +132,6 @@ const PGRShowProduct = () => {
   };
 
 
-  const toggleReviewModal = () => {
-    setIsReviewModalOpen(!isReviewModalOpen)
-    if (!isReviewModalOpen) {
-      setNewReview({
-        username: authenticatedUser ? authenticatedUser.username : "",
-        rating: 0,
-        comment: ""
-      })
-    }
-  }
-
-  const handleReviewSubmit = async () => {
-    try {
-      const response = await fetch('/api/reviews/addreviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          product_id: productData.id,
-          user_id: authenticatedUser.id,
-          username: authenticatedUser.username,
-          rating: newReview.rating,
-          comment: newReview.comment,
-          ...newReview
-        }),
-      });
-
-      if (response.ok) {
-        const createdReview = await response.json();
-        setReviews((prev) => [...prev, createdReview]); // Append the new review
-        toggleReviewModal();
-        setNewReview({ username: '', rating: 0, comment: '' });
-        setReviewError(null);  // Reset error on success
-      } else if (response.status === 400) {
-        const errorData = await response.json();
-        setReviewError(errorData.error);  // Display the error message in the UI
-      } else {
-        console.error('Failed to submit review');
-      }
-    } catch (error) {
-      console.error('Error submitting review:', error);
-    }
-  };
 
 
   const fetchReviews = async () => {
@@ -373,91 +332,9 @@ const PGRShowProduct = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white p-8 mt-6 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold text-gray-900">Customer Reviews</h2>
-        {reviews.length > 0 ? (
-          <div className="mt-6 space-y-6">
-            {reviews.map((review) => (
-              <div key={review.id} className="border p-5 rounded-lg shadow-md hover:shadow-xl transition duration-300 ease-in-out">
-                <div className="flex items-center space-x-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-800">{review.username}</h3>
-                    <div className="flex items-center mt-1">
-                      {Array.from({ length: review.rating }).map((_, i) => (
-                        <StarIcon key={i} className="text-yellow-500" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <p className="mt-4 text-gray-700">{review.comment}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="mt-6 text-gray-600 text-lg">No reviews yet. Be the first to review this product!</p>
-        )}
-        <button
-          onClick={toggleReviewModal}
-          className="mt-6 w-full py-3 px-6 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
-        >
-          Write a Review
-        </button>
-      </div>
 
-      {/* Review Modal */}
-      <Modal open={isReviewModalOpen} onClose={toggleReviewModal}>
-        <Box
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"
-          >
-          <h2 className="text-2xl font-semibold mb-6 text-gray-900">Write a Review</h2>
-          <p className="mb-4 text-gray-600">
-            {authenticatedUser ? (
-              <span className="font-medium">{authenticatedUser.username}</span>
-            ) : (
-              <span>
-                <Link to="/Signup" className="text-blue-600 hover:underline">Sign up</Link> or
-                <Link to="/Signin" className="ml-2 text-blue-600 hover:underline">Sign in</Link>
-              </span>
-            )}
-          </p>
-            {reviewError && <p className="text-red-500 text-sm mt-4">{reviewError}</p>}
-          <TextField
-            label="Rating (1-5)"
-            type="number"
-            value={newReview.rating}
-            onChange={(e) =>
-              setNewReview((prev) => ({ ...prev, rating: Number(e.target.value) }))
-            }
-            inputProps={{ min: 1, max: 5 }}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Comment"
-            multiline
-            rows={4}
-            value={newReview.comment}
-            onChange={(e) =>
-              setNewReview((prev) => ({ ...prev, comment: e.target.value }))
-            }
-            fullWidth
-            margin="normal"
-          />
-          <div className="flex justify-between mt-6">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleReviewSubmit}
-              disabled={!newReview.rating || !newReview.comment}
-            >
-              Submit Review
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={toggleReviewModal}>
-              Cancel
-            </Button>
-          </div>
-        </Box>
-      </Modal>
+      <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={productData.id} fetchReviews={fetchReviews} />
+
       {/* <Description /> */}
     </div>
   );
