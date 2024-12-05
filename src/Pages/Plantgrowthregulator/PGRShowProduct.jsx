@@ -9,7 +9,6 @@ import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom';
 import Description from '../Description';
 import { useAuth } from '../../actions/authContext';
-import { Box, Button, Modal, TextField } from "@mui/material";
 import Reviews from "../Reviews";
 
 const PGRShowProduct = () => {
@@ -22,9 +21,7 @@ const PGRShowProduct = () => {
   const [cartData, setCartData] = useState(null);
   const [selectedSize, setSelectedSize] = useState('50 ml');
   const [reviews, setReviews] = useState([]);
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [newReview, setNewReview] = useState({ username: '', rating: 0, comment: '' });
-  const [reviewError, setReviewError] = useState(null);
+
 
 
 
@@ -320,7 +317,6 @@ const PGRShowProduct = () => {
                 </button>
               </div>
             </div>
-
             <div className="flex justify-center content-center min-h-12">
               <Link to="/#" onClick={handleBuyNow} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 ml-12 -mt-2 rounded">
                 Buy Now

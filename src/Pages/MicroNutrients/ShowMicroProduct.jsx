@@ -8,9 +8,10 @@ import StarIcon from "@mui/icons-material/Star";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import Description from '../Description';
 import { useAuth } from '../../actions/authContext';
+import Reviews from '../Reviews';
 
-const ShowMicroProduct = ({ MicroDataProp = {} }) => {
-    const { getAuthToken } = useAuth()
+const ShowMicroProduct = () => {
+    const { getAuthToken, authenticatedUser } = useAuth()
     const history = useHistory();
     const location = useLocation();
     const initialMicroShowProduct = (location.state && location.state.micronutrientProduct) || {};
@@ -18,6 +19,7 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
     const [count, setCount] = useState(1);
     const [cartData, setCartData] = useState(null);
     const [selectedSize, setSelectedSize] = useState("50 ml");
+    const [reviews, setReviews] = useState([]);
 
     const fetchNextProduct = async () => {
         try {
@@ -129,12 +131,34 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
         }
     }
 
+
+    const fetchReviews = async () => {
+        if (!productData.id) return
+        try {
+            const response = await fetch(`/api/reviews/getreview/${productData.id}`); // Pass the correct ID
+            if (response.ok) {
+                const reviewData = await response.json()
+                setReviews(reviewData)
+            } else {
+                console.error("Failed to fetch reviews:", response.statusText)
+            }
+        } catch (error) {
+            console.error("Error fetching reviews:", error)
+        }
+    }
+
     useEffect(() => {
         if (!productData.reviews) {
             // Only call handleSizeChange when productData is initialized
             handleSizeChange("50 ml");
         }
     }, [productData]);
+
+    useEffect(() => {
+        if (productData.id) {
+            fetchReviews()
+        }
+    }, [productData.id])
 
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col">
@@ -185,7 +209,7 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
                         <StarIcon color="warning" />
                         <StarIcon color="warning" />
                         <StarIcon color="warning" />
-                        <StarIcon color="warning" /> {productData.reviews} reviews
+                        <StarIcon color="warning" /> {reviews.length} reviews
                     </p>
                     <span className="bg-green-300">Save {productData.save}</span>
                     <div className="flex mt-3 mb-3">
@@ -297,7 +321,9 @@ const ShowMicroProduct = ({ MicroDataProp = {} }) => {
                     </div>
                 </div>
             </div>
-            <Description productData={productData} />
+            <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={productData.id} fetchReviews={fetchReviews} />
+
+            {/* <Description productData={productData} /> */}
         </div>
     );
 };

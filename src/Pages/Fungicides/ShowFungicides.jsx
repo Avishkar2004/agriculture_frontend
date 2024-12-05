@@ -9,9 +9,11 @@ import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom';
 import Description from '../Description';
 import { useAuth } from "../../actions/authContext";
+import { setRef } from "@mui/material";
+import Reviews from "../Reviews";
 
 const ShowFungicides = () => {
-  const { getAuthToken } = useAuth()
+  const { getAuthToken, authenticatedUser } = useAuth()
   const history = useHistory();
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
@@ -19,6 +21,7 @@ const ShowFungicides = () => {
   const [cartData, setCartData] = useState(null);
   const [count, setCount] = useState(1);
   const [selectedSize, setSelectedSize] = useState('50 ml');
+  const [reviews, setReviews] = useState([]);
 
 
   const fetchNextProduct = async () => {
@@ -128,6 +131,23 @@ const ShowFungicides = () => {
     }
   }
 
+  const fetchReviews = async () => {
+    if (!productData.id) return
+
+    try {
+      const response = await fetch(`/api/reviews/getreview/${productData.id}`); // Pass the correct ID
+      if (response.ok) {
+        const reviewData = await response.json()
+        setReviews(reviewData)
+      } else {
+        console.error("Failed to fetch reviews:", response.statusText)
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error)
+
+    }
+  }
+
 
   useEffect(() => {
     if (!productData.reviews) {
@@ -135,6 +155,13 @@ const ShowFungicides = () => {
       handleSizeChange("50 ml");
     }
   }, [productData]);
+
+
+  useEffect(() => {
+    if (productData.id) {
+      fetchReviews()
+    }
+  }, [productData.id])
 
 
   return (
@@ -188,7 +215,7 @@ const ShowFungicides = () => {
             <StarIcon color="warning" />
             <StarIcon color="warning" />
             <StarIcon color="warning" />
-            <StarIcon color="warning" /> {productData.reviews} reviews
+            <StarIcon color="warning" /> {reviews.length} reviews
           </p>
           <span className="bg-green-300">Save {productData.save}</span>
           <div className="flex mt-3 mb-3">
@@ -304,7 +331,8 @@ const ShowFungicides = () => {
           </div>
         </div>
       </div>
-      <Description />
+      <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={productData.id} fetchReviews={fetchReviews} />
+      {/* <Description /> */}
     </div>
   );
 };
