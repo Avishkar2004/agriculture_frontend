@@ -1,56 +1,116 @@
 import React, { useState } from "react";
 import { useAuth } from "../actions/authContext";
-import Cart from "./Cart";
-import { FaUserEdit, FaSignOutAlt } from "react-icons/fa"
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { FaSignOutAlt } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
+const ProfileHeader = ({ username, email, avatar }) => (
+    <div className="text-center mb-8">
+        <div className="relative w-32 h-32 mx-auto mb-4">
+            {avatar ? (
+                <img
+                    src={avatar}
+                    alt="Profile Avatar"
+                    className="w-full h-full object-cover rounded-full shadow-lg transition-transform hover:scale-105"
+                />
+            ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-300 rounded-full shadow-lg text-gray-600">
+                    <AccountCircleIcon style={{ fontSize: "4rem" }} />
+                </div>
+            )}
+        </div>
+        <h2 className="text-4xl font-bold text-gray-800">
+            Welcome, <span className="text-indigo-600">{username}</span>
+        </h2>
+        <p className="text-gray-500 text-lg mt-3">{email}</p>
+    </div>
+);
+
+const ActionButtons = ({ onLogout, onDeleteAccount, isLoading }) => (
+    <div className="flex justify-center space-x-6 mt-6">
+        <button
+            className={`flex items-center px-6 py-3 rounded-lg font-semibold text-white bg-indigo-600 transition-all duration-200 transform ${
+                isLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105 hover:bg-indigo-700"
+            }`}
+            onClick={onLogout}
+            disabled={isLoading}
+        >
+            <FaSignOutAlt className="mr-2" /> Logout
+        </button>
+        <button
+            className={`flex items-center px-6 py-3 rounded-lg font-semibold text-white bg-red-500 transition-all duration-200 transform ${
+                isLoading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105 hover:bg-red-600"
+            }`}
+            onClick={onDeleteAccount}
+            disabled={isLoading}
+        >
+            <RiDeleteBin6Line className="mr-2" /> Delete Account
+        </button>
+    </div>
+);
 
 const Profile = () => {
     const { authenticatedUser, logout } = useAuth();
-    const [isCartEmpty, setIsCartEmpty] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        try {
+            setIsLoading(true);
+            logout();
+        } catch (error) {
+            alert("Failed to logout. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleDeleteAccount = async () => {
         const confirmation = window.confirm(
             "Are you sure you want to delete your account?"
         );
-        if (confirmation) {
-            try {
-                const response = await fetch(`/api/users/${authenticatedUser.id}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                    },
-                });
+        if (!confirmation) return;
 
-                const data = await response.json();
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/users/${authenticatedUser.id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            });
 
-                if (response.ok) {
-                    alert(data.message);
-                    logout();
-                    window.location.reload();
-                } else {
-                    alert(data.message);
-                }
-            } catch (error) {
-                console.error("Error deleting account:", error);
-                alert("An error occurred while deleting your account.");
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message);
+                logout();
+                window.location.reload();
+            } else {
+                alert(data.message);
             }
+        } catch (error) {
+            console.error("Error deleting account:", error);
+            alert("An error occurred while deleting your account.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
     if (!authenticatedUser) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-r ">
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <p className="text-gray-800 text-lg">
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-600">
+                <div className="bg-white shadow-lg rounded-lg p-6">
+                    <p className="text-gray-700 text-lg">
                         Please{" "}
-                        <Link to="/Signup" className="text-blue-600 hover:underline">
+                        <Link
+                            to="/Signup"
+                            className="text-blue-600 font-semibold hover:underline"
+                        >
                             Sign Up
                         </Link>{" "}
                         to view your profile.
@@ -59,56 +119,20 @@ const Profile = () => {
             </div>
         );
     }
+
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl w-full bg-white rounded-2xl shadow-2xl p-10">
-                {/* Profile Header */}
-                <div className="mb-8 text-center">
-                    <div className="relative w-32 h-32 mx-auto mb-4">
-                        {authenticatedUser.avatar ? (
-                            <img
-                                src={authenticatedUser.avatar}
-                                alt="Profile Avatar"
-                                className="w-full h-full object-cover rounded-full shadow-lg"
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full shadow-lg text-gray-500">
-                                <AccountCircleIcon style={{ fontSize: "4rem" }} />
-                            </div>
-                        )}
-                    </div>
-                    <h2 className="text-4xl font-extrabold text-gray-800">
-                        Welcome, {authenticatedUser.username}
-                    </h2>
-                    <p className="text-gray-600 text-lg mt-3">{authenticatedUser.email}</p>
-                </div>
-
-                {/* Shopping Cart Section */}
-                <div className="mb-10">
-                    <h3 className="text-3xl font-semibold text-gray-800 mb-5 flex items-center">
-                        <FaUserEdit className="mr-2 text-blue-600" />
-                        Shopping Cart
-                    </h3>
-                    <div className="bg-gray-100 p-6 rounded-xl shadow-inner">
-                        <Cart onCartStatusChange={setIsCartEmpty} />
-                    </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex justify-center space-x-6">
-                    <button
-                        className="flex items-center bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105 hover:bg-indigo-700"
-                        onClick={handleLogout}
-                    >
-                        <FaSignOutAlt className="mr-2" /> Logout
-                    </button>
-                    <button
-                        className="flex items-center bg-red-500 text-white px-6 py-3 rounded-lg font-semibold transition-transform transform hover:scale-105 hover:bg-red-600"
-                        onClick={handleDeleteAccount}
-                    >
-                        <RiDeleteBin6Line className="mr-2" /> Delete Account
-                    </button>
-                </div>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-blue-100 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl w-full bg-white rounded-2xl shadow-lg p-10">
+                <ProfileHeader
+                    username={authenticatedUser.username}
+                    email={authenticatedUser.email}
+                    avatar={authenticatedUser.avatar}
+                />
+                <ActionButtons
+                    onLogout={handleLogout}
+                    onDeleteAccount={handleDeleteAccount}
+                    isLoading={isLoading}
+                />
             </div>
         </div>
     );
