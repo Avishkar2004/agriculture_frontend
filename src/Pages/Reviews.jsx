@@ -11,6 +11,8 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [newReview, setNewReview] = useState({ username: "", rating: 0, comment: "" });
     const [reviewError, setReviewError] = useState(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editReview, setEditReview] = useState(null);
 
     const toggleReviewModal = () => {
         setIsReviewModalOpen(!isReviewModalOpen);
@@ -22,6 +24,15 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
             });
         }
     };
+    const handleEdit = (review) => {
+        setEditReview(review)
+        setIsEditModalOpen(true)
+    }
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false)
+        setEditReview(null)
+    }
 
     const handleReviewSubmit = async () => {
         try {
@@ -57,10 +68,36 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
         // Add logic for liking a review
     };
 
-    const handleEdit = (review) => {
-        console.log(`Editing review: ${review}`);
-        // Add logic for editing a review
+    const handleUpdateSubmit = async () => {
+        try {
+            const response = await fetch(`/api/reviews/updateReview`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+                body: JSON.stringify({
+                    review_id: editReview.id, // Assuming each review has an `id`
+                    product_id: productId,
+                    user_id: authenticatedUser.id,
+                    rating: editReview.rating,
+                    comment: editReview.comment,
+                }),
+            });
+
+            if (response.ok) {
+                await fetchReviews(); // Refresh reviews after update
+                closeEditModal();
+            } else {
+                const error = await response.json();
+                alert(error.error || "Failed to update review");
+            }
+        } catch (error) {
+            console.error("Error updating review:", error);
+            alert("An error occurred while updating the review.");
+        }
     };
+
 
     const handleDelete = (reviewId) => {
         console.log(`Deleting review with ID: ${reviewId}`);
@@ -145,6 +182,51 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
             >
                 Write a Review
             </Button>
+
+            <Modal open={isEditModalOpen} onClose={closeEditModal}>
+                <Box
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"
+                >
+                    <Typography variant="h5" className="font-semibold mb-4 text-gray-900">
+                        Edit Review
+                    </Typography>
+                    <TextField
+                        label="Rating (1-5)"
+                        type="number"
+                        value={editReview?.rating || ""}
+                        onChange={(e) =>
+                            setEditReview((prev) => ({ ...prev, rating: Number(e.target.value) }))
+                        }
+                        inputProps={{ min: 1, max: 5 }}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Comment"
+                        multiline
+                        rows={4}
+                        value={editReview?.comment || ""}
+                        onChange={(e) =>
+                            setEditReview((prev) => ({ ...prev, comment: e.target.value }))
+                        }
+                        fullWidth
+                        margin="normal"
+                    />
+                    <div className="flex justify-between mt-6">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleUpdateSubmit}
+                            disabled={!editReview?.rating || !editReview?.comment}
+                        >
+                            Update Review
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={closeEditModal}>
+                            Cancel
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
 
             {/* Review Modal */}
             <Modal open={isReviewModalOpen} onClose={toggleReviewModal}>
