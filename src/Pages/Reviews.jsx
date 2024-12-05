@@ -36,7 +36,7 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
 
     const handleReviewSubmit = async () => {
         if (!authenticatedUser) {
-            alert("Please login first and try again.")
+            alert("Please login first and try again.");
             return
         }
         try {
@@ -107,7 +107,7 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     };
 
 
-    const handleDelete = async (reviewId) => {
+    const handleDelete = async () => {
         if (!authenticatedUser) {
             alert("You need to be logged in to delete a review.")
             return
