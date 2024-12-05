@@ -30,18 +30,16 @@ const ProfileHeader = ({ username, email, avatar }) => (
 const ActionButtons = ({ onLogout, onDeleteAccount, isLoading }) => (
     <div className="flex space-x-4 mt-6">
         <button
-            className={`flex items-center px-4 py-2 rounded-md font-semibold text-white bg-indigo-600 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-indigo-700"
-            }`}
+            className={`flex items-center px-4 py-2 rounded-md font-semibold text-white bg-indigo-600 ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-indigo-700"
+                }`}
             onClick={onLogout}
             disabled={isLoading}
         >
             <FaSignOutAlt className="mr-2" /> Logout
         </button>
         <button
-            className={`flex items-center px-4 py-2 rounded-md font-semibold text-white bg-red-500 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"
-            }`}
+            className={`flex items-center px-4 py-2 rounded-md font-semibold text-white bg-red-500 ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"
+                }`}
             onClick={onDeleteAccount}
             disabled={isLoading}
         >
