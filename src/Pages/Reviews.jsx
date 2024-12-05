@@ -35,6 +35,10 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     }
 
     const handleReviewSubmit = async () => {
+        if (!authenticatedUser) {
+            alert("Please login first and try again.")
+            return
+        }
         try {
             const response = await fetch("/api/reviews/addreviews", {
                 method: "POST",
@@ -69,6 +73,10 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     };
 
     const handleUpdateSubmit = async () => {
+        if (!authenticatedUser) {
+            alert("You must be logged in to edit this review.")
+            return
+        }
         try {
             const response = await fetch(`/api/reviews/updateReview`, {
                 method: "PUT",
@@ -100,7 +108,6 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
 
 
     const handleDelete = async (reviewId) => {
-        console.log(`Deleting review with ID: ${reviewId}`);
         if (!authenticatedUser) {
             alert("You need to be logged in to delete a review.")
             return
