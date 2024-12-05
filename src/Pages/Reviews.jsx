@@ -99,9 +99,38 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     };
 
 
-    const handleDelete = (reviewId) => {
+    const handleDelete = async (reviewId) => {
         console.log(`Deleting review with ID: ${reviewId}`);
-        // Add logic for deleting a review
+        if (!authenticatedUser) {
+            alert("You need to be logged in to delete a review.")
+            return
+        }
+        const confirmDelete = window.confirm('Are you sure you want to delete this review')
+        if (!confirmDelete) return
+
+        try {
+            const response = await fetch(`/api/reviews/deleteReview`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    user_id: authenticatedUser.id // Assuming the user deleting the review is the one who wrote it
+                })
+            })
+            if (response.ok) {
+                alert("Review deleted successfully")
+                await fetchReviews() // Refresh reviews after deletion
+            } else {
+                const error = await response.json()
+                alert(error.error || "Failed to delete the review.")
+            }
+        } catch (error) {
+            console.error("Error deleting review:", error)
+            alert("An error occurred while deleting the review.");
+        }
+
     };
 
     const handleReport = (reviewId) => {
