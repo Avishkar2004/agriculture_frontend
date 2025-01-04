@@ -6,12 +6,12 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const ProfileHeader = ({ username, email, avatar }) => (
-    // const getEmailUsername = (email) => {
-    //     const emailUsername = email.split("@")[0];
-    //     const parts = emailUsername.split(".");
-    //     return parts.slice(-2).join(".");
-    //   };
-    
+  // const getEmailUsername = (email) => {
+  //     const emailUsername = email.split("@")[0];
+  //     const parts = emailUsername.split(".");
+  //     return parts.slice(-2).join(".");
+  //   };
+
   <div className="flex items-center space-x-6 mb-8">
     <div className="relative w-24 h-24">
       {avatar ? (

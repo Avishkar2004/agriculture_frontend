@@ -7,7 +7,6 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom';
-import Description from '../Description';
 import { useAuth } from '../../actions/authContext';
 import Reviews from "../Reviews";
 
@@ -21,9 +20,6 @@ const PGRShowProduct = () => {
   const [cartData, setCartData] = useState(null);
   const [selectedSize, setSelectedSize] = useState('50 ml');
   const [reviews, setReviews] = useState([]);
-
-
-
 
   const fetchNextProduct = async () => {
     try {
@@ -127,8 +123,6 @@ const PGRShowProduct = () => {
       history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice: productData.price * count } });
     }
   };
-
-
 
 
   const fetchReviews = async () => {
@@ -328,9 +322,7 @@ const PGRShowProduct = () => {
           </div>
         </div>
       </div>
-
       <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={productData.id} fetchReviews={fetchReviews} />
-
       {/* <Description /> */}
     </div>
   );

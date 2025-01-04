@@ -71,6 +71,7 @@ const Header = () => {
     const query = e.target.value;
     setSearchQuery(query);
     handleSearch(query);
+
   };
 
   const ProfilehandleLogOut = async () => {
@@ -178,36 +179,57 @@ const Header = () => {
 
         {/* Search Bar */}
         <div className="hidden md:flex flex-grow max-w-lg mx-4 relative text-black">
-          <input
-            ref={inputRef}
-            type="text"
-            className="w-full px-4 py-2 rounded-full border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 transition shadow-sm"
-            placeholder="Search for products..."
-            value={searchQuery}
-            onChange={handleInputChange}
-          />
-          <SearchIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-black cursor-pointer" />
+          <div className="relative w-full">
+            {/* Input Field */}
+            <input
+              ref={inputRef}
+              type="text"
+              className="w-full px-4 py-2 rounded-full border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-300 transition shadow-sm placeholder-gray-500"
+              placeholder="🔍 Search for products, categories..."
+              value={searchQuery}
+              onChange={handleInputChange}
+            />
+            {/* Search Icon */}
+            <SearchIcon
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-black cursor-pointer transition"
+              onClick={handleSearch}
+            />
+          </div>
+
+          {/* Search Suggestions */}
           {searchQuery.length > 1 && (
-            <div className="absolute top-full left-0 w-full bg-white shadow-md rounded-b-lg rounded-md max-h-60 overflow-y-auto">
-              {isLoading && <p className="text-gray-500 text-center py-2">Loading...</p>}
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-md max-h-60 overflow-y-auto z-50">
+              {/* Loading State */}
+              {isLoading && (
+                <p className="text-gray-500 text-center py-2 animate-pulse">
+                  Searching for products...
+                </p>
+              )}
+
+              {/* Display Results */}
               {!isLoading && searchResults.length > 0 ? (
                 searchResults.map((product) => (
                   <Link
                     key={product.id}
                     to={`/searchproduct/${product.id}`}
-                    className="flex items-center gap-4 px-4 py-2 hover:bg-gray-100 transition"
+                    className="flex items-center gap-4 px-4 py-2 hover:bg-indigo-50 transition cursor-pointer"
                   >
                     <img
                       src={`data:image/jpeg;base64,${product.image}`}
                       alt={product.name}
                       className="w-10 h-10 object-contain bg-gray-100 rounded"
                     />
-                    <span className="text-gray-800 font-medium">{product.name}</span>
+                    <span className="text-gray-800 font-medium line-clamp-1">{product.name}</span>
                   </Link>
                 ))
               ) : (
+                // No Results or Error
                 <p className="text-gray-500 text-center py-2">
-                  {error ? error : "No results found."}
+                  {error ? (
+                    <span className="text-red-500">Error: {error}</span>
+                  ) : (
+                    "No matching products found. Try different keywords."
+                  )}
                 </p>
               )}
             </div>

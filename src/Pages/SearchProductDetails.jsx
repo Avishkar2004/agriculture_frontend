@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import EmailIcon from "@mui/icons-material/Email";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -14,6 +13,7 @@ const SearchProductDetails = () => {
     const [error, setError] = useState(null);
     const [selectedSize, setSelectedSize] = useState('50 ml');
     const [count, setCount] = useState(1);
+    const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
         const fetchProductDetails = async () => {
@@ -45,6 +45,20 @@ const SearchProductDetails = () => {
         }
     };
 
+    const fetchReviews = async () => {
+        try {
+            const response = await fetch(`/api/reviews/getreview/${product.id}`); // Pass the correct ID
+            if (response.ok) {
+                const reviewData = await response.json();
+                setReviews(reviewData);
+            } else {
+                console.error('Failed to fetch reviews:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching reviews:', error);
+        }
+    };
+
     const handleSizeChange = (newSize) => {
         setSelectedSize(newSize);
         // Prepare updated product data based on selected size
@@ -63,10 +77,18 @@ const SearchProductDetails = () => {
 
     useEffect(() => {
         if (product && !product.reviews) {
-            // Only call handleSizeChange when productData is initialized
+            // Only call handleSizeChange when product is initialized
             handleSizeChange("50 ml");
         }
     }, [product]);
+
+    useEffect(() => {
+        if (!product?.id) {
+            fetchReviews()
+        }
+    }, [product?.id])
+
+
 
     if (loading) {
         return <div className="text-center py-4 text-lg">Loading product details...</div>;
@@ -105,13 +127,13 @@ const SearchProductDetails = () => {
                 {/* Right Side */}
                 <div className="w-1/2 bg-white text-left ml-8 p-4 mr-8 border-r-2 border-l-2 border-t-2 border-b-2">
                     <span>ven</span>
-                    <h1 className="text-2xl font-[#1e2d7d]">{product.name}</h1>
+                    <h1 className="text-2xl font-[#1e2d7d]">{product?.name}</h1>
                     <p className="mt-5 mb-3">
                         <StarIcon color="warning" />
                         <StarIcon color="warning" />
                         <StarIcon color="warning" />
                         <StarIcon color="warning" />
-                        <StarIcon color="warning" /> {product.reviews} reviews
+                        <StarIcon color="warning" /> {reviews.length} reviews
                     </p>
                     <span className="bg-green-300">Save {product.save}</span>
                     <div className="flex mt-3 mb-3">

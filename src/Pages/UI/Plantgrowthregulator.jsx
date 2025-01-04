@@ -71,7 +71,6 @@ const Plantgrowthregulator = () => {
                 key={product.id}
                 className="border border-x-slate-200 border-solid"
               >
-
                 <div className="image-container">
                   {product.image && (
                     <div>
