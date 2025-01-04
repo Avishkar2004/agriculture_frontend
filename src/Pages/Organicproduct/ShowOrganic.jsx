@@ -141,6 +141,14 @@ const OrganicproductData = () => {
   };
 
 
+  const calculateAverageRating = () => {
+    if (reviews.length === 0) return 0
+    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1)
+  }
+
+  const averageRating = calculateAverageRating()
+
   useEffect(() => {
     if (!productData.reviews) {
       // Only call handleSizeChange when productData is initialized
@@ -202,13 +210,20 @@ const OrganicproductData = () => {
         <div className="w-1/2 bg-white text-left ml-8 p-4 mr-8 border-r-2 border-l-2 border-t-2 border-b-2">
           <span>ven</span>
           <h1 className="text-2xl font-[#1e2d7d]">{productData.name}</h1>
-          <p className="mt-5 mb-3">
-            <StarIcon color="warning" />
-            <StarIcon color="warning" />
-            <StarIcon color="warning" />
-            <StarIcon color="warning" />
-            <StarIcon color="warning" /> {reviews.length} reviews
-          </p>
+
+          <div className="flex items-center">
+            <div className="flex mt-5 mb-3">
+              {Array.from({ length: 5 }, (_, index) => (
+                <StarIcon
+                  key={index}
+                  color={index < Math.round(averageRating) ? "warning" : "disabled"}
+                />
+              ))}
+            </div>
+            <span className=" ml-2">{averageRating}</span>
+            <span className="text-sm text-gray-500 ml-2">({reviews.length}review)</span>
+          </div>
+
           <span className="bg-green-300">Save {productData.save}</span>
           <div className="flex mt-3 mb-3">
             <p className="text-lg font-semibold text-gray-800">
