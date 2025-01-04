@@ -9,7 +9,6 @@ import { useLocation } from 'react-router-dom';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../../actions/authContext';
 import Reviews from "../Reviews";
-import { accordionClasses } from "@mui/material";
 
 const PGRShowProduct = () => {
   const { getAuthToken, authenticatedUser } = useAuth() || {};
@@ -141,7 +140,7 @@ const PGRShowProduct = () => {
   };
 
   const calculateAverageRating = () => {
-    if (reviews.length === 0) return 0 // Handle case when there are no reiviews
+    if (reviews.length === 0) return 0 // Handle case when there are no reviews
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0)
     return (totalRating / reviews.length).toFixed(1) // Rounded to 1 decimal place
   }
