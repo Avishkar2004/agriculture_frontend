@@ -14,20 +14,30 @@ const Orders = () => {
                 }
                 const data = await response.json();
                 setOrders(data.orders);
+                setError(null); // Clear the error state if fetch is successful
             } catch (err) {
                 setError("Failed to load orders.");
             } finally {
                 setLoading(false);
             }
         };
-
         fetchOrders();
     }, []);
 
     if (loading)
         return <div className="text-center py-8 text-xl font-semibold text-gray-600">Loading your orders...</div>;
     if (error)
-        return <div className="text-center py-8 text-xl font-semibold text-red-500">{error}</div>;
+        return (
+            <div className="text-center flex flex-col items-center">
+                <p className="text-lg text-red-500">{error}</p>
+                <button
+                    className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow hover:bg-blue-600"
+                    onClick={() => window.location.href = "/"}
+                >
+                    Order Now
+                </button>
+            </div>
+        );
 
     return (
         <div className="container mx-auto p-6">

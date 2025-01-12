@@ -168,7 +168,6 @@ const Header = () => {
       </div>
     </div>
   );
-
   return (
     <header className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center px-4 py-4">
@@ -205,7 +204,6 @@ const Header = () => {
                   Searching for products...
                 </p>
               )}
-
               {/* Display Results */}
               {!isLoading && searchResults.length > 0 ? (
                 searchResults.map((product) => (
@@ -235,20 +233,18 @@ const Header = () => {
             </div>
           )}
         </div>
-
         {/* Actions */}
         <div className="flex items-center space-x-4">
           {/* Become a Seller Button */}
           {authenticatedUser && (
             <Link
-              to="/sell"
+              to="#"
               className="hidden md:flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full transition-all duration-300 shadow-md"
             >
               <SellIcon className="mr-2" />
               Become a Seller
             </Link>
           )}
-
           {/* Authenticated User Dropdown */}
           {authenticatedUser ? (
             <div className="relative">
@@ -256,10 +252,8 @@ const Header = () => {
                 className="flex items-center space-x-2 px-2 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-md focus:outline-none transition duration-300"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-
-
                 {authenticatedUser.avatar ? (
-                  <img src={authenticatedUser.avatar}
+                  <img src={authenticatedUser?.avatar}
                     alt={authenticatedUser.username}
                     className="w-8 h-8 rounded-full object-cover"
                   />

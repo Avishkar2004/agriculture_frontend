@@ -45,6 +45,10 @@ const SearchProductDetails = () => {
         }
     };
 
+    const buyNow = async () => {
+        
+    }
+
     const fetchReviews = async () => {
         try {
             const response = await fetch(`/api/reviews/getreview/${product.id}`); // Pass the correct ID

@@ -14,7 +14,7 @@ const ProfileHeader = ({ username, email, avatar }) => (
 
   <div className="flex items-center space-x-6 mb-8">
     <div className="relative w-24 h-24">
-      {avatar ? (
+      {avatar? (
         <img
           src={avatar}
           alt="Profile Avatar"
