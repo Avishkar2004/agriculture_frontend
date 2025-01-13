@@ -10,7 +10,6 @@ const HelpCenter = () => {
                 <p className="text-center text-gray-600 mb-10">
                     Find answers to your questions or get in touch with our support team.
                 </p>
-
                 {/* FAQ Section */}
                 <div className="mb-12">
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -41,24 +40,6 @@ const HelpCenter = () => {
                                 You can reach our support team via email at support@yourstore.com or call us at +1 (123) 456-7890.
                             </p>
                         </div>
-                    </div>
-                </div>
-
-                {/* Contact Support Section */}
-                <div className="mb-12">
-                    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                        Need Assistance?
-                    </h2>
-                    <p className="text-gray-600 mb-6">
-                        If you can't find the answer you're looking for, feel free to reach out to our support team. We're here to help!
-                    </p>
-                    <div className="flex flex-col sm:flex-row sm:space-x-4">
-                        <button className="w-full sm:w-auto px-6 py-3 bg-indigo-500 text-white rounded-lg shadow hover:bg-indigo-600">
-                            Chat with Us
-                        </button>
-                        <button className="w-full sm:w-auto mt-4 sm:mt-0 px-6 py-3 bg-green-500 text-white rounded-lg shadow hover:bg-green-600">
-                            Email Support
-                        </button>
                     </div>
                 </div>
                 {/* General Topics Section */}
