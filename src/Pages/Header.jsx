@@ -143,7 +143,7 @@ const Header = () => {
             </Link>
 
             {/* My Order Button */}
-            <Link to="/#" className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-green-100 transition duration-200 rounded-md">
+            <Link to="/orders" className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-green-100 transition duration-200 rounded-md">
               <SellIcon className="text-green-500" />
               <span className="font-medium">My Orders</span>
             </Link>
@@ -210,6 +210,10 @@ const Header = () => {
                     key={product.id}
                     to={`/searchproduct/${product.id}`}
                     className="flex items-center gap-4 px-4 py-2 hover:bg-indigo-50 transition cursor-pointer"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSearchResults([]);
+                    }}
                   >
                     <img
                       src={`data:image/jpeg;base64,${product.image}`}
@@ -302,7 +306,7 @@ const Header = () => {
 
                   </Link>
                   <Link
-                    to="/help"
+                    to="/helpcenter"
                     className="flex items-center px-4 py-3 gap-3 hover:bg-blue-100 text-gray-700 transition duration-200"
                     onClick={closeDropdown}
                   >
@@ -358,7 +362,7 @@ const Header = () => {
       </div>
       {/* Sidebar */}
       {renderSidebar()}
-    </header>
+    </header >
   );
 };
 
