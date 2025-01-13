@@ -73,6 +73,7 @@ const DeliveryAddress = ({ onAddressSelect }) => {
     useEffect(() => {
         fetchAddresses();
     }, []);
+    
     const fetchAddresses = async () => {
         try {
             const response = await fetch("/api/deliveryAddress", {
