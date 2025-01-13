@@ -134,7 +134,7 @@ const Header = () => {
 
             {/* Help Center Link */}
             <Link
-              to="/help"
+              to="/helpcenter"
               className="flex items-center gap-3 px-6 py-3 text-gray-800 hover:bg-blue-100 transition duration-200 rounded-md"
               onClick={closeDropdown}
             >

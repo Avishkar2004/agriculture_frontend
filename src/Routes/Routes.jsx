@@ -37,6 +37,7 @@ import { FaComments } from "react-icons/fa"; // For chat icon
 import GoogleCallback from "../Pages/GoogleCallback";
 import SearchProductDetails from "../Pages/SearchProductDetails";
 import Settings from "../Pages/Settings";
+import HelpCenter from "../Pages/HelpCenter";
 
 
 const AppRoutes = () => {
@@ -65,6 +66,7 @@ const AppRoutes = () => {
         <Route path="/profile" component={Profile} />
         <Route path="/orders" component={Orders} />
         <Route path="/settings" component={Settings} />
+        <Route path="/helpcenter" component={HelpCenter} />
         <Route path="/ForgotPasswordAndReset" component={ForgotPasswordAndReset} />
         {/* For Become a seller */}
 
