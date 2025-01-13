@@ -88,7 +88,6 @@ const Header = () => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-
   const closeDropdown = () => {
     setIsDropdownOpen(false);
   };

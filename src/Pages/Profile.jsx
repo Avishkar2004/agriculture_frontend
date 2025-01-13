@@ -5,16 +5,18 @@ import { FaSignOutAlt, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const ProfileHeader = ({ username, email, avatar }) => (
-  // const getEmailUsername = (email) => {
-  //     const emailUsername = email.split("@")[0];
-  //     const parts = emailUsername.split(".");
-  //     return parts.slice(-2).join(".");
-  //   };
+const maskEmail = (email) => {
+  const [localPart, domain] = email.split("@");
+  const parts = localPart.split(".");
+  const visiblePart = parts.length > 1 ? parts.slice(-2).join(".") : localPart.slice(-2)
+  const maskedPart = "*".repeat(localPart.length - visiblePart.length)
+  return `${maskedPart}${visiblePart}@${domain}`;
+};
 
+const ProfileHeader = ({ username, email, avatar }) => (
   <div className="flex items-center space-x-6 mb-8">
     <div className="relative w-24 h-24">
-      {avatar? (
+      {avatar ? (
         <img
           src={avatar}
           alt="Profile Avatar"
@@ -28,7 +30,7 @@ const ProfileHeader = ({ username, email, avatar }) => (
     </div>
     <div>
       <h2 className="text-3xl font-extrabold text-gray-800">{username}</h2>
-      <p className="text-indigo-600 text-sm font-semibold">{email}</p>
+      <p className="text-indigo-600 text-sm font-semibold">{maskEmail(email)}</p>
     </div>
   </div>
 );
@@ -36,9 +38,7 @@ const ProfileHeader = ({ username, email, avatar }) => (
 const ActionButtons = ({ onLogout, onDeleteAccount, isLoading }) => (
   <div className="flex space-x-4 mt-8">
     <button
-      className={`flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-indigo-600 shadow-md ${isLoading
-        ? "opacity-50 cursor-not-allowed"
-        : "hover:bg-indigo-700 hover:shadow-lg"
+      className={`flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-indigo-600 shadow-md ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-indigo-700 hover:shadow-lg"
         }`}
       onClick={onLogout}
       disabled={isLoading}
@@ -46,9 +46,7 @@ const ActionButtons = ({ onLogout, onDeleteAccount, isLoading }) => (
       <FaSignOutAlt className="mr-2" /> Logout
     </button>
     <button
-      className={`flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-red-500 shadow-md ${isLoading
-        ? "opacity-50 cursor-not-allowed"
-        : "hover:bg-red-600 hover:shadow-lg"
+      className={`flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-red-500 shadow-md ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600 hover:shadow-lg"
         }`}
       onClick={onDeleteAccount}
       disabled={isLoading}
@@ -145,7 +143,7 @@ const Profile = () => {
               <div>
                 <span className="block text-sm text-gray-600">Email Address</span>
                 <span className="text-lg font-semibold text-gray-800">
-                  {authenticatedUser.email}
+                  {maskEmail(authenticatedUser.email)}
                 </span>
               </div>
             </div>
