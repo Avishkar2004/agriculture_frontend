@@ -42,12 +42,15 @@ const PlantGrowthRegulator = () => {
   return (
     <div className="container mt-3">
       <div className='text-red-800 font-secondary'>
-
-        <Link to="/" className="text-black text-sm hover:text-blue-600  ml-4">Home &gt;</Link>
-        <span className="text-black text-sm ml-1 font-secondary">Plant Growth Regulator (PGR) &gt;</span>
+        <Link to="/" className="text-black text-sm hover:text-blue-600  ml-4">
+        Home &gt;
+        </Link>
+        <span className="text-black text-sm ml-1 font-secondary">
+          Plant Growth Regulator (PGR) &gt;
+        </span>
       </div>
 
-      <div className="container flex mt-10">
+      <div className="container flex mt-4">
         <div className="w-full bg-white p-4 border-[1px]">
           <div className="flex justify-center">
             <img src={PlantGrowthRegulators} alt="" className="w-full max-w-[800px]" />
