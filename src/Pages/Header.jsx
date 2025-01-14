@@ -24,8 +24,8 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const [searchResults, setSearchResults] = useState([]);
+  const debounceTimeout = useRef(null)
 
   useEffect(() => {
     // Fetch cart data on mount
@@ -70,8 +70,17 @@ const Header = () => {
   const handleInputChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    handleSearch(query);
+    // handleSearch(query);
 
+    // Clear previous debouce timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current)
+    }
+
+    // Set new debounce timeout
+    debounceTimeout.current = setTimeout(() => {
+      handleSearch(query)
+    }, 400)
   };
 
   const ProfilehandleLogOut = async () => {
