@@ -225,11 +225,11 @@ const OrganicproductData = () => {
           </div>
 
           <span className="bg-green-300">Save {productData.save}</span>
-          <div className="flex mt-3 mb-3">
+          <div className="flex items-center justify-between mt-3 mb-3">
             <p className="text-lg font-semibold text-gray-800">
               <span className="text-blue-600">{productData.brands}</span>
             </p>
-            <div className="flex ml-[35.5rem] space-x-3">
+            <div className="flex space-x-3">
               <FacebookIcon
                 color="info"
                 className="cursor-pointer hover:text-blue-700"
@@ -303,35 +303,39 @@ const OrganicproductData = () => {
               </p>
             </div>
           </div>
-          <div className="mt-6 flex gap-6">
-            <p className="text-2xl font-semibold space-x-9 ">
-              Quantity :
-              <p className="text-4xl space-x-12 text-red-900 ml-32 overflow-hidden -mt-9 item-center border-[2px] border-t-2 border-b-2">
-                <button className="text-gray-400 hover:text-black border-r-2 ml-5 items-center">
-                  <button className="mr-5" onClick={handleIncrement}>
-                    +
-                  </button>
+          <div className="mt-6 flex flex-col sm:flex-row items-center gap-6">
+            {/* Quantity Selector */}
+            <div className="flex items-center gap-4">
+              <span className="text-2xl font-semibold">Quantity:</span>
+              <div className="flex items-center border-2 border-gray-300 rounded-md">
+                <button
+                  className="px-4 py-2 text-gray-400 hover:text-black border-r border-gray-300"
+                  onClick={handleDecrement}
+                >
+                  -
                 </button>
-                <span className="text-gray-700 border-r-2 items-center">
-                  <span className="mr-5 -ml-5">{count}</span>
-                </span>
-                <button className="items-center">
-                  <button
-                    onClick={handleDecrement}
-                    className="-ml-5 items-center"
-                  >
-                    <button className="mr-5 hover:text-black text-gray-400">
-                      -
-                    </button>
-                  </button>
+                <span className="px-6 text-lg text-gray-700">{count}</span>
+                <button
+                  className="px-4 py-2 text-gray-400 hover:text-black border-l border-gray-300"
+                  onClick={handleIncrement}
+                >
+                  +
                 </button>
-              </p>
-            </p>
-            <div className="flex justify-center content-center min-h-12">
-              <span onClick={handleBuyNow} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 ml-12 -mt-2 rounded hover:cursor-pointer">
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-4">
+              <button
+                onClick={handleBuyNow}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded"
+              >
                 Buy Now
-              </span>
-              <button onClick={handleAddToCart} className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 ml-4 -mt-2 rounded hover:cursor-pointer" >
+              </button>
+              <button
+                onClick={handleAddToCart}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded"
+              >
                 Add To Cart
               </button>
             </div>

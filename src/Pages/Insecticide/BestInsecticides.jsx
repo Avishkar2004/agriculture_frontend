@@ -56,7 +56,7 @@ const BestInsecticides = () => {
         </div>
       </div>
       
-      <div className="container flex mt-10">
+      <div className="container flex mt-4">
         {/* Right Column - Photo */}
         <div className="w-full bg-white p-4 border-[1px]">
           {/* Center the image */}

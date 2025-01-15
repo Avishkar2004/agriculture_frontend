@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useHistory, useLocation } from 'react-router-dom';
 import TwitterIcon from "@mui/icons-material/Twitter";
 import EmailIcon from "@mui/icons-material/Email";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
+import Reviews from "./Reviews";
+import { useAuth } from "../actions/authContext";
 const SearchProductDetails = () => {
+    const { getAuthToken, authenticatedUser } = useAuth() || {}
     const { id } = useParams();
+    const history = useHistory();
+    const location = useLocation();
+
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedSize, setSelectedSize] = useState('50 ml');
     const [count, setCount] = useState(1);
     const [reviews, setReviews] = useState([]);
+    const [cartData, setCartData] = useState(null);
 
     useEffect(() => {
         const fetchProductDetails = async () => {
@@ -45,9 +52,56 @@ const SearchProductDetails = () => {
         }
     };
 
-    const buyNow = async () => {
-        
+    const handleAddToCart = async () => {
+        try {
+            const { id, name, price, image, quantity, productType } = product
+
+            const response = await fetch('/cart', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id,
+                    name,
+                    price,
+                    image,
+                    quantity: count,
+                    productType: "plantgrowthregulator" // or any other product type
+
+                }),
+                credentials: "include"
+            })
+            if (response.ok) {
+                const responseData = await response.json()
+                setCartData(responseData.cart)
+            } else if (response.status === 401) {
+                alert('You must be logged in to add items to the cart.');
+                history.push({
+                    pathname: "/signin",
+                    state: { from: location } //! Pass current location for redirect after login / sign in
+                })
+            } else {
+                console.error('Failed to add item to cart');
+            }
+        } catch (error) {
+            console.error("Error adding item to cart:", error)
+        }
     }
+
+    const handleBuyNow = (e) => {
+        e.preventDefault();
+        const token = getAuthToken();
+        if (!token) {
+            alert("You must be logged in to buy this product");
+            history.push({
+                pathname: "/signin",
+                state: { from: location }
+            });
+        } else {
+            history.push("/BuyNow", { product: { ...product, quantity: count, totalPrice: product.price * count } });
+        }
+    };
 
     const fetchReviews = async () => {
         try {
@@ -78,6 +132,14 @@ const SearchProductDetails = () => {
             ...updatedData,
         }));
     };
+
+    const calculateAverageRating = () => {
+        if (reviews.length === 0) return 0 // Handle case when there are no reviews
+        const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0)
+        return (totalRating / reviews.length).toFixed(1) // Rounded to 1 decimal place
+    }
+    const averageRating = calculateAverageRating() // Call the fucntion
+
 
     useEffect(() => {
         if (product && !product.reviews) {
@@ -132,19 +194,25 @@ const SearchProductDetails = () => {
                 <div className="w-1/2 bg-white text-left ml-8 p-4 mr-8 border-r-2 border-l-2 border-t-2 border-b-2">
                     <span>ven</span>
                     <h1 className="text-2xl font-[#1e2d7d]">{product?.name}</h1>
-                    <p className="mt-5 mb-3">
-                        <StarIcon color="warning" />
-                        <StarIcon color="warning" />
-                        <StarIcon color="warning" />
-                        <StarIcon color="warning" />
-                        <StarIcon color="warning" /> {reviews.length} reviews
-                    </p>
+                    <div className="flex items-center">
+                        <div className="flex mt-5 mb-3">
+                            {/* Display star icons dynamically based on the average rating */}
+                            {Array.from({ length: 5 }, (_, index) => (
+                                <StarIcon
+                                    key={index}
+                                    color={index < Math.round(averageRating) ? "warning" : "disabled"}
+                                />
+                            ))}
+                        </div>
+                        <span className="ml-2">{averageRating}</span>
+                        <span className="text-sm text-gray-500 ml-2">({reviews.length} reviews)</span>
+                    </div>
                     <span className="bg-green-300">Save {product.save}</span>
-                    <div className="flex mt-3 mb-3">
+                    <div className="flex items-center justify-between mt-3 mb-3">
                         <p className="text-lg font-semibold text-gray-800">
                             <span className="text-blue-600">{product.brands}</span>
                         </p>
-                        <div className="flex ml-[35.5rem] space-x-3">
+                        <div className="flex space-x-3">
                             <FacebookIcon
                                 color="info"
                                 className="cursor-pointer hover:text-blue-700"
@@ -217,40 +285,46 @@ const SearchProductDetails = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="mt-6 flex gap-6">
-                        <div className="text-2xl font-semibold space-x-9 ">
-                            Quantity :
-                            <div className="text-4xl space-x-12 text-red-900 ml-32 overflow-hidden -mt-9 item-center border-[2px] border-t-2 border-b-2">
-                                <button className="text-gray-400 hover:text-black border-r-2 ml-5 items-center">
-                                    <button className="mr-5" onClick={handleIncrement}>
-                                        +
-                                    </button>
+                    <div className="mt-6 flex flex-col sm:flex-row items-center gap-6">
+                        {/* Quantity Selector */}
+                        <div className="flex items-center gap-4">
+                            <span className="text-2xl font-semibold">Quantity:</span>
+                            <div className="flex items-center border-2 border-gray-300 rounded-md">
+                                <button
+                                    className="px-4 py-2 text-gray-400 hover:text-black border-r border-gray-300"
+                                    onClick={handleDecrement}
+                                >
+                                    -
                                 </button>
-                                <span className="text-gray-700 border-r-2 items-center">
-                                    <span className="mr-5 -ml-5">{count}</span>
-                                </span>
-                                <button className="items-center">
-                                    <button
-                                        onClick={handleDecrement}
-                                        className="-ml-5 items-center"
-                                    >
-                                        <button className="mr-5 hover:text-black text-gray-400">
-                                            -
-                                        </button>
-                                    </button>
+                                <span className="px-6 text-lg text-gray-700">{count}</span>
+                                <button
+                                    className="px-4 py-2 text-gray-400 hover:text-black border-l border-gray-300"
+                                    onClick={handleIncrement}
+                                >
+                                    +
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex justify-center content-center min-h-12">
-
-                            <button onClick={""} className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 ml-4 -mt-2 rounded hover:cursor-pointer">
+                        {/* Action Buttons */}
+                        <div className="flex gap-4">
+                            <button
+                                onClick={handleBuyNow}
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded"
+                            >
+                                Buy Now
+                            </button>
+                            <button
+                                onClick={handleAddToCart}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded"
+                            >
                                 Add To Cart
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+            <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={product.id} fetchReviews={fetchReviews} />
         </div>
     );
 };
