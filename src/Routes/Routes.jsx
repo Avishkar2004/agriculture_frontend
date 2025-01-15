@@ -38,11 +38,11 @@ import GoogleCallback from "../Pages/GoogleCallback";
 import SearchProductDetails from "../Pages/SearchProductDetails";
 import Settings from "../Pages/Settings";
 import HelpCenter from "../Pages/HelpCenter";
-
+import { useAuth } from "../actions/authContext";
 
 const AppRoutes = () => {
+  const { authenticatedUser, logout } = useAuth();
   const [isChatVisible, setIsChatVisible] = useState(false); // State to control chat visibility
-
   return (
     <Router>
       <div
@@ -57,7 +57,7 @@ const AppRoutes = () => {
           className={`fixed top-36 right-0 w-auto h-[calc(100vh-64px)] bg-white shadow-lg border-r border-gray-300 z-50 transition-transform ${isChatVisible ? "translate-x-0" : "-translate-x-full"
             }`}
         >
-          <Messages onClose={() => setIsChatVisible(false)} />
+          <Messages onClose={() => setIsChatVisible(false)} username={authenticatedUser.username} room="general" />
         </div>
 
       )}

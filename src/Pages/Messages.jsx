@@ -1,38 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
 import useSocket from "../hooks/useSocket";
+import { FaTimes } from "react-icons/fa";
 
-const Messages = ({ onClose }) => {
-  const socket = useSocket();
+const Messages = ({ onClose, username, room }) => {
+  const socket = useSocket(room);
   const [messages, setMessages] = useState([]); // State to hold all messages
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
-
     if (!socket) return;
 
     // Listen for welcome messages
-    socket.on("welcome", (data) => {
-      setMessages((prev) => [...prev, { text: data.message, sender: "server" }]);
+    socket.on("message", (data) => {
+      console.log("Message received:", data); // Log to verify
+      setMessages((prev) => {
+        console.log("Updating messages:", [...prev, { text: data.text, sender: data.sender }]);
+        return [...prev, { text: data.text, sender: data.sender }];
+      });
     });
-
     // Listen for server broadcasts
     socket.on("server-message", (data) => {
-      setMessages((prev) => [...prev, { text: data.text, sender: "server" }]);
+      console.log("Server message received:", data); // Log to verify
+      setMessages((prev) => {
+        console.log("Updating messages:", [...prev, { text: data.text, sender: data.sender }]);
+        return [...prev, { text: data.text, sender: data.sender }];
+      });
     });
-
     return () => {
       // Clean up socket listeners on component unmount
-      socket.off("welcome");
+      socket.off("message");
       socket.off("server-message");
     };
   }, [socket]);
 
+  useEffect(() => {
+    if (!socket) return;
+
+    console.log("Joining room with:", { username, room });
+    socket.emit("joinRoom", { username, room });
+  }, [socket, username, room]);
+
   const sendMessage = () => {
     if (socket && inputMessage.trim()) {
-      const userMessage = { text: inputMessage, sender: "user" };
+      const userMessage = { text: inputMessage, sender: username, room };
       setMessages((prev) => [...prev, userMessage]); // Display user message immediately
-      socket.emit("client-message", { text: inputMessage }); // Send to server
+      socket.emit("chatMessage", userMessage); // Send to server
       setInputMessage(""); // Clear input
     }
   };
@@ -41,7 +53,7 @@ const Messages = ({ onClose }) => {
     <div className="fixed right-5 h-[calc(80vh-100px)] bg-white shadow-lg border border-gray-300 rounded-lg z-50 flex flex-col">
       {/* Header */}
       <div className="bg-green-500 text-white flex justify-between items-center p-4 rounded-t-lg">
-        <h2 className="font-semibold text-lg">Real-Time Chat</h2>
+        <h2 className="font-semibold text-lg">Chat Room: {room}</h2>
         <button
           onClick={onClose}
           className="text-white hover:text-gray-200 transition"
@@ -60,11 +72,12 @@ const Messages = ({ onClose }) => {
             {messages.map((msg, index) => (
               <li
                 key={index}
-                className={`px-4 py-2 rounded-lg ${msg.sender === "user"
+                className={`px-4 py-2 rounded-lg ${msg.sender === username
                   ? "bg-blue-100 text-blue-800 self-end"
                   : "bg-gray-200 text-gray-800 self-start"
                   }`}
               >
+                <strong>{msg.sender}: </strong>
                 {msg.text}
               </li>
             ))}
