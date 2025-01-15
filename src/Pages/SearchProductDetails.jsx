@@ -14,7 +14,7 @@ const SearchProductDetails = () => {
     const history = useHistory();
     const location = useLocation();
 
-    const [product, setProduct] = useState(null);
+    const [productData, setProductData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedSize, setSelectedSize] = useState('50 ml');
@@ -30,7 +30,7 @@ const SearchProductDetails = () => {
                     throw new Error("Failed to fetch product details.");
                 }
                 const data = await response.json();
-                setProduct(data);
+                setProductData(data);
             } catch (err) {
                 setError("Could not load product details.");
                 console.error(err);
@@ -54,7 +54,7 @@ const SearchProductDetails = () => {
 
     const handleAddToCart = async () => {
         try {
-            const { id, name, price, image, quantity, productType } = product
+            const { id, name, price, image, quantity, productType } = productData
 
             const response = await fetch('/cart', {
                 method: "POST",
@@ -99,13 +99,13 @@ const SearchProductDetails = () => {
                 state: { from: location }
             });
         } else {
-            history.push("/BuyNow", { product: { ...product, quantity: count, totalPrice: product.price * count } });
+            history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice: productData.price * count } });
         }
     };
 
     const fetchReviews = async () => {
         try {
-            const response = await fetch(`/api/reviews/getreview/${product.id}`); // Pass the correct ID
+            const response = await fetch(`/api/reviews/getreview/${productData.id}`); // Pass the correct ID
             if (response.ok) {
                 const reviewData = await response.json();
                 setReviews(reviewData);
@@ -121,13 +121,13 @@ const SearchProductDetails = () => {
         setSelectedSize(newSize);
         // Prepare updated product data based on selected size
         const updatedData = {
-            reviews: newSize === '50 ml' ? product.review_50 : product.review_100,
-            save: newSize === '50 ml' ? product.save_50 : product.save_100,
-            price: newSize === '50 ml' ? product.price_small : product.salePrice,
+            reviews: newSize === '50 ml' ? productData.review_50 : productData.review_100,
+            save: newSize === '50 ml' ? productData.save_50 : productData.save_100,
+            price: newSize === '50 ml' ? productData.price_small : productData.salePrice,
         };
 
         // Update the product state with the new values
-        setProduct((prevData) => ({
+        setProductData((prevData) => ({
             ...prevData,
             ...updatedData,
         }));
@@ -142,17 +142,17 @@ const SearchProductDetails = () => {
 
 
     useEffect(() => {
-        if (product && !product.reviews) {
+        if (productData && !productData.reviews) {
             // Only call handleSizeChange when product is initialized
             handleSizeChange("50 ml");
         }
-    }, [product]);
+    }, [productData]);
 
     useEffect(() => {
-        if (!product?.id) {
+        if (productData?.id) {
             fetchReviews()
         }
-    }, [product?.id])
+    }, [productData?.id])
 
 
 
@@ -164,7 +164,7 @@ const SearchProductDetails = () => {
         return <div className="text-center py-4 text-lg text-red-500">{error}</div>;
     }
 
-    if (!product) {
+    if (!productData) {
         return <div className="text-center py-4 text-lg">Product not found.</div>;
     }
 
@@ -175,13 +175,13 @@ const SearchProductDetails = () => {
                 <div className="w-1/2 bg-white text-center ml-12 border-r-2 border-l-2 border-t-2 border-b-2">
                     <img
                         className="h-28 border-2 border-blue-500"
-                        src={`data:image/avif;base64, ${product.image}`}
-                        alt={product.name}
+                        src={`data:image/avif;base64, ${productData.image}`}
+                        alt={productData.name}
                     />
                     {/* this is a big image */}
                     <img
-                        src={`data:image/avif;base64,${product.image}`}
-                        alt={product.name}
+                        src={`data:image/avif;base64,${productData.image}`}
+                        alt={productData.name}
                         className="h-[31rem] object-cover mx-auto overflow-hidden"
                     />
                     <p className="text-gray-500 mb-4">
@@ -193,7 +193,7 @@ const SearchProductDetails = () => {
                 {/* Right Side */}
                 <div className="w-1/2 bg-white text-left ml-8 p-4 mr-8 border-r-2 border-l-2 border-t-2 border-b-2">
                     <span>ven</span>
-                    <h1 className="text-2xl font-[#1e2d7d]">{product?.name}</h1>
+                    <h1 className="text-2xl font-[#1e2d7d]">{productData?.name}</h1>
                     <div className="flex items-center">
                         <div className="flex mt-5 mb-3">
                             {/* Display star icons dynamically based on the average rating */}
@@ -207,10 +207,10 @@ const SearchProductDetails = () => {
                         <span className="ml-2">{averageRating}</span>
                         <span className="text-sm text-gray-500 ml-2">({reviews.length} reviews)</span>
                     </div>
-                    <span className="bg-green-300">Save {product.save}</span>
+                    <span className="bg-green-300">Save {productData.save}</span>
                     <div className="flex items-center justify-between mt-3 mb-3">
                         <p className="text-lg font-semibold text-gray-800">
-                            <span className="text-blue-600">{product.brands}</span>
+                            <span className="text-blue-600">{productData.brands}</span>
                         </p>
                         <div className="flex space-x-3">
                             <FacebookIcon
@@ -238,13 +238,13 @@ const SearchProductDetails = () => {
                             className={`text-xl border-2 rounded-md py-1 px-3 focus:outline-none ${selectedSize === '50 ml' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 text-gray-700 border-gray-300'}`}
                             onClick={() => handleSizeChange('50 ml')}
                         >
-                            {product.small_50}
+                            {productData.small_50}
                         </button>
                         <button
                             className={`text-xl border-2 rounded-md py-1 px-3 focus:outline-none ${selectedSize === '100 ml' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 text-gray-700 border-gray-300'}`}
                             onClick={() => handleSizeChange('100 ml')}
                         >
-                            {product.big_100}
+                            {productData.big_100}
                         </button>
                     </div>
                     <p className="text-[#1e2d7d] mt-5 text-lg font-semibold">Expiry Date: <span className="text-black">09-Dec-2024</span></p>
@@ -260,17 +260,17 @@ const SearchProductDetails = () => {
                                 <span className="text-[#00badb]">
                                     {/* Calculate the displayed price based on selected size and current product */}
                                     {selectedSize === '50 ml'
-                                        ? product.price_small - product.save
-                                        : product.salePrice - product.save}
+                                        ? productData.price_small - productData.save
+                                        : productData.salePrice - productData.save}
                                 </span>
                                 {/* Show the original price with a strikethrough if there is a discount */}
-                                {selectedSize === '50 ml' && product.price_small ? (
+                                {selectedSize === '50 ml' && productData.price_small ? (
                                     <span className="text-base text-gray-700 line-through ml-3">
-                                        {product.price_small}
+                                        {productData.price_small}
                                     </span>
-                                ) : selectedSize === '100 ml' && product.salePrice ? (
+                                ) : selectedSize === '100 ml' && productData.salePrice ? (
                                     <span className="text-base text-gray-700 line-through ml-3">
-                                        {product.salePrice}
+                                        {productData.salePrice}
                                     </span>
                                 ) : null}
                             </div>
@@ -324,7 +324,7 @@ const SearchProductDetails = () => {
                     </div>
                 </div>
             </div>
-            <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={product.id} fetchReviews={fetchReviews} />
+            <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={productData.id} fetchReviews={fetchReviews} />
         </div>
     );
 };

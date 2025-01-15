@@ -6,7 +6,6 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import Description from '../Description';
 import { useAuth } from '../../actions/authContext';
 import Reviews from '../Reviews';
 
