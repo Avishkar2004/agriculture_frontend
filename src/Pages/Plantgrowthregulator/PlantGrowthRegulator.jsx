@@ -41,13 +41,19 @@ const PlantGrowthRegulator = () => {
 
   return (
     <div className="container mt-3">
-      <div className='text-red-800 font-secondary'>
-        <Link to="/" className="text-black text-sm hover:text-blue-600  ml-4">
-        Home &gt;
-        </Link>
-        <span className="text-black text-sm ml-1 font-secondary">
-          Plant Growth Regulator (PGR) &gt;
-        </span>
+      <div className="space-x-52 ml-7 mt-4 mb-4">
+        <div className="flex text-sm gap text-gray-500 font-secondary">
+          <span className="space-x-2 ml-6">
+            <Link to="/" className="hover:text-blue-500" >
+              Home &gt;
+            </Link>
+            <span className="text-sm">
+              Plant Growth Regulator (PGR) &gt;
+            </span>
+            
+          </span>
+
+        </div>
       </div>
 
       <div className="container flex mt-4">

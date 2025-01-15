@@ -41,15 +41,21 @@ const BestInsecticides = () => {
   }
   return (
     <div className="container mt-3">
-      <Link
-        to="/"
-        className="text-black text-sm hover:text-blue-600 font-primary ml-4"
-      >
-        Home &gt;
-      </Link>
-      <span className="text-black text-sm ml-2 font-secondary">
-        Buy Insecticide Online &gt;
-      </span>
+
+      <div className="space-x-52 ml-7 mt-4 mb-4">
+        <div className="flex text-sm gap text-gray-500 font-secondary">
+          <span className="space-x-2 ml-6">
+            <Link to="/" className="hover:text-blue-500" >
+              Home &gt;
+            </Link>
+            
+            <span className="text-sm">
+              Buy Insecticide Online &gt;
+            </span>
+          </span>
+        </div>
+      </div>
+      
       <div className="container flex mt-10">
         {/* Right Column - Photo */}
         <div className="w-full bg-white p-4 border-[1px]">

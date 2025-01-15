@@ -42,16 +42,21 @@ const Micronutrients = () => {
 
     return (
         <div className="container mt-3">
-            <Link
-                to="/"
-                className="text-black text-sm hover:text-blue-600 font-primary ml-4"
-            >
-                Home &gt;
-            </Link>
-            <span className="text-black text-sm ml-1 font-secondary">
-                Buy Micro-nutrients Online &gt;
-            </span>
-            <div className="container flex mt-10">
+            <div className="space-x-52 ml-7 mt-4 mb-4">
+                <div className="flex text-sm gap text-gray-500 font-secondary">
+                    <span className="space-x-2 ml-6">
+                        <Link to="/" className="hover:text-blue-500" >
+                        Home &gt;
+                        </Link>
+                        <span className="text-sm">
+                            Buy Micro-nutrients Online &gt;
+                        </span>
+                        
+                    </span>
+                </div>
+            </div>
+
+            <div className="container flex mt-4">
                 <div className="w-full bg-white p-4 border-[1px] ">
                     <div className="flex justify-center pl-5 w-full h-[15%]">
                         <img
