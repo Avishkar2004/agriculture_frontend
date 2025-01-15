@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useHistory, useLocation, Link } from 'react-router-dom';
-import { useAuth } from '../actions/authContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { MdErrorOutline, MdCheckCircle } from 'react-icons/md'; // Import icons for error and success
-import GoogleButton from "react-google-button"
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Button } from '@mui/material';
+import React, { useState } from 'react';
+import GoogleButton from "react-google-button";
+import { MdCheckCircle, MdErrorOutline } from 'react-icons/md'; // Import icons for error and success
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useAuth } from '../actions/authContext';
 
 
 const LogIn = () => {
@@ -81,16 +81,14 @@ const LogIn = () => {
     }
   };
 
-
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-200 to-gray-400 p-4">
+    <div className="min-h-6 flex items-center justify-center bg-gradient-to-r from-gray-200 to-gray-300 p-4">
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg relative">
         <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Sign In</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700 text-sm font-medium mb-2">
-              Username / Email
+              Username or Email
             </label>
             <input
               type="text"

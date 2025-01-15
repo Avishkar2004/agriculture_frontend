@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link, useHistory, useLocation } from 'react-router-dom';
-import TwitterIcon from "@mui/icons-material/Twitter";
 import EmailIcon from "@mui/icons-material/Email";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
-import Reviews from "./Reviews";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import React, { useEffect, useState } from "react";
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from "../actions/authContext";
+import Reviews from "./Reviews";
 const SearchProductDetails = () => {
     const { getAuthToken, authenticatedUser } = useAuth() || {}
     const { id } = useParams();
@@ -167,7 +167,6 @@ const SearchProductDetails = () => {
     if (!productData) {
         return <div className="text-center py-4 text-lg">Product not found.</div>;
     }
-
     return (
         <div className="bg-gray-100 min-h-screen flex flex-col">
             <div className="flex">

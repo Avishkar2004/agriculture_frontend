@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useAuth } from "../actions/authContext";
-import { Link } from "react-router-dom";
-import { FaSignOutAlt, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import React, { useState } from "react";
+import { FaEnvelope, FaPhoneAlt, FaSignOutAlt } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { Link } from "react-router-dom";
+import { useAuth } from "../actions/authContext";
 
 const maskEmail = (email) => {
   const [localPart, domain] = email.split("@");

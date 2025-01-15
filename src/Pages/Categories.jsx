@@ -1,10 +1,10 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import BugReportIcon from '@mui/icons-material/BugReport';
 import CategoryIcon from '@mui/icons-material/Category';
 import GrassIcon from '@mui/icons-material/Grass';
-import BugReportIcon from '@mui/icons-material/BugReport';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import ParkIcon from '@mui/icons-material/Park';
+import React from 'react';
+import { Link } from 'react-router-dom';
 const categoriesData = [
     { name: 'Plant Growth Regulator', icon: <CategoryIcon className="text-purple-500" />, route: '/plantgrowthregulator' },
     { name: 'Organic Products', icon: <ParkIcon className="text-orange-500" />, route: '/organicproduct' },

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Box, Button, Modal, TextField, Typography, IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import ReportIcon from "@mui/icons-material/Report";
 import StarIcon from "@mui/icons-material/Star";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ReportIcon from "@mui/icons-material/Report";
+import { Box, Button, IconButton, Modal, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {

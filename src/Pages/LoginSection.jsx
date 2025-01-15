@@ -1,7 +1,7 @@
 import React from 'react';
-import { useAuth } from "../actions/authContext";
-import { FaTruck, FaBell, FaStar, FaSignOutAlt } from 'react-icons/fa';
+import { FaBell, FaSignOutAlt, FaStar, FaTruck } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useAuth } from "../actions/authContext";
 
 const LoginSection = ({ goToNextSection }) => {
     const { authenticatedUser, logout } = useAuth();

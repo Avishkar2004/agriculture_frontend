@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
-import OrderConfirmModal from './OrderConfirmModal';
-import LoginSection from './LoginSection';
+import React, { useEffect, useState } from 'react';
+import { AiOutlineCreditCard, AiOutlineFileText, AiOutlineHome, AiOutlineUser } from 'react-icons/ai';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useAuth } from '../actions/authContext';
 import DeliveryAddress from './DeliveryAddress';
+import LoginSection from './LoginSection';
+import OrderConfirmModal from './OrderConfirmModal';
 import OrderSummary from './OrderSummary';
 import PaymentOption from './PaymentOption';
-import { AiOutlineUser, AiOutlineHome, AiOutlineFileText, AiOutlineCreditCard } from 'react-icons/ai';
-import { useAuth } from '../actions/authContext';
 
 const BuyNow = () => {
   const history = useHistory();
@@ -15,7 +15,6 @@ const BuyNow = () => {
   const [expandedSection, setExpandedSection] = useState("login");
   const [isAddressSelected, setIsAddressSelected] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null); // New state for selected address
-
   const location = useLocation();
   const initialProductData = (location.state && location.state.productData) || {};
   const [productData, setProductData] = useState(initialProductData);

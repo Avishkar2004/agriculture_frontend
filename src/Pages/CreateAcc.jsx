@@ -1,11 +1,11 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import React, { useState } from 'react';
+import GoogleButton from 'react-google-button';
 import { Link, useHistory } from 'react-router-dom';
 import zxcvbn from 'zxcvbn';
 import { useAuth } from '../actions/authContext';
-import { IconButton, InputAdornment, TextField, Button } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import GoogleButton from 'react-google-button';
-import GitHubIcon from '@mui/icons-material/GitHub';
 const CreateAcc = () => {
     const history = useHistory();
     const { login } = useAuth();

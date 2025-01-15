@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
-  Search as SearchIcon,
-  ShoppingCartOutlined as ShoppingCartOutlinedIcon,
-  Menu as MenuIcon,
+  AccountCircle as AccountCircleIcon,
   Close as CloseIcon,
+  ExitToApp as ExitToAppIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
-  AccountCircle as AccountCircleIcon,
   ListAlt as ListAltIcon,
-  ExitToApp as ExitToAppIcon,
+  Menu as MenuIcon,
+  Search as SearchIcon,
   Sell as SellIcon,
+  ShoppingCartOutlined as ShoppingCartOutlinedIcon,
 } from "@mui/icons-material";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../actions/authContext";
 import HeaderPhoto from "./Logo.webp";

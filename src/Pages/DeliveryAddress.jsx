@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import Cookies from "js-cookie"
-import { FaChevronDown, FaChevronUp, FaCheckCircle } from 'react-icons/fa';
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from 'react';
+import { FaCheckCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 const DeliveryAddress = ({ onAddressSelect }) => {
     const [address, setAddress] = useState({

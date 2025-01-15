@@ -5,8 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from "../../actions/authContext";
 import Reviews from "../Reviews";
 

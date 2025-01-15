@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MicronutrientsBanner from "../../Components/Banner/Micronutrients.png";
 import Recentlyviewed from '../Recentlyviewed';
-import Loader from "../Loader"; // Assuming you have a Loader component
 import ShimmerCard from "../ShimmerCard";
 
 const Micronutrients = () => {

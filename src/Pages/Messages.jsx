@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import useSocket from "../hooks/useSocket";
+import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import useSocket from "../hooks/useSocket";
 
 const Messages = ({ onClose }) => {
   const socket = useSocket();
