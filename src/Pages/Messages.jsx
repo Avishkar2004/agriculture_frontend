@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import useSocket from "../hooks/useSocket";
 import { FaTimes } from "react-icons/fa";
 
@@ -6,6 +6,14 @@ const Messages = ({ onClose, username, room }) => {
   const socket = useSocket(room);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [typingUsers, setTypingUsers] = useState([])
+  const messagesEndRef = useRef(null)
+
+  // Auto-scroll to the latest message
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+  useEffect(scrollToBottom, [messages])
 
   useEffect(() => {
     if (!socket) return;
@@ -14,7 +22,7 @@ const Messages = ({ onClose, username, room }) => {
     socket.on("message", (data) => {
       setMessages((prev) => [
         ...prev,
-        { text: data.text, sender: data.sender, system: false },
+        { text: data.text, sender: data.sender, timestamp: data.timestamp, system: false },
       ]);
     });
 
@@ -22,16 +30,28 @@ const Messages = ({ onClose, username, room }) => {
     socket.on("server-message", (data) => {
       setMessages((prev) => [
         ...prev,
-        { text: data.text, sender: "System", system: true }, // Mark as system message
+        { text: data.text, sender: "System", timestamp: data.timestamp, system: true }, // Mark as system message
       ]);
     });
+
+    // Listen for typing events
+    socket.on("typing", (user) => {
+      if (user !== username && !typingUsers.includes(user)) {
+        setTypingUsers((prev) => [...prev, user])
+      }
+    })
+    socket.on("stop-typing", (user) => {
+      setTypingUsers((prev) => prev.filter((u) => u !== user))
+    })
 
     return () => {
       // Clean up socket listeners on component unmount
       socket.off("message");
       socket.off("server-message");
+      socket.off("typing")
+      socket.off("stop-typing")
     };
-  }, [socket]);
+  }, [socket, typingUsers, username]);
 
   useEffect(() => {
     if (!socket || !username || !room) return;
@@ -40,7 +60,13 @@ const Messages = ({ onClose, username, room }) => {
 
   const sendMessage = () => {
     if (socket && inputMessage.trim()) {
-      const userMessage = { text: inputMessage, sender: username, room, system: false };
+      const userMessage = {
+        text: inputMessage,
+        sender: username,
+        room,
+        timestamp: new Date().toLocaleTimeString(),
+        system: false
+      };
       setMessages((prev) => [...prev, userMessage]);
       socket.emit("chatMessage", userMessage);
       setInputMessage("");
@@ -85,10 +111,15 @@ const Messages = ({ onClose, username, room }) => {
                     : "bg-gray-200 text-gray-800 self-start shadow-sm"
                   }`}
               >
-                {!msg.system && <strong className="font-medium">{msg.sender}: </strong>}
-                {msg.text}
+                {!msg.system && (
+                  <div className="text-sm text-gray-500 mb-1">
+                    <strong>{msg.sender}</strong> • {msg.timestamp}
+                  </div>
+                )}
+                <p>{msg.text}</p>
               </li>
             ))}
+            <div ref={messagesEndRef} />
           </ul>
         )}
       </div>
