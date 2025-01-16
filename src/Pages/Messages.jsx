@@ -4,28 +4,28 @@ import { FaTimes } from "react-icons/fa";
 
 const Messages = ({ onClose, username, room }) => {
   const socket = useSocket(room);
-  const [messages, setMessages] = useState([]); // State to hold all messages
+  const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
     if (!socket) return;
 
-    // Listen for welcome messages
+    // Listen for general chat messages
     socket.on("message", (data) => {
-      console.log("Message received:", data); // Log to verify
-      setMessages((prev) => {
-        console.log("Updating messages:", [...prev, { text: data.text, sender: data.sender }]);
-        return [...prev, { text: data.text, sender: data.sender }];
-      });
+      setMessages((prev) => [
+        ...prev,
+        { text: data.text, sender: data.sender, system: false },
+      ]);
     });
-    // Listen for server broadcasts
+
+    // Listen for server messages like "user has joined"
     socket.on("server-message", (data) => {
-      console.log("Server message received:", data); // Log to verify
-      setMessages((prev) => {
-        console.log("Updating messages:", [...prev, { text: data.text, sender: data.sender }]);
-        return [...prev, { text: data.text, sender: data.sender }];
-      });
+      setMessages((prev) => [
+        ...prev,
+        { text: data.text, sender: "System", system: true }, // Mark as system message
+      ]);
     });
+
     return () => {
       // Clean up socket listeners on component unmount
       socket.off("message");
@@ -35,25 +35,30 @@ const Messages = ({ onClose, username, room }) => {
 
   useEffect(() => {
     if (!socket) return;
-
-    console.log("Joining room with:", { username, room });
     socket.emit("joinRoom", { username, room });
   }, [socket, username, room]);
 
   const sendMessage = () => {
     if (socket && inputMessage.trim()) {
-      const userMessage = { text: inputMessage, sender: username, room };
-      setMessages((prev) => [...prev, userMessage]); // Display user message immediately
-      socket.emit("chatMessage", userMessage); // Send to server
-      setInputMessage(""); // Clear input
+      const userMessage = { text: inputMessage, sender: username, room, system: false };
+      setMessages((prev) => [...prev, userMessage]);
+      socket.emit("chatMessage", userMessage);
+      setInputMessage("");
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent newline in message input
+      sendMessage();
     }
   };
 
   return (
-    <div className="fixed right-5 h-[calc(80vh-100px)] bg-white shadow-lg border border-gray-300 rounded-lg z-50 flex flex-col">
+    <div className="fixed right-5 h-[calc(80vh-100px)] bg-white shadow-2xl rounded-lg z-50 flex flex-col">
       {/* Header */}
-      <div className="bg-green-500 text-white flex justify-between items-center p-4 rounded-t-lg">
-        <h2 className="font-semibold text-lg">Chat Room: {room}</h2>
+      <div className="bg-gradient-to-r from-green-400 to-green-600 text-white flex justify-between items-center p-4 rounded-t-lg shadow-md">
+        <h2 className="font-semibold text-xl">Chat Room: {room}</h2>
         <button
           onClick={onClose}
           className="text-white hover:text-gray-200 transition"
@@ -68,16 +73,18 @@ const Messages = ({ onClose, username, room }) => {
         {messages.length === 0 ? (
           <p className="text-gray-500 text-center">No messages yet.</p>
         ) : (
-          <ul className="space-y-2">
+          <ul className="space-y-4">
             {messages.map((msg, index) => (
               <li
                 key={index}
-                className={`px-4 py-2 rounded-lg ${msg.sender === username
-                  ? "bg-blue-100 text-blue-800 self-end"
-                  : "bg-gray-200 text-gray-800 self-start"
+                className={`px-4 py-3 rounded-lg transition-all ${msg.system
+                    ? "bg-gray-300 text-gray-600 italic self-center" // Style for system messages
+                    : msg.sender === username
+                      ? "bg-blue-100 text-blue-800 self-end shadow-md"
+                      : "bg-gray-200 text-gray-800 self-start shadow-sm"
                   }`}
               >
-                <strong>{msg.sender}: </strong>
+                {!msg.system && <strong className="font-medium">{msg.sender}: </strong>}
                 {msg.text}
               </li>
             ))}
@@ -86,17 +93,18 @@ const Messages = ({ onClose, username, room }) => {
       </div>
 
       {/* Input Field */}
-      <div className="p-4 flex gap-2 border-t border-gray-200">
+      <div className="p-4 flex gap-4 border-t border-gray-200">
         <input
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          placeholder="Type your message"
-          className="flex-grow px-4 py-2 border rounded-lg focus:ring focus:ring-green-200 outline-none"
+          placeholder="Type your message..."
+          className="flex-grow px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+          onKeyDown={handleKeyDown} // Add the keydown event listener
         />
         <button
           onClick={sendMessage}
-          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:ring-2 focus:ring-green-500 transition"
         >
           Send
         </button>

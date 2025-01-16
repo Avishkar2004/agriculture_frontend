@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-const useSocket = (room) => {
+const useSocket = (username, room) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ const useSocket = (room) => {
       withCredentials: true,
     });
 
-    newSocket.emit("joinRoom", { room }); // Join the specified room
+    newSocket.emit("joinRoom", {  username,room }); // Join the specified room
     setSocket(newSocket);
 
     // Cleanup when the component unmounts
