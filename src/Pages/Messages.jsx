@@ -34,7 +34,7 @@ const Messages = ({ onClose, username, room }) => {
   }, [socket]);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !username || !room) return;
     socket.emit("joinRoom", { username, room });
   }, [socket, username, room]);
 
@@ -49,10 +49,11 @@ const Messages = ({ onClose, username, room }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // Prevent newline in message input
+      e.preventDefault();
       sendMessage();
     }
   };
+
 
   return (
     <div className="fixed right-5 h-[calc(80vh-100px)] bg-white shadow-2xl rounded-lg z-50 flex flex-col">
@@ -78,10 +79,10 @@ const Messages = ({ onClose, username, room }) => {
               <li
                 key={index}
                 className={`px-4 py-3 rounded-lg transition-all ${msg.system
-                    ? "bg-gray-300 text-gray-600 italic self-center" // Style for system messages
-                    : msg.sender === username
-                      ? "bg-blue-100 text-blue-800 self-end shadow-md"
-                      : "bg-gray-200 text-gray-800 self-start shadow-sm"
+                  ? "bg-gray-300 text-gray-600 italic self-center" // Style for system messages
+                  : msg.sender === username
+                    ? "bg-blue-100 text-blue-800 self-end shadow-md"
+                    : "bg-gray-200 text-gray-800 self-start shadow-sm"
                   }`}
               >
                 {!msg.system && <strong className="font-medium">{msg.sender}: </strong>}
@@ -100,7 +101,7 @@ const Messages = ({ onClose, username, room }) => {
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder="Type your message..."
           className="flex-grow px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
-          onKeyDown={handleKeyDown} // Add the keydown event listener
+          onKeyDown={handleKeyDown}
         />
         <button
           onClick={sendMessage}
