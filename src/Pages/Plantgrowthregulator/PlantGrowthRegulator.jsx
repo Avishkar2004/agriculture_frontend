@@ -50,7 +50,7 @@ const PlantGrowthRegulator = () => {
             <span className="text-sm">
               Plant Growth Regulator (PGR) &gt;
             </span>
-            
+
           </span>
 
         </div>
