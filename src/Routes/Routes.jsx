@@ -39,6 +39,7 @@ import SearchProductDetails from "../Pages/SearchProductDetails";
 import Settings from "../Pages/Settings";
 import HelpCenter from "../Pages/HelpCenter";
 import { useAuth } from "../actions/authContext";
+import AdminPanel from "../Pages/AdminPanel";
 
 const AppRoutes = () => {
   const { authenticatedUser, logout } = useAuth();
@@ -67,6 +68,7 @@ const AppRoutes = () => {
         <Route path="/orders" component={Orders} />
         <Route path="/settings" component={Settings} />
         <Route path="/helpcenter" component={HelpCenter} />
+        <Route path="/adminpanel" component={AdminPanel} />
         <Route path="/ForgotPasswordAndReset" component={ForgotPasswordAndReset} />
         {/* For Become a seller */}
 

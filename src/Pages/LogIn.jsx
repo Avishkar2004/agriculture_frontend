@@ -3,15 +3,14 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import GoogleButton from "react-google-button";
-import { MdCheckCircle, MdErrorOutline } from 'react-icons/md'; // Import icons for error and success
+import { MdCheckCircle, MdErrorOutline } from 'react-icons/md';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from '../actions/authContext';
-
 
 const LogIn = () => {
   const history = useHistory();
   const { login } = useAuth();
-  const location = useLocation()
+  const location = useLocation();
   const [serverResponse, setServerResponse] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
@@ -33,12 +32,12 @@ const LogIn = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/auth/google"
-  }
+    window.location.href = "http://localhost:8080/auth/google";
+  };
 
   const handleGitHubLogin = () => {
-    window.location.href = "http://localhost:8080/auth/github"
-  }
+    window.location.href = "http://localhost:8080/auth/github";
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -60,13 +59,21 @@ const LogIn = () => {
         setIsLoading(false);
         return;
       }
+
       const { success, message, user } = await response.json();
-      // console.log("Token from Login", user.token)
+
       if (success) {
         localStorage.setItem('authenticatedUser', JSON.stringify({ user }));
         login(user);
-        const redirectTo = location.state?.from || "/" //! Redirect to previous or home page
-        history.push(redirectTo)
+
+        // Check if the user is an admin
+        if (user.email === 'kakdevicky476@gmail.com') {
+          history.push('/adminpanel'); // Redirect to the admin panel
+        } else {
+          const redirectTo = location.state?.from || '/'; // Redirect to previous or home page
+          history.push(redirectTo);
+        }
+
         window.location.reload();
       } else {
         setErrorMessage(message);
@@ -139,7 +146,7 @@ const LogIn = () => {
               <span>{errorMessage}</span>
             </div>
           )}
-          {/* Success Message */}
+
           {serverResponse && !errorMessage && (
             <div className="flex items-center text-green-600 justify-center bg-green-100 rounded-lg p-3 mt-4 text-sm">
               <MdCheckCircle className="mr-2 text-xl" />
