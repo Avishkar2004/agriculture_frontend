@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
         id: decodedToken.id,
         username: decodedToken.username,
         email: decodedToken.email,
+        token: user.token,
         ...user,
         decodedToken,
         avatar: user.avatar || decodedToken.avatar,
