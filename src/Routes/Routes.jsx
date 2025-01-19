@@ -101,7 +101,7 @@ const AppRoutes = () => {
         {/* Route for SignUp */}
         <Route path="/Signup" component={CreateAcc} />
         <Route path="/categories" component={Categories} />
-        <Route path="/product/:id/" component={CartProductDetails} />
+        <Route path="/cartproduct/:id" component={CartProductDetails} />
         <Route path="/searchproduct/:id" component={SearchProductDetails} />
         <Route path="/order-completed" component={OrderCompleted} />
         <Route path="/auth/google/callback" component={GoogleCallback} />

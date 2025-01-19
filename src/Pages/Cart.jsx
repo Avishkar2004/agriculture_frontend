@@ -118,8 +118,8 @@ const CartItem = ({ item, onDelete }) => (
     <li className="flex flex-col sm:flex-row items-center bg-white p-6 rounded-lg shadow-md border border-gray-200 transition hover:shadow-lg">
         <Link
             to={{
-                pathname: `/product/${item.name}`,
-                state: { product: item },
+                pathname: `/cartproduct/${item.id}`,
+                state: { Cartproduct: item },
             }}
             className="w-full sm:w-32 h-32 flex-shrink-0"
         >
@@ -132,8 +132,8 @@ const CartItem = ({ item, onDelete }) => (
         <div className="flex-1 mt-4 sm:mt-0 sm:ml-6">
             <Link
                 to={{
-                    pathname: `/product/${item.name}`,
-                    state: { product: item },
+                    pathname: `/cartproduct/${item.id}`,
+                    state: { Cartproduct: item },
                 }}
                 className="text-lg font-semibold text-gray-800 hover:underline"
             >
