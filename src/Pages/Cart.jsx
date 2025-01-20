@@ -18,7 +18,11 @@ const Cart = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setCartData(data);
+            const updatedData = data.map((item) => ({
+                ...item,
+                totalPrice: item.price * item.quantity //compute total Price
+            }))
+            setCartData(updatedData);
         } catch (error) {
             console.error("Error fetching cart data:", error);
         }

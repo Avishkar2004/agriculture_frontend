@@ -283,6 +283,7 @@ const Header = () => {
                     to="/profile"
                     className="flex items-center gap-3 px-4 py-3 hover:bg-indigo-100 transition duration-200 text-gray-700"
                     onClick={closeDropdown}
+                    ref={inputRef}
                   >
                     {authenticatedUser.avatar ? (
                       <img

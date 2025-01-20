@@ -1,84 +1,159 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { AiOutlineCreditCard, AiOutlineFileText, AiOutlineHome, AiOutlineUser } from 'react-icons/ai';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useAuth } from '../actions/authContext';
+import DeliveryAddress from './DeliveryAddress';
+import LoginSection from './LoginSection';
+import CartOrderConfirmModal from './CartOrderConfirmModal';
+// import OrderSummary from './OrderSummary';
+import PaymentOption from './PaymentOption';
+import OrderSummaryCart from './OrderSummaryCart';
 
 const Checkout = () => {
     const location = useLocation();
     const history = useHistory();
+    const { authenticatedUser } = useAuth();
+    const [showModal, setShowModal] = useState(false);
+    const [expandedSection, setExpandedSection] = useState("login");
+    const [isAddressSelected, setIsAddressSelected] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState(null);
 
     const cartData = location.state?.cartData || [];
 
-    const calculateTotal = () => {
-        return cartData.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2);
+    const [productData, setProductData] = useState(cartData);
+
+    const calculateTotalPrice = () => {
+        return productData.reduce((total, item) => total + item.totalPrice, 0);
     };
 
-    const handleOrderSubmit = () => {
-        history.push('/order-completed', { cartData });
+    const handleSubmit = () => {
+        setShowModal(true);
     };
+
+    const closeModal = () => {
+        setShowModal(false);
+        history.push("/");
+    };
+
+    const goToNextSection = (section) => {
+        setExpandedSection(section);
+    };
+
+    const handleToggleSection = (section) => {
+        setExpandedSection(expandedSection === section ? null : section);
+    };
+
+    useEffect(() => {
+        console.log("Product Data:", productData);
+    }, [productData]);
 
     return (
-        <div className="container mx-auto my-8 max-w-4xl px-6">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">Checkout</h2>
-            <p className="text-lg text-gray-600 mb-8">Review your details and place your order.</p>
-
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-                <div className="flex flex-col md:flex-row md:space-x-6">
-                    <div className="flex-1">
-                        <label className="text-lg text-gray-700">Full Name</label>
-                        <input
-                            type="text"
-                            className="w-full mt-2 p-3 border border-gray-300 rounded-lg"
-                            placeholder="Enter your full name"
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <label className="text-lg text-gray-700">Email</label>
-                        <input
-                            type="email"
-                            className="w-full mt-2 p-3 border border-gray-300 rounded-lg"
-                            placeholder="Enter your email address"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex flex-col md:flex-row md:space-x-6">
-                    <div className="flex-1">
-                        <label className="text-lg text-gray-700">Shipping Address</label>
-                        <textarea
-                            className="w-full mt-2 p-3 border border-gray-300 rounded-lg"
-                            placeholder="Enter your shipping address"
-                        />
-                    </div>
-                </div>
-
-                <div className="mt-8 bg-gray-50 rounded-lg shadow-md p-6">
-                    <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-4 mb-4">Order Summary</h3>
-                    <ul className="space-y-4">
-                        {cartData.map(item => (
-                            <li key={item.id} className="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm">
-                                <div>
-                                    <p className="text-gray-800 font-medium">{item.name}</p>
-                                    <p className="text-gray-500 text-sm">Quantity: {item.quantity}</p>
-                                </div>
-                                <p className="font-semibold text-indigo-600">${(item.price * item.quantity).toFixed(2)}</p>
-                            </li>
+        <div className="container mx-auto my-8">
+            <div className="flex">
+                <div className="w-1/2 pr-4">
+                    <div className="sticky top-0 border p-4 rounded-lg mb-4 bg-white">
+                        <h1 className="text-2xl font-bold mb-4">Checkout</h1>
+                        {productData.map((product, index) => (
+                            <div key={index} className="mb-6">
+                                <h2 className="text-xl font-bold mb-2">{product.name}</h2>
+                                <p className="mb-2">Price: ₹{product.totalPrice}</p>
+                                <img
+                                    src={`data:image/avif;base64, ${product.image}`}
+                                    alt={product.name}
+                                    className="mb-4 w-[17.8rem] mx-auto"
+                                />
+                            </div>
                         ))}
-                    </ul>
-                    <div className="flex justify-between items-center border-t border-gray-200 pt-4 mt-6">
-                        <p className="text-xl font-bold text-gray-800">Total:</p>
-                        <p className="text-xl font-bold text-indigo-600">${calculateTotal()}</p>
+                        <div className="p-4 bg-gray-100 rounded-lg">
+                            <h3 className="text-xl font-medium text-gray-700 mb-2">Product Details</h3>
+                            <ul className="list-disc pl-6 text-gray-600">
+                                <li>Free shipping for orders above ₹500</li>
+                                <li>30-day return policy</li>
+                                <li>Secure payment options</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+                <div className="w-full md:w-1/2 p-4">
+                    <div className="mb-4">
+                        <button
+                            className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
+                            onClick={() => handleToggleSection('login')}
+                        >
+                            <div className="flex items-center">
+                                <AiOutlineUser className="text-xl mr-2" />
+                                <span className="font-semibold">Login Details</span>
+                            </div>
+                            <span className="text-xl">{expandedSection === 'login' ? '-' : '+'}</span>
+                        </button>
+                        {expandedSection === 'login' && <LoginSection goToNextSection={goToNextSection} />}
+                    </div>
+                    <div className="mb-4">
+                        <button
+                            className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
+                            onClick={() => handleToggleSection('address')}
+                        >
+                            <div className="flex items-center">
+                                <AiOutlineHome className="text-xl mr-2" />
+                                <span className="font-semibold">Delivery Address</span>
+                            </div>
+                            <span className="text-xl">{expandedSection === 'address' ? '-' : '+'}</span>
+                        </button>
+                        {expandedSection === 'address' && (
+                            <DeliveryAddress
+                                onAddressSelect={(address) => {
+                                    setSelectedAddress(address);
+                                    setIsAddressSelected(true);
+                                    setExpandedSection('summary');
+                                }}
+                            />
+                        )}
+                    </div>
 
-                <div className="mt-8 text-center">
-                    <button
-                        type="submit"
-                        onClick={handleOrderSubmit}
-                        className="bg-indigo-500 text-white px-8 py-3 rounded-lg shadow-md hover:bg-indigo-600 transition-transform transform hover:scale-105"
-                    >
-                        Place Order
-                    </button>
+                    <div className="mb-4">
+                        <button
+                            className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
+                            onClick={() => handleToggleSection('summary')}
+                        >
+                            <div className="flex items-center">
+                                <AiOutlineFileText className="text-xl mr-2" />
+                                <span className="font-semibold">Order Summary</span>
+                            </div>
+                            <span className="text-xl">{expandedSection === 'summary' ? '-' : '+'}</span>
+                        </button>
+                        {expandedSection === 'summary' && (
+                            <OrderSummaryCart
+                                onContinue={() => setExpandedSection('payment')}
+                                productData={productData}
+                                totalPrice={calculateTotalPrice()}
+                            />
+                        )}
+                    </div>
+
+                    <div className="mb-4">
+                        <button
+                            className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
+                            onClick={() => handleToggleSection('payment')}
+                        >
+                            <div className="flex items-center">
+                                <AiOutlineCreditCard className="text-xl mr-2" />
+                                <span className="font-semibold">Payment Options</span>
+                            </div>
+                            <span className="text-xl">{expandedSection === 'payment' ? '-' : '+'}</span>
+                        </button>
+                        {expandedSection === 'payment' && (
+                            <PaymentOption onSubmit={handleSubmit} productData={productData} totalPrice={calculateTotalPrice()} />
+                        )}
+                    </div>
                 </div>
-            </form>
+            </div>
+            {showModal && (
+                <CartOrderConfirmModal
+                    productData={productData}
+                    totalPrice={calculateTotalPrice()}
+                    onClose={closeModal}
+                />
+            )}
         </div>
     );
 };
