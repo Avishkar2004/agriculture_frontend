@@ -26,8 +26,55 @@ const Checkout = () => {
         return productData.reduce((total, item) => total + item.totalPrice, 0);
     };
 
-    const handleSubmit = () => {
-        setShowModal(true);
+    const handleSubmit = async (orderData) => {
+        if (!selectedAddress) {
+            alert("Please select a delivery address");
+            return;
+        }
+
+        const orderPayload = {
+            ...orderData,
+            products: productData.map(product => ({
+                productName: product.name,
+                productId: product.id,
+                quantity: product.quantity,
+                totalPrice: product.totalPrice,
+            })),
+            userId: authenticatedUser?.id,
+            customerName: authenticatedUser?.username,
+            email: authenticatedUser?.email,
+            phoneNumber: selectedAddress?.phone_number,
+            address: selectedAddress?.locality,
+            city: selectedAddress?.city,
+            state: selectedAddress?.state,
+            zipCode: selectedAddress?.pincode,
+            country: "India",
+        };
+
+
+        console.log("Final Order Payload:", orderPayload); // Debug log
+        try {
+            const response = await fetch('/api/checkoutOrder', {
+                method: 'POST',
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderPayload),
+            });
+
+            if (response.ok) {
+                setTimeout(() => setShowModal(true), 1000);
+            } else if (response.status === 401) {
+                alert("You must be logged in to buy an item");
+                history.push("/signup");
+            } else {
+                throw new Error('Failed to place order');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('There was an error placing your order. Please try again.');
+        }
     };
 
     const closeModal = () => {
@@ -44,7 +91,7 @@ const Checkout = () => {
     };
 
     useEffect(() => {
-        console.log("Product Data:", productData);
+        // console.log("Product Data:", productData);
     }, [productData]);
 
     return (

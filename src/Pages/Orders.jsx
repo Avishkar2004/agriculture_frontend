@@ -24,6 +24,25 @@ const Orders = () => {
         fetchOrders();
     }, []);
 
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const response = await fetch("/api/checkoutOrders", { credentials: "include" });
+                if (!response.ok) {
+                    throw new Error("Failed to fetch orders");
+                }
+                const data = await response.json();
+                setOrders(data.orders);
+                setError(null); // Clear the error state if fetch is successful
+            } catch (err) {
+                setError("Failed to load orders.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchOrders();
+    }, []);
+
     if (loading)
         return <div className="text-center py-8 text-xl font-semibold text-gray-600">Loading your orders...</div>;
     if (error)
