@@ -43,7 +43,7 @@ import AdminPanel from "../Pages/AdminPanel";
 import TrackOrder from "../Pages/TrackOrder ";
 
 const AppRoutes = () => {
-  const { authenticatedUser, logout } = useAuth();
+  const { authenticatedUser } = useAuth();
   const [isChatVisible, setIsChatVisible] = useState(false); // State to control chat visibility
   return (
     <Router>
