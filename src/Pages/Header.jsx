@@ -159,11 +159,15 @@ const Header = () => {
 
             {/* Logout Button */}
             <button
-              onClick={logout}
-              className="flex items-center gap-3 px-6 py-3 w-full text-gray-800 hover:bg-red-100 transition duration-200 rounded-md"
+              onClick={() => {
+                if (window.confirm("Are you sure you want to logout?")) {
+                  ProfilehandleLogOut();
+                }
+              }}
+              className="flex items-center w-full text-left px-4 py-3 gap-3 hover:bg-red-100 text-gray-700 transition duration-200"
             >
-              <ExitToAppIcon className="text-red-500" />
-              <span onClick={logout} className="font-medium text-red-600">Logout</span>
+              <ExitToAppIcon className="text-red-500 text-lg" />
+              <span className="font-medium">Logout</span>
             </button>
           </>
         ) : (

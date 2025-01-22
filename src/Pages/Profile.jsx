@@ -40,7 +40,11 @@ const ActionButtons = ({ onLogout, onDeleteAccount, isLoading }) => (
     <button
       className={`flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-indigo-600 shadow-md ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-indigo-700 hover:shadow-lg"
         }`}
-      onClick={onLogout}
+      onClick={() => {
+        if (window.confirm("Are you sure you want to logout?")) {
+          onLogout()
+        }
+      }}
       disabled={isLoading}
     >
       <FaSignOutAlt className="mr-2" /> Logout
@@ -48,7 +52,11 @@ const ActionButtons = ({ onLogout, onDeleteAccount, isLoading }) => (
     <button
       className={`flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-red-500 shadow-md ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600 hover:shadow-lg"
         }`}
-      onClick={onDeleteAccount}
+      onClick={() => {
+        if (window.confirm("Are you sure you want to delete your account ?")) {
+          onDeleteAccount()
+        }
+      }}
       disabled={isLoading}
     >
       <RiDeleteBin6Line className="mr-2" /> Delete Account
@@ -57,19 +65,22 @@ const ActionButtons = ({ onLogout, onDeleteAccount, isLoading }) => (
 );
 
 const Profile = () => {
-  const { authenticatedUser, logout } = useAuth();
+  const { authenticatedUser, logout } = useAuth() || {};
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogout = async () => {
+
+  const ProfilehandleLogOut = async () => {
     try {
-      setIsLoading(true);
-      logout();
+      const response = await fetch("/logout", { method: "POST", credentials: "include" })
+      if (response.ok) {
+        logout()
+        window.location.reload()
+      }
     } catch (error) {
-      alert("Failed to logout. Please try again.");
-    } finally {
-      setIsLoading(false);
+      console.error("Error logging out", error)
     }
-  };
+  }
+
 
   const handleDeleteAccount = async () => {
     const confirmation = window.confirm(
@@ -162,7 +173,7 @@ const Profile = () => {
           </div>
         </div>
         <ActionButtons
-          onLogout={handleLogout}
+          onLogout={ProfilehandleLogOut}
           onDeleteAccount={handleDeleteAccount}
           isLoading={isLoading}
         />
