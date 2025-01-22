@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-
+import { useHistory } from "react-router-dom"
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const history = useHistory()
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -25,16 +26,7 @@ const Orders = () => {
     }, []);
 
     const trackOrder = async (orderId) => {
-        try {
-            const response = await fetch(`/api/trackOrder/${orderId}`, { credentials: "include" });
-            if (!response.ok) {
-                throw new Error("Failed to track order");
-            }
-            const data = await response.json();
-            alert(`Order Status: ${data.status}`);
-        } catch (err) {
-            alert("Failed to track order. Please try again later.");
-        }
+        history.push(`/track-order/${orderId}`)
     };
 
     if (loading)

@@ -40,6 +40,7 @@ import Settings from "../Pages/Settings";
 import HelpCenter from "../Pages/HelpCenter";
 import { useAuth } from "../actions/authContext";
 import AdminPanel from "../Pages/AdminPanel";
+import TrackOrder from "../Pages/TrackOrder ";
 
 const AppRoutes = () => {
   const { authenticatedUser, logout } = useAuth();
@@ -103,6 +104,7 @@ const AppRoutes = () => {
         <Route path="/categories" component={Categories} />
         <Route path="/cartproduct/:id" component={CartProductDetails} />
         <Route path="/searchproduct/:id" component={SearchProductDetails} />
+        <Route path="/track-order/:orderId" component={TrackOrder} />
         <Route path="/order-completed" component={OrderCompleted} />
         <Route path="/auth/google/callback" component={GoogleCallback} />
       </Switch>
