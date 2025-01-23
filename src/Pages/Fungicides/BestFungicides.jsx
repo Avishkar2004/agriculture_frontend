@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import BannerFungicide from '../../Components/BestFungicides/BannerFungi.webp';
+import BannerFungicide from '../../Components/Banner/BannerFungi.webp';
 import Recentlyviewed from "../Recentlyviewed";
 import ShimmerCard from "../ShimmerCard";
 

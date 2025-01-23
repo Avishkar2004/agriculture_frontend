@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom"
 
 const Orders = () => {
@@ -107,7 +107,7 @@ const Orders = () => {
                                                 <span
                                                     className={`px-2 sm:px-3 py-1 inline-flex text-xs sm:text-sm leading-5 font-semibold rounded-full ${order.order_status === "Delivered"
                                                         ? "bg-green-100 text-green-800"
-                                                        : "bg-yellow-100 text-yellow-800"
+                                                        : "bg-yellow-100 text-yellow-700"
                                                         }`}
                                                 >
                                                     {order.order_status}
