@@ -6,6 +6,7 @@ const TrackOrder = () => {
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [cancelLoading, setCancelLoading] = useState(false);
 
     useEffect(() => {
         const fetchOrdersDetails = async () => {
@@ -24,6 +25,38 @@ const TrackOrder = () => {
         };
         fetchOrdersDetails();
     }, [orderId]);
+
+    const cancelOrder = async () => {
+        setCancelLoading(true);
+        try {
+            const response = await fetch(`/api/cancelOrder/${orderId}`, {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to cancel the order');
+            }
+            const data = await response.json();
+            // Update the order status in the state
+            setOrder((prevOrder) => ({
+                ...prevOrder,
+                order_status: 'Cancelled',
+            }));
+            alert(data.message || 'Order successfully cancelled.');
+        } catch (error) {
+            alert('Failed to cancel the order. Please try again.');
+        } finally {
+            setCancelLoading(false);
+        }
+    };
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
 
     if (loading)
         return (
@@ -54,7 +87,7 @@ const TrackOrder = () => {
                     </div>
                     <div className="mb-4">
                         <p className="text-gray-600">Status:</p>
-                        <p className={`text-lg font-medium ${order.order_status === 'delivered' ? 'text-green-600' : 'text-yellow-600'}`}>
+                        <p className={`text-lg font-medium ${order.order_status === 'Delivered' ? 'text-green-600' : order.order_status === 'Cancelled' ? 'text-red-600' : 'text-yellow-600'}`}>
                             {order.order_status}
                         </p>
                     </div>
@@ -69,10 +102,21 @@ const TrackOrder = () => {
                 </div>
                 <div className="bg-gray-100 p-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">Next Steps</h3>
-                    {order.order_status === 'delivered' ? (
-                        <p className="text-gray-600">Your order has been delivered. Thank you for shopping with us!</p>
+                    {order.order_status === 'Delivered' ? (
+                        <p className="text-gray-600">Your order was delivered on {formatDate(order.created_at)}. Thank you for shopping with us!</p>
+                    ) : order.order_status === 'Cancelled' ? (
+                        <p className="text-gray-600">Your order was cancelled.</p>
                     ) : (
-                        <p className="text-gray-600">Your order is on its way. You can expect delivery soon!</p>
+                        <div>
+                            <p className="text-gray-600">Your order is on its way. You can expect delivery soon!</p>
+                            <button
+                                className="mt-4 px-6 py-2 bg-red-600 text-white font-semibold rounded-md shadow hover:bg-red-700"
+                                onClick={cancelOrder}
+                                disabled={cancelLoading}
+                            >
+                                {cancelLoading ? 'Cancelling...' : 'Cancel Order'}
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>
