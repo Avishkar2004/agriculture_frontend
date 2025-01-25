@@ -53,6 +53,32 @@ const TrackOrder = () => {
         }
     };
 
+    const generateInvoice = async () => {
+        try {
+            const response = await fetch(`/api/generateInvoice/${orderId}`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+            if (!response.ok) {
+                console.error(await response.text());
+                throw new Error("Failed to fetch order details");
+            }
+
+            // Handle the response as a file download
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Invoice-${orderId}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            alert('Failed to generate the invoice. Please try again.');
+        }
+    };
+
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString(undefined, options);
@@ -103,7 +129,13 @@ const TrackOrder = () => {
                 <div className="bg-gray-100 p-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">Next Steps</h3>
                     {order.order_status === 'Delivered' ? (
-                        <p className="text-gray-600">Your order was delivered on {formatDate(order.created_at)}. Thank you for shopping with us!</p>
+                        <div>
+                            <p className="text-gray-600">Your order was delivered on {formatDate(order.created_at)}. Thank you for shopping with us!</p>
+                            <button className='mt-4 px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700'
+                                onClick={generateInvoice}
+                            >Generate Invoice</button>
+                        </div>
+
                     ) : order.order_status === 'Cancelled' ? (
                         <p className="text-gray-600">Your order was cancelled.</p>
                     ) : (
