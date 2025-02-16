@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Switch, useLocation } from "react-router-dom";
 import Header from "../Pages/Header";
 import ForgotPasswordAndReset from "../Pages/ForgotPasswordAndReset";
 import Collection from "../Pages/Collection";
@@ -42,6 +42,16 @@ import { useAuth } from "../actions/authContext";
 import AdminPanel from "../Pages/AdminPanel";
 import TrackOrder from "../Pages/TrackOrder ";
 
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null;
+}
+
 const AppRoutes = () => {
   const { authenticatedUser } = useAuth();
   const [isChatVisible, setIsChatVisible] = useState(false); // State to control chat visibility
@@ -64,6 +74,7 @@ const AppRoutes = () => {
 
       )}
       <Header />
+      <ScrollToTop />
       <Switch>
         <Route path="/profile" component={Profile} />
         <Route path="/orders" component={Orders} />
