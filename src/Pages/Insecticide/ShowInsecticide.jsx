@@ -192,11 +192,11 @@ const ShowInsecticide = () => {
                 </div>
             </div>
 
-            <div className="flex">
-                {/* Left Side */}
-                <div className="w-1/2 bg-white text-center ml-12 border-r-2 border-l-2 border-t-2 border-b-2">
+            <div className="flex flex-col lg:flex-row p-4 lg:p-2">
+                {/* Left Side - Product Images */}
+                <div className="w-full lg:w-1/2 bg-white text-center p-6 border-2 border-gray-200 rounded-lg">
                     <img
-                        className="h-28 border-2 border-blue-500"
+                        className="h-28 border-2 border-blue-500 rounded-lg mb-4"
                         src={`data:image/avif;base64, ${productData.image}`}
                         alt={productData.name}
                     />
@@ -205,18 +205,16 @@ const ShowInsecticide = () => {
                         alt={productData.name}
                         className="h-[31rem] object-cover mx-auto overflow-hidden"
                     />
-                    <p className="text-gray-500 mb-4">
-                        <SearchIcon /> Roll over image to zoom in
+                    <p className="text-gray-500 mt-4 flex items-center justify-center">
+                        <SearchIcon className="mr-2" /> Roll over image to zoom in
                     </p>
                 </div>
-                <hr className="border-[2rem] border-gray-100 border-r" />
 
-                {/* Right Side */}
-                <div className="w-1/2 bg-white text-left ml-8 p-4 mr-8 border-r-2 border-l-2 border-t-2 border-b-2">
-                    <span>ven</span>
-                    <h1 className="text-2xl font-[#1e2d7d]">{productData.name}</h1>
-                    <div className="flex items-center">
-                        <div className="flex mt-5 mb-3">
+                {/* Right Side - Product Info */}
+                <div className="w-full lg:w-1/2 bg-white text-left p-6 lg:ml-8 mt-6 lg:mt-0 border-2 border-gray-200 rounded-lg shadow-sm">
+                    <h1 className="text-2xl font-bold text-[#1e2d7d]">{productData.name}</h1>
+                    <div className="flex items-center mt-4">
+                        <div className="flex">
                             {Array.from({ length: 5 }, (_, index) => (
                                 <StarIcon
                                     key={index}
@@ -227,124 +225,81 @@ const ShowInsecticide = () => {
                         <span className="ml-2">{averageRating}</span>
                         <span className="text-sm text-gray-500 ml-2">({reviews.length} reviews)</span>
                     </div>
-                    <span className="bg-green-300">Save {productData.save}</span>
-                    <div className="flex items-center justify-between mt-3 mb-3">
+                    <span className="bg-green-300 text-green-800 px-2 py-1 rounded text-sm mt-2 inline-block">
+                        Save {productData.save}
+                    </span>
+
+                    <div className="flex items-center justify-between mt-4">
                         <p className="text-lg font-semibold text-gray-800">
                             <span className="text-blue-600">{productData.brands}</span>
                         </p>
                         <div className="flex space-x-3">
-                            <FacebookIcon
-                                color="info"
-                                className="cursor-pointer hover:text-blue-700"
-                            />
-                            <PinterestIcon
-                                color="info"
-                                className="cursor-pointer hover:text-blue-700"
-                            />
-                            <TwitterIcon
-                                color="info"
-                                className="cursor-pointer hover:text-blue-700"
-                            />
-                            <EmailIcon
-                                color="info"
-                                className="cursor-pointer hover:text-blue-700"
-                            />
+                            <FacebookIcon className="text-blue-600 cursor-pointer hover:text-blue-700 transition-colors" />
+                            <PinterestIcon className="text-red-600 cursor-pointer hover:text-red-700 transition-colors" />
+                            <TwitterIcon className="text-blue-400 cursor-pointer hover:text-blue-500 transition-colors" />
+                            <EmailIcon className="text-gray-600 cursor-pointer hover:text-gray-700 transition-colors" />
                         </div>
                     </div>
-                    <hr className="border-[1px] border-gray-800 border-r" />
 
-                    <p className="text-[#1e2d7d] mt-8">Size: <span className="text-xl">{selectedSize}</span></p>
-                    <div className="flex mt-8 space-x-3">
+                    <hr className="border-t border-gray-300 my-4" />
+
+                    <p className="text-[#1e2d7d] mt-4">Size: <span className="text-xl font-semibold">{selectedSize}</span></p>
+                    <div className="flex mt-4 space-x-3">
                         <button
-                            className={`text-xl border-2 rounded-md py-1 px-3 focus:outline-none ${selectedSize === '50 ml' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 text-gray-700 border-gray-300'}`}
+                            className={`text-xl border-2 rounded-md py-1 px-3 focus:outline-none transition-colors ${selectedSize === '50 ml' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 text-gray-700 border-gray-300 hover:bg-gray-300'}`}
                             onClick={() => handleSizeChange('50 ml')}
                         >
                             {productData.small_50}
                         </button>
                         <button
-                            className={`text-xl border-2 rounded-md py-1 px-3 focus:outline-none ${selectedSize === '100 ml' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 text-gray-700 border-gray-300'}`}
+                            className={`text-xl border-2 rounded-md py-1 px-3 focus:outline-none transition-colors ${selectedSize === '100 ml' ? 'bg-blue-500 text-white border-blue-500' : 'bg-gray-200 text-gray-700 border-gray-300 hover:bg-gray-300'}`}
                             onClick={() => handleSizeChange('100 ml')}
                         >
                             {productData.big_100}
                         </button>
                     </div>
-                    <p className="text-[#1e2d7d] mt-5 text-lg font-semibold">Expiry Date: <span className="text-black">09-Dec-2024</span></p>
-                    <div className="flex gap-6 mt-5">
-                        <span className="text-xl text-gray-700 bg-[#f1fdff] border-2 border-[#00badb] rounded-md py-2 px-4 cursor-pointer">
+
+                    <p className="text-[#1e2d7d] mt-4 text-lg font-semibold">Expiry Date: <span className="text-black">09-Dec-2024</span></p>
+                    <div className="flex gap-6 mt-4">
+                        <span className="text-xl text-gray-700 bg-[#f1fdff] border-2 border-[#00badb] rounded-md py-2 px-4 cursor-pointer hover:bg-[#e0f7fa] transition-colors">
                             09-Dec-2024
                         </span>
                     </div>
-                    <div className="flex justify-between items-center mt-4">
-                        <div>
-                            <div className="text-2xl mt-3 gap-12 font-semibold flex items-baseline">
-                                <span>Price:</span>
-                                <span className="text-[#00badb]">
-                                    {/* Calculate the displayed price based on selected size and current productData */}
-                                    {selectedSize === '50 ml'
-                                        ? productData.price_small - productData.save
-                                        : productData.salePrice - productData.save}
-                                </span>
-                                {/* Show the original price with a strikethrough if there is a discount */}
-                                {selectedSize === '50 ml' && productData.price_small ? (
-                                    <span className="text-base text-gray-700 line-through ml-3">
-                                        {productData.price_small}
-                                    </span>
-                                ) : selectedSize === '100 ml' && productData.salePrice ? (
-                                    <span className="text-base text-gray-700 line-through ml-3">
-                                        {productData.salePrice}
-                                    </span>
-                                ) : null}
-                            </div>
 
-                            <p className="text-sm mt-3 ml-[107px] text-gray-700">
-                                Tax included
-                                <span className="text-[#00badb] cursor-pointer">
-                                    {" "}
-                                    Shipping calculated
-                                </span>{" "}
-                                at checkout
-                            </p>
+                    <div className="mt-6">
+                        <div className="text-2xl font-semibold flex items-baseline gap-4">
+                            <span>Price:</span>
+                            <span className="text-[#00badb]">
+                                {selectedSize === '50 ml' ? productData.price_small - productData.save : productData.salePrice - productData.save}
+                            </span>
+                            {(selectedSize === '50 ml' && productData.price_small) || (selectedSize === '100 ml' && productData.salePrice) ? (
+                                <span className="text-base text-gray-700 line-through">
+                                    {selectedSize === '50 ml' ? productData.price_small : productData.salePrice}
+                                </span>
+                            ) : null}
                         </div>
+                        <p className="text-sm mt-2 text-gray-700">
+                            Tax included. <span className="text-[#00badb] cursor-pointer hover:underline">Shipping calculated</span> at checkout.
+                        </p>
                     </div>
+
                     <div className="mt-6 flex flex-col sm:flex-row items-center gap-6">
-                        {/* Quantity Selector */}
                         <div className="flex items-center gap-4">
                             <span className="text-2xl font-semibold">Quantity:</span>
                             <div className="flex items-center border-2 border-gray-300 rounded-md">
-                                <button
-                                    className="px-4 py-2 text-gray-400 hover:text-black border-r border-gray-300"
-                                    onClick={handleDecrement}
-                                >
-                                    -
-                                </button>
+                                <button className="px-4 py-2 text-gray-400 hover:text-black border-r border-gray-300 transition-colors" onClick={handleDecrement}>-</button>
                                 <span className="px-6 text-lg text-gray-700">{count}</span>
-                                <button
-                                    className="px-4 py-2 text-gray-400 hover:text-black border-l border-gray-300"
-                                    onClick={handleIncrement}
-                                >
-                                    +
-                                </button>
+                                <button className="px-4 py-2 text-gray-400 hover:text-black border-l border-gray-300 transition-colors" onClick={handleIncrement}>+</button>
                             </div>
                         </div>
-
-                        {/* Action Buttons */}
                         <div className="flex gap-4">
-                            <button
-                                onClick={handleBuyNow}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded"
-                            >
-                                Buy Now
-                            </button>
-                            <button
-                                onClick={handleAddToCart}
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded"
-                            >
-                                Add To Cart
-                            </button>
+                            <button onClick={handleBuyNow} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-colors">Buy Now</button>
+                            <button onClick={handleAddToCart} className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors">Add To Cart</button>
                         </div>
                     </div>
                 </div>
             </div>
+
             <Reviews authenticatedUser={authenticatedUser} fetchReviews={fetchReviews} productId={productData.id} reviews={reviews} />
             {/* <Description /> */}
         </div>
