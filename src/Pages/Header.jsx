@@ -181,11 +181,11 @@ const Header = () => {
     </div>
   );
   return (
-    <header className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-3 shadow-lg">
-      <div className="container mx-auto flex justify-between items-center px-4">
+    <header className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-4 shadow-lg">
+      <div className="container mx-auto flex justify-between items-center px-4 py-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center text-lg font-bold">
-          <img src={HeaderPhoto} alt="Header" className="w-10 md:w-14 h-auto rounded-lg" />
+        <Link to="/" className="flex items-center space-x-3 text-lg md:text-2xl font-bold">
+          <img src={HeaderPhoto} alt="Header" className="w-12 md:w-14 h-auto rounded-lg" />
         </Link>
 
         {/* Search Bar */}
@@ -315,7 +315,9 @@ const Header = () => {
                     onClick={closeDropdown}
                   >
                     <AccountCircleIcon className="text-yellow-500 text-lg" />
+
                     <span className="font-medium">Settings</span>
+
                   </Link>
                   <Link
                     to="/helpcenter"
