@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from '../../actions/authContext';
 import Reviews from "../Reviews";
+// import Description from "../Description"
 
 const PGRShowProduct = () => {
   const { getAuthToken, authenticatedUser } = useAuth() || {};
