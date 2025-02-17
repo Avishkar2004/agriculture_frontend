@@ -164,26 +164,30 @@ const OrganicproductData = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
-      <div className="space-x-52 ml-12 mt-4 mb-4">
-        <div className="flex text-sm gap-12 text-gray-500 font-secondary">
-          <span className="space-x-2 ml-6">
-            <Link to="/" className="hover:text-blue-500" >
+      <div className="ml-4 mt-4 mx-4 flex flex-wrap items-center justify-between">
+        <div className="flex flex-wrap text-sm md:text-base gap-3 md:gap-6 text-gray-500 font-secondary">
+          <span className="flex flex-wrap gap-2">
+            <Link to="/" className="hover:text-blue-500">
               Home
             </Link>
             &gt;
-            <Link
-              className="hover:text-blue-500 text-sm"
-              to="/organicproduct"
-            >
-              Buy Organic Product Online         </Link>
+            <Link to="/organicproduct" className="hover:text-blue-500">
+              Buy Organic Product Online
+            </Link>
             &gt;
-            <span className="text-sm">{productData.name}</span>
+            <span className="text-gray-700">{productData.name}</span>
           </span>
-          <button onClick={fetchNextProduct} className="right-12 absolute font-secondary cursor-pointer hover:text-blue-500 text-base">
-            Next &gt;
-          </button>
         </div>
+
+        {/* Next Button */}
+        <button
+          onClick={fetchNextProduct}
+          className="mt-3 md:mt-0 font-secondary cursor-pointer hover:text-blue-500 text-sm md:text-base"
+        >
+          Next &gt;
+        </button>
       </div>
+
 
       <div className="flex flex-col lg:flex-row p-4 lg:p-2">
         {/* Left Side - Product Images */}

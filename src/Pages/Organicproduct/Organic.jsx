@@ -126,16 +126,21 @@ const Organic = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-5">
               {OrganicproductData.map((OrganicProduct) => (
                 <Link
-                  to={{ pathname: `/organicproduct/${OrganicProduct.name}`, state: { OrganicProduct: OrganicProduct } }}
+                  to={{
+                    pathname: `/organicproduct/${encodeURIComponent(OrganicProduct.name)}`,
+                    state: { OrganicproductData: OrganicProduct },
+                  }}
                   key={OrganicProduct.id}
-                  className="border border-gray-200 rounded-lg overflow-hidden transition-shadow"
+                  className="border border-x-slate-200 border-solid rounded-lg overflow-hidden"
                 >
-                  <div className="image-container">
-                    <img
-                      src={`data:image/avif;base64, ${OrganicProduct.image}`}
-                      alt={OrganicProduct.altTag || OrganicProduct.name}
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="image-container w-full h-48 sm:h-56 md:h-64 lg:h-72">
+                    {OrganicProduct.image && (
+                      <img
+                        className="w-full h-full object-cover"
+                        src={`data:image/avif;base64,${OrganicProduct.image}`}
+                        alt={OrganicProduct.name}
+                      />
+                    )}
                   </div>
                   <div className="p-4">
                     <h2 className="text-lg font-semibold font-primary">{OrganicProduct.name}</h2>

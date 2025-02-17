@@ -66,13 +66,9 @@ const LogIn = () => {
         localStorage.setItem('authenticatedUser', JSON.stringify({ user }));
         login(user);
 
-        // Check if the user is an admin
-        if (user.email === 'kakdevicky476@gmail.com') {
-          history.push('/adminpanel'); // Redirect to the admin panel
-        } else {
-          const redirectTo = location.state?.from || '/'; // Redirect to previous or home page
-          history.push(redirectTo);
-        }
+        // No admin check anymore, just redirect to the home or previous page
+        const redirectTo = location.state?.from || '/'; // Redirect to previous or home page
+        history.push(redirectTo);
 
         window.location.reload();
       } else {
@@ -87,6 +83,7 @@ const LogIn = () => {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-6 flex items-center justify-center bg-gradient-to-r from-gray-200 to-gray-300 p-4">
