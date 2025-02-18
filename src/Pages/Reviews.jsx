@@ -68,7 +68,6 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     };
 
     const handleLike = (reviewId) => {
-        console.log(`Liked review with ID: ${reviewId}`);
         // Add logic for liking a review
     };
 
@@ -141,7 +140,6 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     };
 
     const handleReport = (reviewId) => {
-        console.log(`Reported review with ID: ${reviewId}`);
         // Add logic for reporting a review
     };
 

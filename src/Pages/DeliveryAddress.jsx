@@ -31,6 +31,7 @@ const DeliveryAddress = ({ onAddressSelect }) => {
             setAddress({ ...address, [name]: value });
         }
     };
+
     const handleSave = async () => {
         try {
             const response = await fetch("/api/delivery-address/add", {
@@ -39,13 +40,39 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(address),
-                credentials: "include" //Includes credentials (Cookies on the request)
-            })
+                credentials: "include" // Includes credentials (Cookies on the request)
+            });
+
             if (response.ok) {
                 const data = await response.json();
-                // console.log("Address saved successfully", data);
+
+                // Update address list immediately after adding
+                setAddresses((prevAddresses) => [...prevAddresses, data]);
+
+                // Highlight and select the newly added address
+                setSelectedAddress(data.id);
+                setHighlightedAddress(data.id);
+
+                // Send the selected address to parent component
+                onAddressSelect(data);
+
+                // Hide form after successful save
                 setIsFormVisible(false);
-                setSelectedAddress(address); // Update selected address on save
+
+                // Reset form state
+                setAddress({
+                    name: '',
+                    phoneNumber: '',
+                    alternatePhoneNumber: '',
+                    pincode: '',
+                    locality: '',
+                    streetAddress: '',
+                    city: '',
+                    state: '',
+                    landmark: '',
+                    addressType: 'Home',
+                });
+
             } else {
                 console.error("Error saving address:", response.statusText);
             }
@@ -53,7 +80,6 @@ const DeliveryAddress = ({ onAddressSelect }) => {
             console.error("Error saving address:", error);
         }
     };
-
 
     const handleCancel = () => {
         setAddress({
@@ -73,7 +99,7 @@ const DeliveryAddress = ({ onAddressSelect }) => {
     useEffect(() => {
         fetchAddresses();
     }, []);
-    
+
     const fetchAddresses = async () => {
         try {
             const response = await fetch("/api/deliveryAddress", {
@@ -114,7 +140,6 @@ const DeliveryAddress = ({ onAddressSelect }) => {
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-lg">
-
             <div className="rounded-lg">
                 <div className="space-y-4">
                     {addresses.length > 0 ? (
@@ -194,10 +219,10 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                 </div>
             ) : (
                 <form>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Name */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                             <input
                                 type="text"
                                 name="name"
@@ -209,8 +234,8 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
 
                         {/* Phone Number */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                             <input
                                 type="text"
                                 name="phoneNumber"
@@ -223,8 +248,8 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
 
                         {/* Pincode */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Pincode</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
                             <input
                                 type="text"
                                 name="pincode"
@@ -236,8 +261,8 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
 
                         {/* Locality */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Locality</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Locality</label>
                             <input
                                 type="text"
                                 name="locality"
@@ -248,9 +273,9 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                             />
                         </div>
 
-                        {/* Street Address */}
-                        <div className="col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Address (Street and Area)</label>
+                        {/* Street Address (Full Width) */}
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Address (Street and Area)</label>
                             <input
                                 type="text"
                                 name="streetAddress"
@@ -262,8 +287,8 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
 
                         {/* City/District/Town */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">City/District/Town</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">City/District/Town</label>
                             <input
                                 type="text"
                                 name="city"
@@ -274,9 +299,9 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                             />
                         </div>
 
-                        {/* State */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                        {/* State Dropdown */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
                             <select
                                 name="state"
                                 value={address.state}
@@ -293,8 +318,8 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
 
                         {/* Landmark */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Landmark (optional)</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Landmark (optional)</label>
                             <input
                                 type="text"
                                 name="landmark"
@@ -305,8 +330,8 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
 
                         {/* Alternate Phone Number */}
-                        <div className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Alternate Phone Number (optional)</label>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Alternate Phone Number (optional)</label>
                             <input
                                 type="text"
                                 name="alternatePhoneNumber"
@@ -318,10 +343,10 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
 
                         {/* Address Type */}
-                        <div className="col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Address Type</label>
-                            <div className="flex justify-between">
-                                <label className="inline-flex items-center w-1/2 ">
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Address Type</label>
+                            <div className="flex flex-col sm:flex-row justify-between gap-2">
+                                <label className="inline-flex items-center">
                                     <input
                                         type="radio"
                                         name="addressType"
@@ -332,7 +357,7 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                                     />
                                     <span className="ml-2">Home (All Day Delivery)</span>
                                 </label>
-                                <label className="inline-flex items-center w-1/2">
+                                <label className="inline-flex items-center">
                                     <input
                                         type="radio"
                                         name="addressType"
@@ -347,19 +372,19 @@ const DeliveryAddress = ({ onAddressSelect }) => {
                         </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="mt-6 flex justify-between">
+                    {/* Action Buttons (Stack on small screens) */}
+                    <div className="mt-6 flex flex-col sm:flex-row justify-between gap-2">
                         <button
                             type="button"
                             onClick={handleSave}
-                            className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
                         >
                             Save and Deliver Here
                         </button>
                         <button
                             type="button"
                             onClick={handleCancel}
-                            className="bg-gray-300 text-black py-3 px-6 rounded-lg hover:bg-gray-400 focus:outline-none"
+                            className="bg-gray-300 text-black py-3 px-6 rounded-lg hover:bg-gray-400 focus:outline-none w-full sm:w-auto"
                         >
                             Cancel
                         </button>

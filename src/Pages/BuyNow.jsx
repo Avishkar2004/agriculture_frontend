@@ -44,7 +44,6 @@ const BuyNow = () => {
       country: "India",
     };
 
-    console.log("Final Order Payload:", orderPayload); // Debug log
     try {
       const response = await fetch('/api/orders', {
         method: 'POST',
@@ -83,9 +82,10 @@ const BuyNow = () => {
   }, [initialProductData]);
 
   return (
-    <div className="container mx-auto my-8">
-      <div className="flex">
-        <div className="w-1/2 pr-4">
+    <div className="container mx-auto my-8 px-4">
+      <div className="flex flex-col md:flex-row">
+        {/* Product Details - Show first on small screens */}
+        <div className="w-full md:w-1/2 md:pr-4">
           <div className="sticky top-0 border p-4 rounded-lg mb-4 bg-white">
             <h1 className="text-2xl font-bold mb-4">Checkout</h1>
             <h2 className="text-2xl font-bold mb-2">{productData.name}</h2>
@@ -93,7 +93,7 @@ const BuyNow = () => {
             <img
               src={`data:image/avif;base64, ${productData.image}`}
               alt={productData.name}
-              className="mb-4 w-[17.8rem] mr-auto ml-auto"
+              className="mb-4 w-[17.8rem] mx-auto"
             />
             <div className="p-4 bg-gray-100 rounded-lg">
               <h3 className="text-xl font-medium text-gray-700 mb-2">Product Details</h3>
@@ -105,7 +105,10 @@ const BuyNow = () => {
             </div>
           </div>
         </div>
+
+        {/* Checkout Sections - Below the product on small screens */}
         <div className="w-full md:w-1/2 p-4">
+          {/* Login Section */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -119,6 +122,8 @@ const BuyNow = () => {
             </button>
             {expandedSection === 'login' && <LoginSection goToNextSection={goToNextSection} />}
           </div>
+
+          {/* Delivery Address Section */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -133,7 +138,7 @@ const BuyNow = () => {
             {expandedSection === 'address' && (
               <DeliveryAddress
                 onAddressSelect={(address) => {
-                  setSelectedAddress(address); // Update selectedAddress
+                  setSelectedAddress(address);
                   setIsAddressSelected(true);
                   setExpandedSection('summary');
                 }}
@@ -141,6 +146,7 @@ const BuyNow = () => {
             )}
           </div>
 
+          {/* Order Summary Section */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -155,6 +161,7 @@ const BuyNow = () => {
             {expandedSection === 'summary' && <OrderSummary onContinue={() => setExpandedSection('payment')} productData={productData} />}
           </div>
 
+          {/* Payment Options Section */}
           <div className="mb-4">
             <button
               className="w-full text-left bg-gray-200 p-4 rounded-lg flex justify-between items-center"
@@ -170,14 +177,17 @@ const BuyNow = () => {
           </div>
         </div>
       </div>
+
+      {/* Order Confirmation Modal */}
       {showModal && (
         <OrderConfirmModal
           productData={productData}
-          totalPrice={productData.totalPrice} // Pass totalPrice to the modal
+          totalPrice={productData.totalPrice}
           onClose={closeModal}
         />
       )}
     </div>
+
   );
 };
 

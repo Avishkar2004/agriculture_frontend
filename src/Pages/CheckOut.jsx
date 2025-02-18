@@ -52,7 +52,6 @@ const Checkout = () => {
         };
 
 
-        console.log("Final Order Payload:", orderPayload); // Debug log
         try {
             const response = await fetch('/api/checkoutOrder', {
                 method: 'POST',
@@ -91,7 +90,6 @@ const Checkout = () => {
     };
 
     useEffect(() => {
-        // console.log("Product Data:", productData);
     }, [productData]);
 
     return (
