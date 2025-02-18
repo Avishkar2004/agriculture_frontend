@@ -207,7 +207,6 @@ const SearchProductDetails = () => {
                     <span className="bg-green-300 text-green-800 px-2 py-1 rounded text-sm mt-2 inline-block">
                         Save {productData.save}
                     </span>
-
                     <div className="flex items-center justify-between mt-4">
                         <p className="text-lg font-semibold text-gray-800">
                             <span className="text-blue-600">{productData.brands}</span>
@@ -219,9 +218,7 @@ const SearchProductDetails = () => {
                             <EmailIcon className="text-gray-600 cursor-pointer hover:text-gray-700 transition-colors" />
                         </div>
                     </div>
-
                     <hr className="border-t border-gray-300 my-4" />
-
                     <p className="text-[#1e2d7d] mt-4">Size: <span className="text-xl font-semibold">{selectedSize}</span></p>
                     <div className="flex mt-4 space-x-3">
                         <button
@@ -237,14 +234,12 @@ const SearchProductDetails = () => {
                             {productData.big_100}
                         </button>
                     </div>
-
                     <p className="text-[#1e2d7d] mt-4 text-lg font-semibold">Expiry Date: <span className="text-black">09-Dec-2024</span></p>
                     <div className="flex gap-6 mt-4">
                         <span className="text-xl text-gray-700 bg-[#f1fdff] border-2 border-[#00badb] rounded-md py-2 px-4 cursor-pointer hover:bg-[#e0f7fa] transition-colors">
                             09-Dec-2024
                         </span>
                     </div>
-
                     <div className="mt-6">
                         <div className="text-2xl font-semibold flex items-baseline gap-4">
                             <span>Price:</span>
@@ -263,7 +258,6 @@ const SearchProductDetails = () => {
                             Tax included. <span className="text-[#00badb] cursor-pointer hover:underline">Shipping calculated</span> at checkout.
                         </p>
                     </div>
-
                     <div className="mt-6 flex flex-col sm:flex-row items-center gap-6">
                         {/* Quantity Selector */}
                         <div className="flex items-center gap-4">
