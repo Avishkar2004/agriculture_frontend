@@ -126,7 +126,13 @@ const ShowMicroProduct = () => {
                 state: { from: location }
             })
         } else {
-            history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice: productData.price * count } })
+            const finalPrice = selectedSize === "50 ml"
+                ? productData.price_small - productData.save
+                : productData.salePrice - productData.save
+            const totalPrice = finalPrice * count
+
+            history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice } })
+
         }
     }
 

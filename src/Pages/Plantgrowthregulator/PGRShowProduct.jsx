@@ -120,7 +120,16 @@ const PGRShowProduct = () => {
         state: { from: location }
       });
     } else {
-      history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice: productData.price * count } });
+      // Calculate the price bases on the selected size
+      const finalPrice = selectedSize === "50 ml"
+        ? productData.price_small - productData.save
+        : productData.salePrice - productData.save
+
+      //Calculate the total price bases on quantity
+      const totalPrice = finalPrice * count
+
+      // Pass the product data along with the calculated total price
+      history.push("/BuyNow", { productData: { ...productData, quantity: count, totalPrice } })
     }
   };
 
