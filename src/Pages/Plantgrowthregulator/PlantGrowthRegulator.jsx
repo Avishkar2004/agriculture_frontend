@@ -157,7 +157,6 @@ const PlantGrowthRegulator = () => {
           )}
         </div>
       </div>
-
       {/* Recently Viewed */}
       <Recentlyviewed />
     </div>
