@@ -3,6 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import ReportIcon from "@mui/icons-material/Report";
 import StarIcon from "@mui/icons-material/Star";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import { CircularProgress } from "@mui/material"; // For loading indicator
 import { Box, Button, IconButton, Modal, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -13,6 +14,7 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     const [reviewError, setReviewError] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editReview, setEditReview] = useState(null);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const toggleReviewModal = () => {
         setIsReviewModalOpen(!isReviewModalOpen);
@@ -143,6 +145,50 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
         // Add logic for reporting a review
     };
 
+
+    const generateReviewWithAI = async () => {
+        if (!authenticatedUser) {
+            alert("Please login to use AI-generated reviews.");
+            return;
+        }
+        setIsGenerating(true);
+        try {
+            const response = await fetch("/api/reviews/generate-gemini-review", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId }),
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+            if (response.ok) {
+                // Extract rating and comment properly
+                const ratingMatch = data.comment.match(/Rating:\s*(\d+)\/5/);
+                const rating = ratingMatch ? parseInt(ratingMatch[1], 10) : 5; // Default to 5 if not found
+
+                const CleanCommnet = data.comment
+                    .replace(/Rating:\s*\d+\/5/, "") // Remove rating text
+                    .replace(/This product \(ID: \d+\)/, `The "${data.productName}"`) // Replace product ID
+                    .replace(/\*{2,}/g, "") // Remove ** or **** formatting
+                    .trim(); // Clean any extra spaces
+                setNewReview((prev) => ({
+                    ...prev,
+                    rating: rating, // Set AI-generated rating
+                    comment: CleanCommnet, // Set AI-generated comment
+                }));
+            } else {
+                console.error("Failed to generate AI review:", data.error);
+            }
+        } catch (error) {
+            console.error("Error generating AI review:", error);
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+
+
     return (
         <div className="bg-white p-8 mt-6 rounded-lg shadow-lg">
             <Typography variant="h4" component="h2" className="font-semibold text-gray-900">
@@ -161,8 +207,9 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
                                         {review.username}
                                     </Typography>
                                     <div className="flex items-center">
+                                        <span className="text-gray-600 mr-2 mb-1">Rating:</span>
                                         {Array.from({ length: review.rating }).map((_, i) => (
-                                            <StarIcon key={i} className="text-yellow-500" />
+                                            <StarIcon key={i} className="text-yellow-400" />
                                         ))}
                                     </div>
                                 </div>
@@ -270,6 +317,12 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
                     <Typography variant="h5" className="font-semibold mb-4 text-gray-900">
                         Write a Review
                     </Typography>
+
+                    {reviewError && (
+                        <Typography variant="body2" className="text-red-500 mt-2">
+                            {reviewError}
+                        </Typography>
+                    )}
                     <Typography variant="body2" className="mb-4 text-gray-600">
                         {authenticatedUser ? (
                             <span className="font-medium">{authenticatedUser.username}</span>
@@ -324,6 +377,11 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
                         </Button>
                         <Button variant="outlined" color="secondary" onClick={toggleReviewModal}>
                             Cancel
+                        </Button>
+                    </div>
+                    <div className="mt-4 flex justify-center">
+                        <Button variant="outlined" color="primary" onClick={generateReviewWithAI} disabled={isGenerating}>
+                            {isGenerating ? <CircularProgress size={20} /> : "Write Review with AI (Gemini)"}
                         </Button>
                     </div>
                 </Box>
