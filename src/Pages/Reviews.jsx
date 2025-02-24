@@ -206,7 +206,7 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
             </Typography>
             {reviews.length > 0 ? (
                 <div className="mt-6 mb-6 space-y-6">
-                    {reviews.slice(0, visibleReviews).map((review) => (
+                    {reviews.sort((a, b) => (a.user_id === authenticatedUser?.id ? -1 : 1)).slice(0, visibleReviews).map((review) => (
                         <div
                             key={review.id}
                             className="border p-6 rounded-lg shadow-sm hover:shadow-lg transition duration-300 ease-in-out"
