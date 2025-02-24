@@ -42,17 +42,15 @@ const PlantGrowthRegulator = () => {
   return (
     <div className="mx-6 px-4 sm:px-6 lg:px-8 mt-3">
       {/* Breadcrumb */}
-      <div className="mt-4 mb-4">
-        <div className="text-sm text-gray-500 font-secondary">
-          <span className="space-x-2">
-            <Link to="/" className="hover:text-blue-500">
-              Home &gt;
-            </Link>
-            <span>Plant Growth Regulator (PGR) &gt;</span>
-          </span>
-        </div>
+      <div className="flex flex-wrap text-sm md:text-base gap-3 md:gap-6 text-gray-500 font-secondary">
+        <span className="flex flex-wrap gap-2">
+          <Link to="/" className="hover:text-blue-500">
+            Home
+          </Link>
+          &gt;
+          <span>Plant Growth Regulator (PGR) &gt;</span>
+        </span>
       </div>
-
       {/* Main Content */}
       <div className="flex flex-col">
         <div className="w-full bg-white p-4 border border-gray-200 rounded-lg">

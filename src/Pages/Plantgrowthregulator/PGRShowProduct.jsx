@@ -170,7 +170,7 @@ const PGRShowProduct = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col">
-      <div className="ml-4  mt-4 mx-4 flex flex-wrap items-center justify-between">
+      <div className="ml-4 mt-4 mx-4 flex flex-wrap items-center justify-between">
         <div className="flex flex-wrap text-sm md:text-base gap-3 md:gap-6 text-gray-500 font-secondary">
           <span className="flex flex-wrap gap-2">
             <Link to="/" className="hover:text-blue-500">

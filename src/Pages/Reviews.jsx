@@ -15,6 +15,8 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editReview, setEditReview] = useState(null);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [visibleReviews, setVisibleReviews] = useState(3); // Show 3 reviews initially
+
 
     const toggleReviewModal = () => {
         setIsReviewModalOpen(!isReviewModalOpen);
@@ -26,6 +28,15 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
             });
         }
     };
+
+    const handleLoadMore = () => {
+        setVisibleReviews((prev) => prev + 3) // Show 3 more reviews each time
+    }
+
+
+
+
+
     const handleEdit = (review) => {
         setEditReview(review)
         setIsEditModalOpen(true)
@@ -188,15 +199,14 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     };
 
 
-
     return (
         <div className="bg-white p-8 mt-6 rounded-lg shadow-lg">
             <Typography variant="h4" component="h2" className="font-semibold text-gray-900">
                 Customer Reviews
             </Typography>
             {reviews.length > 0 ? (
-                <div className="mt-6 space-y-6">
-                    {reviews.map((review) => (
+                <div className="mt-6 mb-6 space-y-6">
+                    {reviews.slice(0, visibleReviews).map((review) => (
                         <div
                             key={review.id}
                             className="border p-6 rounded-lg shadow-sm hover:shadow-lg transition duration-300 ease-in-out"
@@ -249,6 +259,16 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
                             </Typography>
                         </div>
                     ))}
+                    {visibleReviews < reviews.length && (
+                        <Button
+                            onClick={handleLoadMore}
+                            variant="outlined"
+                            color="primary"
+                            className="mt-4 mb-4 w-full"
+                        >
+                            Load More Reviews
+                        </Button>
+                    )}
                 </div>
             ) : (
                 <Typography variant="body1" className="mt-6 text-gray-600 text-lg">
@@ -259,11 +279,10 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
                 onClick={toggleReviewModal}
                 variant="contained"
                 color="primary"
-                className="mt-6 w-full py-3 shadow-md transition duration-300"
+                className="mt-6 w-full py-3 mb-4 shadow-md transition duration-300"
             >
                 Write a Review
             </Button>
-
             <Modal open={isEditModalOpen} onClose={closeEditModal}>
                 <Box
                     className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-2xl w-full max-w-md"
@@ -308,7 +327,6 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
                     </div>
                 </Box>
             </Modal>
-
             {/* Review Modal */}
             <Modal open={isReviewModalOpen} onClose={toggleReviewModal}>
                 <Box
