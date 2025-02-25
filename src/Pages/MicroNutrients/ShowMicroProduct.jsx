@@ -302,8 +302,22 @@ const ShowMicroProduct = () => {
                             </div>
                         </div>
                         <div className="flex gap-4">
-                            <button onClick={handleBuyNow} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded transition-colors">Buy Now</button>
-                            <button onClick={handleAddToCart} className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded transition-colors">Add To Cart</button>
+                            <button onClick={handleBuyNow}
+                                disabled={productData.stockStatus === "Out of Stock"}
+                                className={`py-3 px-6 rounded font-bold transition-colors ${productData.stockStatus === "In Stock" ? "bg-blue-500 hover:bg-blue-700 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"}`}
+                            >
+                                Buy Now
+                            </button>
+                            <button
+                                onClick={handleAddToCart}
+                                disabled={productData.stockStatus === 'Out of Stock'}
+                                className={`py-3 px-6 rounded font-bold transition-colors ${productData.stockStatus === 'In Stock'
+                                    ? "bg-red-500 hover:bg-red-700 text-white"
+                                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                                    }`}
+                            >
+                                Add To Cart
+                            </button>
                         </div>
                     </div>
                 </div>
