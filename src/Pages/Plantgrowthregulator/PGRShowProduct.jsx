@@ -4,13 +4,13 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 import SearchIcon from "@mui/icons-material/Search";
 import StarIcon from "@mui/icons-material/Star";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from '../../actions/authContext';
 import Reviews from "../Reviews";
-// import Description from "../Description"
 
 const PGRShowProduct = () => {
+  const reviewRef = useRef(null)
   const { getAuthToken, authenticatedUser } = useAuth() || {};
   const history = useHistory();
   const location = useLocation();
@@ -155,6 +155,13 @@ const PGRShowProduct = () => {
   }
   const averageRating = calculateAverageRating() // Call the fucntion
 
+
+  const scrollToReviews = () => {
+    if (reviewRef.current) {
+      reviewRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   useEffect(() => {
     if (!productData.reviews) {
       // Only call handleSizeChange when productData is initialized
@@ -215,7 +222,7 @@ const PGRShowProduct = () => {
         {/* Right Side - Product Info */}
         <div className="w-full lg:w-1/2 bg-white text-left p-6 lg:ml-8 mt-6 lg:mt-0 border-2 border-gray-200 rounded-lg shadow-sm">
           <h1 className="text-2xl font-bold text-[#1e2d7d]">{productData.name}</h1>
-          <div className="flex items-center mt-4">
+          <div className="flex items-center mt-4 text-sm font-medium text-black">
             <div className="flex">
               {Array.from({ length: 5 }, (_, index) => (
                 <StarIcon
@@ -225,7 +232,7 @@ const PGRShowProduct = () => {
               ))}
             </div>
             <span className="ml-2">{averageRating}</span>
-            <span className="text-sm text-gray-500 ml-2">({reviews.length} reviews)</span>
+            <span className="text-sm font-medium text-gray-600 ml-2 cursor-pointer hover:text-blue-500" onClick={scrollToReviews}>({reviews.length} reviews)</span>
           </div>
           <span className="bg-green-300 text-green-800 px-2 py-1 rounded text-sm mt-2 inline-block">
             Save {productData.save}
@@ -331,8 +338,9 @@ const PGRShowProduct = () => {
           </div>
         </div>
       </div>
-      <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={productData.id} fetchReviews={fetchReviews} />
-      {/* <Description /> */}
+      <div ref={reviewRef}>
+        <Reviews reviews={reviews} authenticatedUser={authenticatedUser} productId={productData.id} fetchReviews={fetchReviews} />
+      </div>
     </div>
   );
 };

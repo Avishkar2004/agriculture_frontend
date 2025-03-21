@@ -62,7 +62,6 @@ const PlantGrowthRegulator = () => {
               className="w-full max-h-[300px] rounded-lg"
             />
           </div>
-
           {/* Title */}
           <div className="text-center mt-5 font-primary text-2xl sm:text-3xl text-blue-500">
             <h1>Plant Growth Regulator (PGR)</h1>
@@ -77,9 +76,7 @@ const PlantGrowthRegulator = () => {
               Unlike micro-nutrients, it has side effects if applied frequently or more doses. Before it used, everyone keeps notice of the applicable doses of the products mentioned on the packets. The dose of all the products varies.
             </p>
           </div>
-
           <hr className="mt-5 border border-gray-200" />
-
           {/* Responsive Controls */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-5 font-secondary text-sm sm:text-base">
             <p className="text-center sm:text-left mb-4 sm:mb-0">
@@ -99,7 +96,6 @@ const PlantGrowthRegulator = () => {
                   </select>
                 </label>
               </div>
-
               {/* Sort By Dropdown */}
               <div className="flex items-center justify-center sm:justify-start">
                 <label>
@@ -116,9 +112,7 @@ const PlantGrowthRegulator = () => {
               </div>
             </div>
           </div>
-
           <hr className="mt-5 border border-gray-200" />
-
           {/* Product Grid */}
           {loading ? (
             <div>
