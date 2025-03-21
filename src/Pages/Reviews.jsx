@@ -5,7 +5,7 @@ import StarIcon from "@mui/icons-material/Star";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import { CircularProgress } from "@mui/material"; // For loading indicator
 import { Box, Button, IconButton, Modal, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
@@ -16,6 +16,7 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     const [editReview, setEditReview] = useState(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [visibleReviews, setVisibleReviews] = useState(3); // Show 3 reviews initially
+    const [reviewLikes, setReviewLikes] = useState({});
 
 
     const toggleReviewModal = () => {
@@ -32,8 +33,6 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
     const handleLoadMore = () => {
         setVisibleReviews((prev) => prev + 3) // Show 3 more reviews each time
     }
-
-
 
 
 
@@ -80,9 +79,83 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
         }
     };
 
-    const handleLike = (reviewId) => {
-        // Add logic for liking a review
+    const handleLike = async (reviewId) => {
+        if (!authenticatedUser) {
+            alert("Please login to like this review.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/feedbackreview/like`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                },
+                body: JSON.stringify({ review_id: reviewId, user_id: authenticatedUser.id }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setReviewLikes((prev) => ({
+                    ...prev,
+                    [reviewId]: data.likeCount, // Update like count
+                }));
+            } else {
+                console.error("Failed to like review.");
+            }
+        } catch (error) {
+            console.error("Error liking review:", error);
+        }
     };
+
+    const handleDislike = async (reviewId) => {
+        if (!authenticatedUser) {
+            alert("Please login to dislike this review.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/feedbackreview/dislike`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                },
+                body: JSON.stringify({ review_id: reviewId, user_id: authenticatedUser.id }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setReviewLikes((prev) => ({
+                    ...prev,
+                    [reviewId]: data.likeCount, // Update like count after dislike
+                }));
+            } else {
+                console.error("Failed to dislike review.");
+            }
+        } catch (error) {
+            console.error("Error disliking review:", error);
+        }
+    };
+
+    // Fetch likes count when component mounts
+    useEffect(() => {
+        const fetchLikeCounts = async () => {
+            try {
+                const response = await fetch(`/api/feedbackreview/likeCounts?product_id=${productId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setReviewLikes(data); // Set like counts for all reviews
+                }
+            } catch (error) {
+                console.error("Error fetching like counts:", error);
+            }
+        };
+
+        fetchLikeCounts();
+    }, [productId]);
+
 
     const handleUpdateSubmit = async () => {
         if (!authenticatedUser) {
@@ -224,12 +297,11 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
                                     </div>
                                 </div>
                                 <div className="flex space-x-2">
-                                    <IconButton
-                                        color="primary"
-                                        onClick={() => handleLike(review.id)}
-                                    >
+                                    <IconButton color="primary" onClick={() => handleLike(review.id)}>
                                         <ThumbUpAltIcon />
+                                        <span>{reviewLikes[review.id] || 0}</span>
                                     </IconButton>
+
                                     {authenticatedUser && authenticatedUser.id === review.user_id && (
                                         <>
                                             <IconButton
