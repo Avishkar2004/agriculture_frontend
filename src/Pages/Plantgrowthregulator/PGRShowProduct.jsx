@@ -100,8 +100,8 @@ const PGRShowProduct = () => {
         alert('You must be logged in to add items to the cart.');
         history.push({
           pathname: "/signin",
-          state: { from: location } //! Pass current location for redirect after login / sign in
-        })
+          state: { from: location }
+        });
       } else {
         console.error('Failed to add item to cart');
       }

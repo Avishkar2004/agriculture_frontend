@@ -8,6 +8,7 @@ const TrackOrder = () => {
     const [error, setError] = useState(null);
     const [cancelLoading, setCancelLoading] = useState(false);
     const [invoiceLoading, setInvoiceLoading] = useState(false);
+    const [orderStatus, setOrderStatus] = useState("Pending");
 
     useEffect(() => {
         const fetchOrdersDetails = async () => {
@@ -18,14 +19,48 @@ const TrackOrder = () => {
                 }
                 const data = await response.json();
                 setOrder(data.order);
+                setOrderStatus(data.order.order_status);
             } catch (error) {
                 setError('Failed to load order details.');
             } finally {
                 setLoading(false);
             }
         };
+
+        const fetchStatus = async () => {
+            try {
+                const response = await fetch(`/api/order-status/${orderId}`, { credentials: "include" });
+                if (!response.ok) throw new Error("Failed to fetch status");
+
+                const data = await response.json();
+                setOrderStatus(data.status);
+            } catch (error) {
+                console.error("Error fetching order status:", error);
+            }
+        };
+
         fetchOrdersDetails();
+        const interval = setInterval(fetchStatus, 5000);
+        fetchStatus();
+
+        return () => clearInterval(interval);
     }, [orderId]);
+
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
+    const getProgress = () => {
+        switch (orderStatus) {
+            case "Pending": return 25;
+            case "Shipped": return 50;
+            case "Delivered": return 100;
+            case "Cancelled": return 0;
+            default: return 0;
+        }
+    };
 
     const cancelOrder = async () => {
         setCancelLoading(true);
@@ -33,19 +68,13 @@ const TrackOrder = () => {
             const response = await fetch(`/api/cancelOrder/${orderId}`, {
                 method: 'PATCH',
                 credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
             });
-            if (!response.ok) {
-                throw new Error('Failed to cancel the order');
-            }
+            if (!response.ok) throw new Error('Failed to cancel the order');
+
             const data = await response.json();
-            // Update the order status in the state
-            setOrder((prevOrder) => ({
-                ...prevOrder,
-                order_status: 'Cancelled',
-            }));
+            setOrder((prevOrder) => ({ ...prevOrder, order_status: 'Cancelled' }));
+            setOrderStatus('Cancelled');
             alert(data.message || 'Order successfully cancelled.');
         } catch (error) {
             alert('Failed to cancel the order. Please try again.');
@@ -55,18 +84,11 @@ const TrackOrder = () => {
     };
 
     const generateInvoice = async () => {
-        setInvoiceLoading(true)
+        setInvoiceLoading(true);
         try {
-            const response = await fetch(`/api/generateInvoice/${orderId}`, {
-                method: 'GET',
-                credentials: 'include', // Ensures cookies are sent
-            });
+            const response = await fetch(`/api/generateInvoice/${orderId}`, { method: 'GET', credentials: 'include' });
+            if (!response.ok) throw new Error("Failed to fetch order details");
 
-            if (!response.ok) {
-                console.error(await response.text());
-                throw new Error("Failed to fetch order details");
-            }
-            // Handle the response as a file download
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -78,29 +100,12 @@ const TrackOrder = () => {
         } catch (error) {
             alert('Failed to generate the invoice. Please try again.');
         } finally {
-            setInvoiceLoading(false)
+            setInvoiceLoading(false);
         }
     };
 
-
-    const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
-
-    if (loading)
-        return (
-            <div className="flex justify-center items-center min-h-screen bg-gray-100">
-                <p className="text-lg font-semibold text-gray-700">Loading order details...</p>
-            </div>
-        );
-
-    if (error)
-        return (
-            <div className="flex justify-center items-center min-h-screen bg-gray-100">
-                <p className="text-lg font-semibold text-red-500">{error}</p>
-            </div>
-        );
+    if (loading) return <div className="flex justify-center items-center min-h-screen bg-gray-100"><p className="text-lg font-semibold text-gray-700">Loading order details...</p></div>;
+    if (error) return <div className="flex justify-center items-center min-h-screen bg-gray-100"><p className="text-lg font-semibold text-red-500">{error}</p></div>;
 
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-6">
@@ -108,6 +113,19 @@ const TrackOrder = () => {
                 <div className="bg-blue-600 text-white text-center py-6">
                     <h1 className="text-2xl font-bold">Order Tracking</h1>
                     <p className="mt-2 text-sm">Order ID: {orderId}</p>
+                </div>
+                <div className="p-6">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Details</h2>
+                    <p className="text-lg font-medium text-gray-900">{order.product_name}</p>
+                    <div className="w-full bg-gray-300 h-2 rounded-full mt-4">
+                        <div className="h-2 bg-blue-600 rounded-full" style={{ width: `${getProgress()}%` }}></div>
+                    </div>
+                    <div className="flex justify-between text-sm mt-2">
+                        <span className={orderStatus === "Pending" ? "font-bold text-blue-600" : ""}>Pending</span>
+                        <span className={orderStatus === "Shipped" ? "font-bold text-blue-600" : ""}>Shipped</span>
+                        <span className={orderStatus === "Delivered" ? "font-bold text-blue-600" : ""}>Delivered</span>
+                        <span className={orderStatus === "Cancelled" ? "font-bold text-red-600" : ""}>Cancelled</span>
+                    </div>
                 </div>
                 <div className="p-6">
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Details</h2>
