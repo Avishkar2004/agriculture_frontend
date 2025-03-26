@@ -166,7 +166,6 @@ const Reviews = ({ reviews, authenticatedUser, productId, fetchReviews }) => {
             });
 
             const data = await response.json();
-            console.log(data);
 
             if (response.ok) {
                 // Extract rating and comment properly

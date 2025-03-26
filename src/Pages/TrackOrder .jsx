@@ -9,6 +9,7 @@ const TrackOrder = () => {
     const [cancelLoading, setCancelLoading] = useState(false);
     const [invoiceLoading, setInvoiceLoading] = useState(false);
     const [orderStatus, setOrderStatus] = useState("Pending");
+    const [status, setStatus] = useState("Pending"); // ✅ Add this state
 
     useEffect(() => {
         const fetchOrdersDetails = async () => {
@@ -20,6 +21,7 @@ const TrackOrder = () => {
                 const data = await response.json();
                 setOrder(data.order);
                 setOrderStatus(data.order.order_status);
+                setStatus(data.order.status);
             } catch (error) {
                 setError('Failed to load order details.');
             } finally {
@@ -30,18 +32,35 @@ const TrackOrder = () => {
         const fetchStatus = async () => {
             try {
                 const response = await fetch(`/api/order-status/${orderId}`, { credentials: "include" });
-                if (!response.ok) throw new Error("Failed to fetch status");
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch status: ${response.statusText}`);
+                }
 
                 const data = await response.json();
-                setOrderStatus(data.status);
+
+                // Instantly update the status if it has changed
+                setOrderStatus((prevStatus) => {
+                    if (prevStatus !== data.status) {
+                        return data.status;
+                    }
+                    return prevStatus;
+                });
+
+                setStatus((prevStatus) => {
+                    if (prevStatus !== data.status) {
+                        return data.status;
+                    }
+                    return prevStatus;
+                });
+
             } catch (error) {
-                console.error("Error fetching order status:", error);
+                console.error("Error fetching order status:", error.message);
             }
         };
 
         fetchOrdersDetails();
-        const interval = setInterval(fetchStatus, 5000);
-        fetchStatus();
+        const interval = setInterval(fetchStatus, 3000);
 
         return () => clearInterval(interval);
     }, [orderId]);
@@ -107,6 +126,10 @@ const TrackOrder = () => {
     if (loading) return <div className="flex justify-center items-center min-h-screen bg-gray-100"><p className="text-lg font-semibold text-gray-700">Loading order details...</p></div>;
     if (error) return <div className="flex justify-center items-center min-h-screen bg-gray-100"><p className="text-lg font-semibold text-red-500">{error}</p></div>;
 
+
+    if (!order) return <div className="text-center py-10">No order found.</div>;
+
+
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-6">
             <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
@@ -135,8 +158,8 @@ const TrackOrder = () => {
                     </div>
                     <div className="mb-4">
                         <p className="text-gray-600">Status:</p>
-                        <p className={`text-lg font-medium ${order.order_status === 'Delivered' ? 'text-green-600' : order.order_status === 'Cancelled' ? 'text-red-600' : 'text-yellow-600'}`}>
-                            {order.order_status}
+                        <p className={`text-lg font-medium ${orderStatus === 'Delivered' ? 'text-green-600' : orderStatus === 'Cancelled' ? 'text-red-600' : 'text-yellow-600'}`}>
+                            {orderStatus}
                         </p>
                     </div>
                     <div className="mb-4">
