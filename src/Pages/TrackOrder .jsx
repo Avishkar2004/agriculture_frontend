@@ -12,16 +12,29 @@ const TrackOrder = () => {
     const [status, setStatus] = useState("Pending"); // ✅ Add this state
 
     useEffect(() => {
+        let interval; // Declare interval reference
+
         const fetchOrdersDetails = async () => {
             try {
                 const response = await fetch(`/api/trackOrder/${orderId}`, { credentials: 'include' });
                 if (!response.ok) {
                     throw new Error('Failed to fetch order details');
                 }
+
                 const data = await response.json();
+                console.log("Order Data:", data.order); // ✅ Debugging
+
                 setOrder(data.order);
                 setOrderStatus(data.order.order_status);
                 setStatus(data.order.status);
+
+                // ✅ Stop polling immediately if order is Delivered or Cancelled
+                if (data.order.order_status === "Delivered" || data.order.order_status === "Cancelled") {
+                    return; // 🔥 Exit early, no need to fetch status
+                }
+
+                // ✅ Start polling only if order is still active
+                interval = setInterval(fetchStatus, 3000);
             } catch (error) {
                 setError('Failed to load order details.');
             } finally {
@@ -31,6 +44,7 @@ const TrackOrder = () => {
 
         const fetchStatus = async () => {
             try {
+                console.log("Fetching latest status...");
                 const response = await fetch(`/api/order-status/${orderId}`, { credentials: "include" });
 
                 if (!response.ok) {
@@ -39,30 +53,30 @@ const TrackOrder = () => {
 
                 const data = await response.json();
 
-                // Instantly update the status if it has changed
-                setOrderStatus((prevStatus) => {
-                    if (prevStatus !== data.status) {
-                        return data.status;
-                    }
-                    return prevStatus;
-                });
+                if (!data || !data.status) {
+                    console.error("Invalid response data:", data);
+                    return;
+                }
 
-                setStatus((prevStatus) => {
-                    if (prevStatus !== data.status) {
-                        return data.status;
-                    }
-                    return prevStatus;
-                });
+                console.log("Live Status Update:", data.status); // ✅ Debugging
 
+                setOrderStatus((prevStatus) => (prevStatus !== data.status ? data.status : prevStatus));
+                setStatus((prevStatus) => (prevStatus !== data.status ? data.status : prevStatus));
+
+                // ✅ Stop polling if status updates to delivered or cancelled
+                if (data.status === "Delivered" || data.status === "Cancelled") {
+                    clearInterval(interval);
+                }
             } catch (error) {
                 console.error("Error fetching order status:", error.message);
             }
         };
 
         fetchOrdersDetails();
-        const interval = setInterval(fetchStatus, 3000);
 
-        return () => clearInterval(interval);
+        return () => {
+            if (interval) clearInterval(interval); // ✅ Clear interval on unmount
+        };
     }, [orderId]);
 
 
